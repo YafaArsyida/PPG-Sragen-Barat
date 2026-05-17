@@ -257,6 +257,6 @@ class Kegiatan extends Model
     // INFAQ
     public function tr_infaq()
     {
-        return $this->hasMany(TrInfaq::class, 'ms_kegiatan_id');
+        return $this->hasMany(TRInfaq::class, 'ms_kegiatan_id');
     }
 }
