@@ -331,18 +331,30 @@
                                                 <p class="text-muted fs-13 mb-1">
                                                     Presensi Manual
                                                 </p>
+                                                @if($kegiatan->status == 'selesai')
                                                 <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                    <a href="{{ route('operasional.presensi-kegiatan', $kegiatan->token) }}"
-                                                        target="_blank" class="fw-semibold text-secondary">
+                                                    <span class="fw-semibold text-muted">
+                                                        Presensi Ditutup
+                                                    </span>
+                                                    <button type="button" class="btn btn-sm btn-light btn-icon rounded-circle" disabled
+                                                        title="Kegiatan telah selesai">
+                                                        <i class="ri-lock-line">
+                                                        </i>
+                                                    </button>
+                                                </div>
+                                                @else
+                                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                    <a href="{{ route('operasional.presensi-kegiatan', $kegiatan->token) }}" target="_blank"
+                                                        class="fw-semibold text-secondary">
                                                         Buka Presensi
                                                     </a>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-light btn-icon rounded-circle"
+                                                    <button type="button" class="btn btn-sm btn-light btn-icon rounded-circle"
                                                         onclick="copyToClipboard('{{ route('operasional.presensi-kegiatan', $kegiatan->token) }}')">
                                                         <i class="mdi mdi-content-copy">
                                                         </i>
                                                     </button>
                                                 </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

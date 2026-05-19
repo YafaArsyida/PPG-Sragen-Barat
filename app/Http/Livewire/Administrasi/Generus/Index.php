@@ -49,6 +49,11 @@ class Index extends Component
 
     public function getAllGenerusProperty()
     {
+        // guard clause
+        if (!$this->selectedDesa) {
+            return Generus::query()->whereRaw('1 = 0');
+        }
+
         $query = Generus::with(['ms_kelompok.ms_desa']);
 
         // Filter by desa
