@@ -13,10 +13,10 @@
                             </div>
                         </div>
                         <div>
-                            <h5 class="modal-title fw-bold mb-1">
+                            <h5 class="fw-bold mb-1">
                                 Detail Pengguna
                             </h5>
-                            <small class="text-muted">
+                            <small>
                                 Informasi lengkap petugas administrasi & hak akses sistem
                             </small>
                         </div>

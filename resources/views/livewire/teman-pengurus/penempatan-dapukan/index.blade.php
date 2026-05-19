@@ -1,9 +1,8 @@
-<div wire:ignore.self class="modal fade" id="PenempatanDapukan" tabindex="-1"
-    aria-labelledby="PenempatanDapukanLabel" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="PenempatanDapukan" tabindex="-1" aria-labelledby="PenempatanDapukanLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             {{-- HEADER --}}
-            <div class="modal-header border-0 pb-0 pt-4 px-4">
+            <div class="modal-header align-items-center border-0 pb-0 p-4">
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
                         <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
@@ -12,12 +11,12 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="modal-title fw-bold mb-1" id="PenempatanDapukanLabel">
+                        <h5 class="fw-bold mb-1" id="PenempatanDapukanLabel">
                             Penempatan Dapukan
-                        </h4>
-                        <p class="text-muted mb-0 fs-13">
+                        </h5>
+                        <small>
                             Atur penempatan jabatan pengurus
-                        </p>
+                        </small>
                     </div>
                 </div>
                 <button type="button" class="btn btn-light btn-icon rounded-circle" data-bs-dismiss="modal">
@@ -41,9 +40,9 @@
                                     <h5 class="fw-bold mb-1">
                                         {{ $pengurus->nama_pengurus ?? '-' }}
                                     </h5>
-                                    <div class="text-muted">
+                                    <small>
                                         {{ $pengurus->usia ?? '-' }} Tahun
-                                    </div>
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -137,7 +136,7 @@
                                     <div>
                                         {{-- HEADER --}}
                                         <div class="d-flex justify-content-between align-items-center mb-4">
-                                            <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
+                                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
                                                 Edit Penempatan
                                             </span>
                                             <button type="button" class="btn btn-light btn-sm rounded-circle"
@@ -187,7 +186,7 @@
                                                 wire:click="$set('editId', null)">
                                                 Batal
                                             </button>
-                                            <button type="button" class="btn btn-warning rounded-pill px-4 text-white"
+                                            <button type="button" class="btn btn-primary rounded-pill px-4 text-white"
                                                 wire:click="update">
                                                 <i class="ri-save-line me-1">
                                                 </i>

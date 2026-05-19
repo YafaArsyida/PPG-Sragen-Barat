@@ -31,9 +31,27 @@
                 <div style="width: 500px;" class="offcanvas offcanvas-end" id="offcanvasDesa" data-bs-scroll="true"
                     data-bs-backdrop="false" aria-labelledby="offcanvasDesaLabel">
         
-                    <div class="offcanvas-header border-bottom">
-                        <h5 class="offcanvas-title" id="offcanvasDesaLabel">Data Desa</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                    <div class="offcanvas-header border-bottom ">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-sm">
+                                <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
+                                    <i class="ri-community-line text-primary">
+                                    </i>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    Data Desa
+                                </h5>
+                                <small>
+                                    Kelola administrasi data Desa dan masjid
+                                </small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-light btn-icon rounded-circle" data-bs-dismiss="offcanvas">
+                            <i class="ri-close-line fs-18">
+                            </i>
+                        </button>
                     </div>
         
                     <div class="offcanvas-body">

@@ -12,10 +12,10 @@
                         </div>
                     </div>
                     <div>
-                        <h5 class="modal-title fw-bold mb-1">
+                        <h5 class="modal-title fw-bold">
                             Ranking Kehadiran
                         </h5>
-                        <small class="text-muted">
+                        <small>
                             Generus dengan kehadiran terbaik
                         </small>
                     </div>
@@ -107,7 +107,7 @@
                                     <div class="fw-semibold text-body">
                                         {{ $item->ms_generus->nama_generus ?? '-' }}
                                     </div>
-                                    <small class="text-muted">
+                                    <small>
                                         {{ $item->ms_generus->ms_kelompok->nama_kelompok ?? '-' }}
                                     </small>
                                 </div>

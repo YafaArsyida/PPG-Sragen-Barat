@@ -114,7 +114,7 @@
     <div class="card-body pt-3">
         <div class="table-responsive">
             <table id="Laporan" class="table table-hover align-middle table-nowrap mb-0">
-                <thead class="bg-light-subtle">
+                <thead class="table-light">
                     <tr class="text-uppercase fs-12">
                         <th width="60" class="ps-4">#</th>
                         <th>Tanggal</th>

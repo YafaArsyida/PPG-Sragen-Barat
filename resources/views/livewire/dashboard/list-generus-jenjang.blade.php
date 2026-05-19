@@ -11,10 +11,10 @@
                         </div>
                     </div>
                     <div>
-                        <h5 class="modal-title fw-bold mb-1">
+                        <h5 class="modal-title fw-bold">
                             Data Generus
                         </h5>
-                        <small class="text-muted">
+                        <small class="">
                             Generus dengan jenjang usianya
                         </small>
                     </div>

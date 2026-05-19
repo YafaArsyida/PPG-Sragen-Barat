@@ -4,20 +4,19 @@
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4">
             {{-- TITLE --}}
             <div>
-                <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
                         <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
                             <i class="ri-team-line"></i>
                         </div>
                     </div>
-
                     <div>
-                        <h4 class="fw-bold mb-1">
+                        <h5 class="fw-bold mb-1">
                             Master Pengurus
-                        </h4>
-                        <p class="text-muted mb-0 fs-13">
+                        </h5>
+                        <small>
                             Kelola data pengurus sesuai dapukannya
-                        </p>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -107,12 +106,13 @@
     </div>
     
     {{-- TABLE --}}
-    <div class="card-body pt-3">
+    <div class="card-body">
         <div class="table-responsive">
             <table id="Laporan" class="table table-hover align-middle table-nowrap mb-0">
                 <thead class="table-light">
-                    <tr>
+                    <tr class="text-uppercase fw-semibold">
                         <th width="50">#</th>
+                        <th class="text-center" width="50">Hapus</th>
                         <th>Pengurus</th>
                         <th>Telepon</th>
                         <th>Kelompok</th>
@@ -129,6 +129,14 @@
                             <td>
                                 {{ $data->firstItem() + $index }}
                             </td>
+                            <td class="text-center">
+                                {{-- DELETE --}}
+                                <a href="#PengurusDelete" data-bs-toggle="modal" class="btn btn-soft-danger btn-sm rounded-pill px-3"
+                                    title="Hapus Data Pengurus" wire:click.prevent="$emit('PengurusDelete', {{ $item->ms_pengurus_id }})">
+                                    <i class="ri-delete-bin-5-line me-1"></i>
+                                    Hapus
+                                </a>
+                            </td>
                             {{-- PENGURUS --}}
                             <td>
                                 <div class="d-flex flex-column">
@@ -143,10 +151,18 @@
                             {{-- TELEPON --}}
                             <td>
                                 @if($item->telepon)
-                                <a href="https://wa.me/{{ $item->telepon }}" target="_blank" class="text-decoration-none">
-                                    {{ $item->telepon }}
-                                </a>
-                                @else - @endif
+                                <div class="d-flex align-items-center text-success">
+                                    <i class="ri-whatsapp-line me-2 fs-16">
+                                    </i>
+                                    <a href="https://wa.me/{{ $item->telepon }}" target="_blank" class="fw-medium text-success">
+                                        {{ $item->telepon }}
+                                    </a>
+                                </div>
+                                @else
+                                    <span class="text-muted">
+                                        -
+                                    </span>
+                                @endif
                             </td>
                             {{-- KELOMPOK --}}
                             <td>
@@ -162,7 +178,7 @@
                                 @if($item->ms_penempatan_dapukan_count > 0)
                                 <a href="#PenempatanDapukan" data-bs-toggle="modal"
                                     wire:click.prevent="$emit('PenempatanDapukan', {{ $item->ms_pengurus_id }})"
-                                    class="btn btn-soft-primary rounded-pill px-3 position-relative">
+                                    class="btn btn-sm btn-primary rounded-pill px-3">
                                     <i class="ri-shield-user-line me-1">
                                     </i>
                                     {{ $item->ms_penempatan_dapukan_count }} Dapukan
@@ -170,7 +186,7 @@
                                 @else
                                 <a href="#PenempatanDapukan" data-bs-toggle="modal"
                                     wire:click.prevent="$emit('PenempatanDapukan', {{ $item->ms_pengurus_id }})"
-                                    class="btn btn-success rounded-pill px-3">
+                                    class="btn btn-sm btn-soft-primary rounded-pill px-3">
                                     <i class="ri-shield-user-line me-1">
                                     </i>
                                     Tambah Dapukan
@@ -181,27 +197,26 @@
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     {{-- DETAIL --}}
-                                    <button class="btn btn-light btn-sm" title="Detail">
-                                        <i class="ri-eye-line text-primary">
+                                    <a href="#PengurusDetail" data-bs-toggle="modal" class="btn btn-sm btn-light border rounded-pill"
+                                        wire:click.prevent="$emit('PengurusDetail', {{ $item->ms_pengurus_id }})">
+                                        <i class="ri-eye-line me-1">
                                         </i>
-                                    </button>
+                                        Detail
+                                    </a>
                                     {{-- EDIT --}}
-                                    <button class="btn btn-light btn-sm" title="Edit">
-                                        <i class="ri-pencil-line text-warning">
+                                    <a href="#PengurusEdit" data-bs-toggle="modal" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        wire:click.prevent="$emit('PengurusEdit', {{ $item->ms_pengurus_id }})">
+                                        <i class="ri-pencil-line me-1">
                                         </i>
-                                    </button>
-                                    {{-- DELETE --}}
-                                    <button class="btn btn-light btn-sm" title="Hapus">
-                                        <i class="ri-delete-bin-line text-danger">
-                                        </i>
-                                    </button>
+                                        Edit
+                                    </a>
                                 </div>
                             </td>
                         </tr>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-5">
+                        <td colspan="8" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="avatar-md mb-3">
                                     <div class="avatar-title bg-light text-muted rounded-circle fs-2">

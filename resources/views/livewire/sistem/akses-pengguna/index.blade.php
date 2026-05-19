@@ -4,20 +4,19 @@
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4">
             {{-- TITLE --}}
             <div>
-                <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
                         <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
                             <i class="ri-team-line"></i>
                         </div>
                     </div>
-    
                     <div>
-                        <h4 class="fw-bold mb-1">
+                        <h5 class="fw-bold mb-1">
                             Petugas Administrasi
-                        </h4>
-                        <p class="text-muted mb-0 fs-13">
+                        </h5>
+                        <small>
                             Kelola akun petugas, akses sistem, dan keamanan pengguna aplikasi.
-                        </p>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -40,14 +39,14 @@
         </div>
     </div>
     {{-- FILTER --}}
-    <div class="card-body border-top bg-light-subtle">
+    <div class="card-body border-top border-bottom bg-light-subtle">
         <div class="row g-3 align-items-end">
             <div class="col-12">
                 <label class="form-label fw-semibold">
                     Pencarian Pengguna
                 </label>
                 <div class="search-box">
-                    <input type="text" class="form-control border-light shadow-sm rounded-3"
+                    <input type="text" class="form-control"
                         wire:model.debounce.300ms="search" placeholder="Cari nama, email, telepon, atau lainnya...">
                     <i class="ri-search-line search-icon">
                     </i>
@@ -56,7 +55,7 @@
         </div>
     </div>
     {{-- TABLE --}}
-    <div class="card-body p-0">
+    <div class="card-body p-3">
         <div class="table-responsive">
             <table class="table align-middle table-hover mb-0">
                 <thead class="table-light">

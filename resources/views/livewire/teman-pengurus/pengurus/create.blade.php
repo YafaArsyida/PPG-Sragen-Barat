@@ -1,6 +1,6 @@
 <div wire:ignore.self class="modal fade" id="PengurusCreate" tabindex="-1" aria-labelledby="PengurusCreateLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             {{-- HEADER --}}
             <div class="modal-header border-0 pb-0 pt-4 px-4">
@@ -12,12 +12,12 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="modal-title fw-bold mb-1" id="PengurusCreateLabel">
+                        <h5 class="fw-bold mb-1" id="PengurusCreateLabel">
                             Tambah Pengurus
-                        </h4>
-                        <p class="text-muted mb-0 fs-13">
+                        </h5>
+                        <small>
                             Tambahkan data pengurus baru
-                        </p>
+                        </small>
                     </div>
                 </div>
                 <button type="button" class="btn btn-light btn-icon rounded-circle" data-bs-dismiss="modal">

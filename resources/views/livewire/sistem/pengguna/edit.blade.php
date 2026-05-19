@@ -13,10 +13,10 @@
                             </div>
                         </div>
                         <div>
-                            <h5 class="modal-title fw-bold mb-1">
+                            <h5 class="fw-bold mb-1">
                                 Edit Pengguna
                             </h5>
-                            <small class="text-muted">
+                            <small>
                                 Perbarui informasi pengguna, role, dan hak akses sistem
                             </small>
                         </div>
@@ -181,11 +181,17 @@
                                                     <option value="">
                                                         Pilih Peran
                                                     </option>
-                                                    <option value="superadmin">
-                                                        Super Admin
+                                                    <option value="SUPERADMIN">
+                                                        SUPERADMIN
                                                     </option>
-                                                    <option value="administrasi">
-                                                        Administrasi
+                                                    <option value="DAERAH">
+                                                        Admin Daerah
+                                                    </option>
+                                                    <option value="DESA">
+                                                        Admin Desa
+                                                    </option>
+                                                    <option value="KELOMPOK">
+                                                        Admin Kelompok
                                                     </option>
                                                 </select>
                                                 @error('peran')

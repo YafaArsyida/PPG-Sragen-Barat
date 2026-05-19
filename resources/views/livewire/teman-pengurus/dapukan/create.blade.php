@@ -12,12 +12,12 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="modal-title fw-bold mb-1" id="DapukanCreateLabel">
+                        <h5 class="fw-bold mb-1" id="DapukanCreateLabel">
                             Tambah Dapukan
-                        </h4>
-                        <p class="text-muted mb-0 fs-13">
+                        </h5>
+                        <small>
                             Tambahkan data dapukan pengurus
-                        </p>
+                        </small>
                     </div>
                 </div>
                 <button type="button" class="btn btn-light btn-icon rounded-circle" data-bs-dismiss="modal">

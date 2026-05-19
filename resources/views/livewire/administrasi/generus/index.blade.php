@@ -118,7 +118,7 @@
     <div class="card-body">
         <div class="border rounded-4 overflow-hidden">
             {{-- TAB NAV --}}
-            <div class="bg-light px-3 pt-3">
+            <div class="border-bottom px-3 pt-3">
                 <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-3" role="tablist">
                     {{-- SEMUA --}}
                     <li class="nav-item flex-shrink-0">
@@ -145,26 +145,25 @@
                 </ul>
             </div>
             {{-- TAB CONTENT --}}
-            <div class="bg-white p-3 p-lg-4">
-                <div class="tab-content">
-                    {{-- SEMUA GENERUS --}}
-                    <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabSemua" role="tabpanel">
-                        <div class="row g-4">
-                            @include('livewire.administrasi.generus.data', [ 'listGenerus' => $allGenerus])
-                        </div>
+            <div class="tab-content">
+                {{-- SEMUA GENERUS --}}
+                <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabSemua" role="tabpanel">
+                    <div class="row g-4">
+                        @include('livewire.administrasi.generus.data', [ 'listGenerus' => $allGenerus])
                     </div>
-                    {{-- PER KELOMPOK --}} 
-                    @foreach($kelompok as $grp)
-                    <div class="tab-pane fade {{ $activeTab === 'kelompok-'.$grp->ms_kelompok_id ? 'show active' : '' }}" id="tabKelompok{{ $grp->ms_kelompok_id }}" role="tabpanel">
-                        @php 
-                            $listGenerus = $allGenerus->where('ms_kelompok_id', $grp->ms_kelompok_id); 
-                        @endphp
-                        <div class="row g-4">
-                            @include('livewire.administrasi.generus.data', [ 'listGenerus' => $listGenerus])
-                        </div>
-                    </div>
-                    @endforeach
                 </div>
+                {{-- PER KELOMPOK --}}
+                @foreach($kelompok as $grp)
+                <div class="tab-pane fade {{ $activeTab === 'kelompok-'.$grp->ms_kelompok_id ? 'show active' : '' }}"
+                    id="tabKelompok{{ $grp->ms_kelompok_id }}" role="tabpanel">
+                    @php
+                    $listGenerus = $allGenerus->where('ms_kelompok_id', $grp->ms_kelompok_id);
+                    @endphp
+                    <div class="row g-4">
+                        @include('livewire.administrasi.generus.data', [ 'listGenerus' => $listGenerus])
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
     </div>
