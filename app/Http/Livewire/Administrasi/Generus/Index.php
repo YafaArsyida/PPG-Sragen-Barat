@@ -5,9 +5,14 @@ namespace App\Http\Livewire\Administrasi\Generus;
 use App\Models\Generus;
 use App\Models\Kelompok;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $namaDesa = '';
     public $selectedDesa = null;
     
@@ -24,6 +29,7 @@ class Index extends Component
 
     public function setActiveTab($tab)
     {
+        $this->resetPage();
         $this->activeTab = $tab;
     }
 
@@ -49,50 +55,59 @@ class Index extends Component
 
     public function getAllGenerusProperty()
     {
-        // guard clause
+        $query = Generus::query()
+            ->with(['ms_kelompok.ms_desa'])
+            ->orderBy('nama_generus');
+
+        // Guard clause
         if (!$this->selectedDesa) {
-            return Generus::query()->whereRaw('1 = 0');
+            return $query->whereRaw('1 = 0')->paginate(50);
         }
 
-        $query = Generus::with(['ms_kelompok.ms_desa']);
-
-        // Filter by desa
-        if ($this->selectedDesa) {
-            $query->whereHas('ms_kelompok', function ($q) {
-                $q->where('ms_desa_id', $this->selectedDesa);
-            });
-        }
+        // Filter desa
+        $query->whereHas('ms_kelompok', function ($q) {
+            $q->where('ms_desa_id', $this->selectedDesa);
+        });
 
         // Search
         if ($this->search) {
-            $query->where('nama_generus', 'like', "%{$this->search}%");
+            $query->where('nama_generus', 'like', '%' . $this->search . '%');
         }
 
-        // Filter Jenis Kelamin
+        // Gender
         if ($this->gender) {
             $query->where('jenis_kelamin', $this->gender);
         }
 
-        // Filter Jenjang Usia
+        // Jenjang usia
         if ($this->jenjangUsia) {
-            [$min, $max] = Generus::jenjangUsiaMap()[$this->jenjangUsia];
 
-            $startDate = now()->subYears($max)->startOfDay();
-            $endDate   = now()->subYears($min)->endOfDay();
+            $range = Generus::jenjangUsiaMap()[$this->jenjangUsia] ?? null;
 
-            $query->whereBetween('tanggal_lahir', [$startDate, $endDate]);
+            if ($range) {
+
+                [$min, $max] = $range;
+
+                $startDate = now()->subYears($max)->startOfDay();
+                $endDate   = now()->subYears($min)->endOfDay();
+
+                $query->whereBetween('tanggal_lahir', [$startDate, $endDate]);
+            }
         }
-        return $query->orderBy('nama_generus')->get();
+
+        // Filter tab kelompok
+        if (str_contains($this->activeTab, 'kelompok-')) {
+            $kelompokId = str_replace('kelompok-', '', $this->activeTab);
+            $query->where('ms_kelompok_id', $kelompokId);
+        }
+        return $query->paginate(50);
     }
 
     public function render()
     {
-        $kelompok = $this->kelompok;
-        $allGenerus = $this->allGenerus;
-
-        return view('livewire.administrasi.generus.index',[
-            'kelompok' => $kelompok,
-            'allGenerus' => $allGenerus
+        return view('livewire.administrasi.generus.index', [
+            'kelompok'   => $this->kelompok,
+            'allGenerus' => $this->allGenerus,
         ]);
     }
 }

@@ -174,12 +174,7 @@
                     {{-- TAMBAHAN --}}
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge
-              bg-danger-subtle
-              text-danger
-              px-3
-              py-2
-              rounded-pill">
+                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
                                 Informasi Tambahan
                             </span>
                         </div>
@@ -189,16 +184,14 @@
                                 <label class="form-label fw-semibold">
                                     Alamat
                                 </label>
-                                <textarea class="form-control" rows="3" wire:model.defer="alamat">
-                </textarea>
+                                <textarea class="form-control" rows="3" wire:model.defer="alamat"></textarea>
                             </div>
                             {{-- DESKRIPSI --}}
                             <div class="col-lg-12">
                                 <label class="form-label fw-semibold">
                                     Deskripsi
                                 </label>
-                                <textarea class="form-control" rows="4" wire:model.defer="deskripsi">
-                </textarea>
+                                <textarea class="form-control" rows="4" wire:model.defer="deskripsi"></textarea>
                             </div>
                         </div>
                     </div>

@@ -46,10 +46,10 @@
                 <label class="form-label fw-semibold">
                     Pencarian Kelompok
                 </label>
-                <div class="position-relative">
-                    <input type="text" class="form-control ps-5" wire:model.debounce.300ms="search"
+                <div class="search-box">
+                    <input type="text" class="form-control rounded-3" wire:model.debounce.400ms="search"
                         placeholder="Cari nama kelompok, masjid, atau desa...">
-                    <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fs-18">
+                    <i class="ri-search-line search-icon">
                     </i>
                 </div>
             </div>
@@ -68,7 +68,7 @@
     <div class="card-body">
         <div class="border rounded-4 overflow-hidden">
             {{-- NAV TAB --}}
-            <div class="bg-light px-3 pt-3">
+            <div class="px-3 pt-3">
                 <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-3" role="tablist">
                     {{-- SEMUA --}}
                     <li class="nav-item flex-shrink-0">
@@ -94,7 +94,7 @@
                 </ul>
             </div>
             {{-- CONTENT --}}
-            <div class="bg-white p-3 p-lg-4">
+            <div class="bg-light p-3 p-lg-4">
                 <div class="tab-content">
                     {{-- SEMUA KELOMPOK --}}
                     <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabAll" role="tabpanel">

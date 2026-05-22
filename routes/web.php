@@ -13,7 +13,9 @@ use App\Http\Controllers\PresensiKegiatanKartu;
 // TEMANPENGURUS
 use App\Http\Controllers\TemanPengurus\Dashboard;
 use App\Http\Controllers\TemanPengurus\DesaKelompok as TemanPengurusDesaKelompok;
+use App\Http\Controllers\TemanPengurus\KegiatanPengurus;
 use App\Http\Controllers\TemanPengurus\Pengurus;
+use App\Http\Controllers\TemanPengurus\PresensiKegiatan as TemanPengurusPresensiKegiatan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,6 +73,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/temanpengurus/dashboard', [Dashboard::class, 'index'])->name('temanpengurus.dashboard.index');
     Route::get('/temanpengurus/administrasi/desa-kelompok', [TemanPengurusDesaKelompok::class, 'index'])->name('temanpengurus.administrasi.desa-kelompok');
     Route::get('/temanpengurus/administrasi/pengurus', [Pengurus::class, 'index'])->name('temanpengurus.administrasi.pengurus');
+    Route::get('/temanpengurus/administrasi/kegiatan', [KegiatanPengurus::class, 'index'])->name('temanpengurus.administrasi.kegiatan-pengurus');
+
+    Route::get('/temanpengurus/presensi-kegiatan/{token}',  [TemanPengurusPresensiKegiatan::class, 'index'])->name('temanpengurus.presensi-kegiatan');
 
     // =========================
     // ADMINISTRASI (SUPERADMIN, DAERAH, DESA, KELOMPOK)

@@ -24,10 +24,10 @@
             {{-- ACTION --}}
             <div class="d-flex gap-2 flex-wrap">
                 {{-- IMPORT --}}
-                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal"
+                <button type="button" class="btn btn-soft-primary border rounded-pill px-4" data-bs-toggle="modal"
                     data-bs-target="#ModalImportGenerus"
                     wire:click.prevent="$emit('showImportGenerus', {{ $selectedDesa }})">
-                    <i class="ri-database-2-line me-1 text-secondary">
+                    <i class="ri-database-2-line me-1">
                     </i>
                     Import Generus
                 </button>
@@ -45,7 +45,7 @@
                     </button>
                 @endif
                 {{-- TAMBAH --}}
-                <button type="button" class="btn btn-success rounded-pill px-4" data-bs-toggle="modal"
+                <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
                     data-bs-target="#ModalGenerusCreate" wire:click="$emit('GenerusCreate')">
                     <i class="ri-add-line me-1">
                     </i>
@@ -55,23 +55,23 @@
         </div>
     </div>
     {{-- FILTER --}}
-    <div class="card-body border-top border-bottom bg-light-subtle">
+    <div class="card-body border-top bg-light-subtle">
         <div class="row g-3 align-items-end">
             {{-- SEARCH --}}
             <div class="col-xxl-7 col-lg-6">
                 <label class="form-label fw-semibold">
                     Cari Nama Generus
                 </label>
-                <div class="position-relative">
-                    <input type="text" class="form-control ps-5" wire:model.debounce.400ms="search"
-                        placeholder="Cari nama generus...">
-                    <i class="ri-search-line position-absolute top-50 start-0 translate-middle-y ms-3 text-muted fs-18">
+                <div class="search-box">
+                    <input type="text" class="form-control rounded-3" wire:model.debounce.400ms="search"
+                        placeholder="Ketik nama generus...">
+                    <i class="ri-search-line search-icon">
                     </i>
                 </div>
             </div>
             {{-- GENDER --}}
             <div class="col-xxl-2 col-lg-3 col-sm-6">
-                <label class="form-label fw-semibold">
+                <label class="form-label  fw-semibold">
                     Gender
                 </label>
                 <select class="form-select" wire:model="gender">
@@ -116,9 +116,9 @@
     </div>
     {{-- CONTENT --}}
     <div class="card-body">
-        <div class="border rounded-4 overflow-hidden">
+        <div class="overflow-hidden">
             {{-- TAB NAV --}}
-            <div class="border-bottom px-3 pt-3">
+            <div class="px-3 pt-3">
                 <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-3" role="tablist">
                     {{-- SEMUA --}}
                     <li class="nav-item flex-shrink-0">
@@ -130,7 +130,7 @@
                             Semua Generus
                         </button>
                     </li>
-                    {{-- DINAMIS KELOMPOK --}} 
+                    {{-- DINAMIS KELOMPOK --}}
                     @foreach($kelompok as $item)
                     <li class="nav-item flex-shrink-0">
                         <button type="button"
@@ -145,25 +145,21 @@
                 </ul>
             </div>
             {{-- TAB CONTENT --}}
-            <div class="tab-content">
-                {{-- SEMUA GENERUS --}}
-                <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabSemua" role="tabpanel">
-                    <div class="row g-4">
-                        @include('livewire.administrasi.generus.data', [ 'listGenerus' => $allGenerus])
+            <div class="bg-white">
+                <div class="tab-content">
+                    {{-- SEMUA GENERUS --}}
+                    <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabSemua" role="tabpanel">
+                        @include('livewire.administrasi.generus.data', ['listGenerus' => $allGenerus])
                     </div>
-                </div>
-                {{-- PER KELOMPOK --}}
-                @foreach($kelompok as $grp)
-                <div class="tab-pane fade {{ $activeTab === 'kelompok-'.$grp->ms_kelompok_id ? 'show active' : '' }}"
-                    id="tabKelompok{{ $grp->ms_kelompok_id }}" role="tabpanel">
-                    @php
-                    $listGenerus = $allGenerus->where('ms_kelompok_id', $grp->ms_kelompok_id);
-                    @endphp
-                    <div class="row g-4">
-                        @include('livewire.administrasi.generus.data', [ 'listGenerus' => $listGenerus])
+        
+                    {{-- PER KELOMPOK --}}
+                    @foreach($kelompok as $grp)
+                    <div class="tab-pane fade {{ $activeTab === 'kelompok-'.$grp->ms_kelompok_id ? 'show active' : '' }}"
+                        id="tabKelompok{{ $grp->ms_kelompok_id }}" role="tabpanel">
+                        @include('livewire.administrasi.generus.data', ['listGenerus' => $allGenerus])
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
         </div>
     </div>

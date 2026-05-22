@@ -25,6 +25,7 @@
                 @livewire('teman-pengurus.pengurus.index')
                 @livewire('teman-pengurus.pengurus.import')
                 @livewire('teman-pengurus.pengurus.create')
+                @livewire('teman-pengurus.pengurus.detail')
                 @livewire('teman-pengurus.pengurus.edit')
                 @livewire('teman-pengurus.pengurus.delete')
 

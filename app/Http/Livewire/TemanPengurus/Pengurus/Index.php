@@ -5,9 +5,14 @@ namespace App\Http\Livewire\TemanPengurus\Pengurus;
 use App\Models\TemanPengurus\Dapukan;
 use App\Models\TemanPengurus\Pengurus;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $search = '';
     public $gender = '';
     public $ms_dapukan_id = '';
@@ -39,6 +44,12 @@ class Index extends Component
         }
         if ($this->gender) {
             $query->where('jenis_kelamin', $this->gender);
+        }
+        // Filter dapukan
+        if ($this->ms_dapukan_id) {
+            $query->whereHas('ms_penempatan_dapukan', function ($q) {
+                $q->where('ms_dapukan_id', $this->ms_dapukan_id);
+            });
         }
         return $query;
     }

@@ -133,6 +133,13 @@ class Index extends Component
             });
         });
 
+        // FILTER TANGGAL
+        $query->when(
+            $this->startDate && $this->endDate,
+            fn($q) =>
+            $q->whereBetween('tanggal', [$this->startDate, $this->endDate])
+        );
+        
         // FILTER TAMBAHAN
         if ($this->search) {
             $query->where('nama_kegiatan', 'like', "%{$this->search}%");
@@ -150,7 +157,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.administrasi.kegiatan-generus.index',[
-            'listKegiatan' => $this->query->paginate(100)
+        'listKegiatan' => $this->query->paginate(25)
         ]);
     }
 }

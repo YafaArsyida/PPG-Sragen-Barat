@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="PengurusDelete" tabindex="-1" aria-labelledby="deleteKegiatanLabel"
+<div wire:ignore.self class="modal fade" id="KegiatanDelete" tabindex="-1" aria-labelledby="deleteKegiatanLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
@@ -26,10 +26,10 @@
                         Konfirmasi Penghapusan
                     </span>
                     <h3 class="fw-bold mb-2" id="deleteKegiatanLabel">
-                        Hapus Pengurus?
+                        Hapus Kegiatan Pengurus?
                     </h3>
                     <p class="text-muted mb-0 lh-lg px-lg-4">
-                        Data akan dihapus secara permanen dari sistem dan tidak dapat
+                        Data kegiatan akan dihapus secara permanen dari sistem dan tidak dapat
                         dipulihkan kembali.
                     </p>
                 </div>
@@ -57,7 +57,7 @@
                     <i class="ri-close-line me-1"></i>
                     Batal
                 </button>
-                <button type="button" class="btn btn-danger rounded-pill px-4" wire:click="delete">
+                <button type="button" class="btn btn-danger rounded-pill px-4" wire:click="deleteKegiatan">
                     <i class="ri-delete-bin-6-line me-1"></i>
                     Ya, Hapus
                 </button>

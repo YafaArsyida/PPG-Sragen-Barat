@@ -1,4 +1,4 @@
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden" id="kegiatanGenerusList">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden" id="kegiatanPengurusList">
     {{-- HEADER --}}
     <div class="card-header bg-white border-0 p-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4">
@@ -7,32 +7,35 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
                         <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
-                            <i class="ri-team-line"></i>
+                            <i class="ri-calendar-event-line">
+                            </i>
                         </div>
                     </div>
-    
+
                     <div>
                         <h5 class="fw-bold mb-1">
-                            Kegiatan Generasi Penerus
+                            Kegiatan Pengurus
                         </h5>
                         <small>
-                            Kelola data kegiatan generus sesuai jenjang usia
+                            Kelola data kegiatan pengurus
                         </small>
                     </div>
                 </div>
             </div>
-    
+
             {{-- ACTION --}}
             <div class="d-flex gap-2 flex-wrap">
                 {{-- IMPORT --}}
-                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportLaporanExcel">
+                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal"
+                    data-bs-target="#ExportLaporanExcel">
                     <i class="ri-database-2-line me-1 text-secondary"></i>
                     Export Data
                 </button>
-    
+
                 {{-- TAMBAH --}}
-                <button type="button" class="btn btn-success rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ModalKegiatanCreate"
-                        wire:click.prevent="$emit('KegiatanCreate', {{ $ms_desa_id }})">
+                <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal"
+                    data-bs-target="#KegiatanCreate"
+                    wire:click.prevent="$emit('KegiatanCreate')">
                     <i class="ri-add-line me-1"></i>Tambah Kegiatan
                 </button>
             </div>
@@ -43,7 +46,7 @@
     <div class="card-body border-top border-bottom bg-light-subtle">
         <div class="row g-3 align-items-end">
             {{-- SEARCH --}}
-            <div class="col-12 col-lg-6 col-xxl-3">
+            <div class="col-12 col-lg-6 col-xxl-8">
                 <label class="form-label fw-semibold">
                     Cari Kegiatan
                 </label>
@@ -54,69 +57,8 @@
                     </i>
                 </div>
             </div>
-            {{-- TIPE --}}
-            <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
-                <label class="form-label fw-semibold">
-                    Tipe Kegiatan
-                </label>
-                <select class="form-select" wire:model="tipeKegiatan">
-                    <option value="">
-                        Semua Kegiatan
-                    </option>
-                    <option value="rutin">
-                        Kegiatan Rutin
-                    </option>
-                    <option value="sekali">
-                        Event / Sekali
-                    </option>
-                </select>
-            </div>
-            {{-- KELOMPOK --}}
-            <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
-                <label class="form-label fw-semibold">
-                    Kelompok
-                </label>
-                <select class="form-select" wire:model="ms_kelompok_id">
-                    <option value="">
-                        Semua Kelompok
-                    </option>
-                    @foreach($listKelompok as $k)
-                    <option value="{{ $k->ms_kelompok_id }}">
-                        {{ $k->nama_kelompok }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-            {{-- JENJANG --}}
-            <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
-                <label class="form-label fw-semibold">
-                    Jenjang Usia
-                </label>
-                <select class="form-select" wire:model="jenjangUsia">
-                    <option value="">
-                        Semua Jenjang
-                    </option>
-                    <option value="caberawit">
-                        Caberawit
-                    </option>
-                    <option value="remaja">
-                        Remaja
-                    </option>
-                    <option value="gp">
-                        GP
-                    </option>
-                    {{--
-                    <option value="pra_nikah">
-                        Pra Nikah
-                    </option>
-                    --}}
-                    <option value="mandiri">
-                        Mandiri
-                    </option>
-                </select>
-            </div>
             {{-- PERIODE --}}
-            <div class="col-12 col-xl-8 col-xxl-3">
+            <div class="col-12 col-xl-6 col-xxl-4">
                 <label class="form-label fw-semibold">
                     Periode
                 </label>
@@ -142,13 +84,12 @@
             <table id="Laporan" class="table table-hover align-middle table-nowrap mb-0">
                 <thead class="table-light">
                     <tr class="text-uppercase fw-semibold">
-                        <th width="50">No</th>
+                        <th width="50">#</th>
                         <th class="text-center" width="50">Hapus</th>
                         <th>Jadwal</th>
                         <th>Kegiatan</th>
-                        <th>Peserta</th>
-                        <th>Tingkat</th>
                         <th>Tempat</th>
+                        <th>Status</th>
                         <th class="text-center" width="170">Aksi</th>
                     </tr>
                 </thead>
@@ -156,123 +97,101 @@
                     @forelse($listKegiatan as $index => $item)
                     <tr>
                         {{-- NO --}}
-                        <td class="fw-semibold text-muted">
+                        <td class="fw-semibold text-muted align-middle">
                             {{ $listKegiatan->firstItem() + $index }}
                         </td>
                         <td class="text-center">
                             {{-- DELETE --}}
-                            <a href="#ModalDeleteKegiatan" data-bs-toggle="modal" class="btn btn-soft-danger btn-sm rounded-pill px-3"
-                                title="Hapus Kegiatan" wire:click.prevent="$emit('KegiatanDelete', {{ $item->ms_kegiatan_id }})">
-                                <i class="ri-eye-line me-1"></i>
+                            <a href="#KegiatanDelete" data-bs-toggle="modal" class="btn btn-soft-danger btn-sm rounded-pill px-3" title="Hapus Kegiatan"
+                                wire:click.prevent="$emit('KegiatanDelete', {{ $item->ms_kegiatan_pengurus_id }})">
+                            
+                                <i class="ri-delete-bin-line me-1"></i>
                                 Hapus
                             </a>
                         </td>
+                
                         {{-- JADWAL --}}
-                        <td>
+                        <td class="align-middle">
                             <div class="fw-semibold text-dark">
-                                @if($item->tipe_kegiatan === 'rutin')
-                                    <i class="ri-repeat-line text-primary me-1"></i>
-                                    {{ $item->hari_label ?: 'Jadwal Mingguan' }}
-                                @else
-                                    <i class="ri-calendar-event-line text-danger me-1"></i>
-                                    {{ $item->tanggal ? \App\Http\Controllers\HelperController::formatTanggalIndonesia($item->tanggal, 'd F Y') : '-' }}
-                                @endif
+                                <i class="ri-calendar-event-line text-primary me-1"></i>
+                
+                                {{ $item->tanggal
+                                ? \App\Http\Controllers\HelperController::formatTanggalIndonesia($item->tanggal, 'd F Y')
+                                : '-' }}
                             </div>
-                            <div class="text-muted fs-12">
-                                <i class="ri-time-line me-1"></i>
-                                {{ $item->waktu }}
-                            </div>
-                        </td>
-                        {{-- KEGIATAN --}}
-                        <td>
-                            <div class="fw-semibold">{{ $item->nama_kegiatan }}</div>
-                            <div class="mt-1">
-                                @if($item->tipe_kegiatan === 'rutin')
-                                <span class="badge bg-primary-subtle text-primary">
-                                    Rutin
-                                </span>
-                                @else
-                                <span class="badge bg-danger-subtle text-danger">
-                                    Event
-                                </span>
-                                @endif
-                            </div>
-                        </td>
-
-                        {{-- PESERTA --}}
-                        <td>
-                            @php
-                            if ($item->jenjang) {
-                                [$jenjangLabel, $jenjangClass] = match($item->jenjang) {
-                                    'caberawit' => ['Caberawit', 'primary'],
-                                    'remaja' => ['Remaja', 'success'],
-                                    'gp' => ['GP', 'info'],
-                                    'mandiri' => ['Mandiri', 'danger'],
-                                    default => ['-', 'secondary'],
-                                };
-                            } else {
-                                [$jenjangLabel, $jenjangClass] = ['Semua Jenjang', 'secondary'];
-                            }
-
-                            @endphp
-                            <span class="badge bg-{{ $jenjangClass }}-subtle text-{{ $jenjangClass }}">
-                                {{ $jenjangLabel }}
-                            </span>
+                
                             <div class="text-muted fs-12 mt-1">
-                                @if($item->scope === 'kelompok')
-                                    Kelompok {{ $item->ms_kelompok->nama_kelompok ?? '-' }}
-                                @elseif($item->scope === 'desa')
-                                    Desa {{ $item->ms_desa->nama_desa ?? '-' }}
-                                @else
-                                    Daerah Sragen Barat
-                                @endif
+                                <i class="ri-time-line me-1"></i>
+                                {{ $item->waktu ?: '-' }}
                             </div>
                         </td>
-
-                        {{-- TINGKAT --}}
-                        <td>
-                            @if($item->scope === 'daerah')
-                            <span class="badge bg-danger-subtle text-danger">
-                                Daerah
-                            </span>
-                            @elseif($item->scope === 'desa')
-                            <span class="badge bg-success-subtle text-success">
-                                Desa
-                            </span>
-                            @else
-                            <span class="badge bg-primary-subtle text-primary">
-                                Kelompok
-                            </span>
+                
+                        {{-- KEGIATAN --}}
+                        <td class="align-middle">
+                            <div class="fw-semibold text-dark">
+                                {{ $item->nama_kegiatan }}
+                            </div>
+                
+                            @if($item->deskripsi)
+                            <div class="text-muted fs-12 mt-1 text-truncate" style="max-width: 250px;" title="{{ $item->deskripsi }}">
+                                {{ $item->deskripsi }}
+                            </div>
                             @endif
                         </td>
-
+                
                         {{-- TEMPAT --}}
-                        <td>
-                            @php $lokasi = $item->lokasi_final; @endphp
-                            <div class="fw-semibold text-truncate" style="max-width: 220px;" title="{{ $lokasi['tempat'] }}">
+                        <td class="align-middle">
+                            <div class="fw-semibold text-truncate" style="max-width: 220px;" title="{{ $item->tempat }}">
                                 <i class="ri-map-pin-line text-danger me-1"></i>
-                                {{ $lokasi['tempat'] }}
+                                {{ $item->tempat ?: '-' }}
                             </div>
+                
+                            @if($item->alamat)
+                            <div class="text-muted fs-12 mt-1 text-truncate" style="max-width: 220px;" title="{{ $item->alamat }}">
+                                {{ $item->alamat }}
+                            </div>
+                            @endif
                         </td>
-
+                
+                        {{-- STATUS --}}
+                        <td class="align-middle">
+                            @php
+                            [$statusLabel, $statusClass] = match($item->status) {
+                            'draft' => ['Draft', 'secondary'],
+                            'aktif' => ['Aktif', 'success'],
+                            'selesai' => ['Selesai', 'primary'],
+                            default => ['Unknown', 'dark'],
+                            };
+                            @endphp
+                
+                            <span class="badge bg-{{ $statusClass }}-subtle text-{{ $statusClass }}">
+                                {{ $statusLabel }}
+                            </span>
+                        </td>
+                
                         {{-- AKSI --}}
                         <td>
                             <div class="d-flex justify-content-center gap-2">
                                 {{-- DETAIL --}}
-                                <a href="#ModalDetailKegiatan" data-bs-toggle="modal" class="btn btn-soft-primary btn-sm rounded-pill px-3"
-                                    title="Detail Kegiatan" wire:click.prevent="$emit('KegiatanDetail', {{ $item->ms_kegiatan_id }})">
+                                <a href="#KegiatanDetail" data-bs-toggle="modal"
+                                    class="btn btn-soft-primary btn-sm rounded-pill px-3" title="Detail Kegiatan"
+                                    wire:click.prevent="$emit('KegiatanDetail', {{ $item->ms_kegiatan_pengurus_id }})">
+                
                                     <i class="ri-eye-line me-1"></i>
                                     Detail
                                 </a>
-
+                
                                 {{-- EDIT --}}
-                                <a href="#ModalEditKegiatan" data-bs-toggle="modal" class="btn btn-primary btn-sm rounded-pill px-3"
-                                    title="Edit Kegiatan" wire:click.prevent="$emit('KegiatanEdit', {{ $item->ms_kegiatan_id }}, {{ $ms_desa_id }})">
+                                <a href="#KegiatanEdit" data-bs-toggle="modal"
+                                    class="btn btn-primary btn-sm rounded-pill px-3" title="Edit Kegiatan"
+                                    wire:click.prevent="$emit('KegiatanEdit', {{ $item->ms_kegiatan_pengurus_id }})">
+                
                                     <i class="ri-pencil-line me-1"></i>
                                     Edit
                                 </a>
                             </div>
                         </td>
+                
                     </tr>
                     @empty
                     <tr>
@@ -287,7 +206,7 @@
                                     Belum Ada Data Kegiatan
                                 </h6>
                                 <p class="text-muted mb-0 fs-13">
-                                    Data kegiatan generus akan tampil di sini
+                                    Data kegiatan pengurus akan tampil di sini
                                 </p>
                             </div>
                         </td>
@@ -320,18 +239,21 @@
                 </div>
             </div>
         </div>
+
     </div>
     {{-- MODAL EXPORT --}}
-    <div class="modal fade" id="ExportLaporanExcel" tabindex="-1" aria-labelledby="exportRecordLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="ExportLaporanExcel" tabindex="-1" aria-labelledby="exportRecordLabel" aria-hidden="true"
+        wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 {{-- HEADER --}}
                 <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn btn-light btn-icon rounded-circle ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-light btn-icon rounded-circle ms-auto" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="ri-close-line fs-18"></i>
                     </button>
                 </div>
-    
+
                 {{-- BODY --}}
                 <div class="modal-body px-4 pb-5 pt-2 text-center">
                     {{-- ICON --}}
@@ -352,13 +274,13 @@
                         <h3 class="fw-bold mb-2" id="exportRecordLabel">
                             Export Data Kegiatan?
                         </h3>
-    
+
                         <p class="text-muted mb-0 lh-lg px-lg-4">
                             Laporan kegiatan generus akan diekspor sesuai
                             filter dan data tabel yang sedang ditampilkan.
                         </p>
                     </div>
-    
+
                     {{-- INFO --}}
                     <div class="alert alert-light border rounded-4 text-start mt-4 mb-0">
                         <div class="d-flex align-items-start gap-3">
@@ -369,7 +291,7 @@
                                 <h6 class="fw-semibold mb-1">
                                     Informasi Export
                                 </h6>
-    
+
                                 <p class="text-muted mb-0 fs-13">
                                     File akan diunduh dalam format Excel (.xlsx)
                                     dan hanya mencakup data yang tampil pada tabel.
@@ -384,7 +306,7 @@
                         <i class="ri-close-line me-1"></i>
                         Batal
                     </button>
-    
+
                     <button type="button" class="btn btn-success rounded-pill px-4" id="konfirmasiExportLaporan"
                         data-bs-dismiss="modal">
                         <i class="ri-file-excel-2-line me-1"></i>
@@ -465,4 +387,4 @@
         });
         
     </script>
-</div>  
+</div>

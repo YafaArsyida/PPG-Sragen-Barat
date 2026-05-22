@@ -31,8 +31,6 @@ class Index extends Component
 
     public $jenjangUsia = '';
 
-    // public $jenis_kelamin = '';
-
     public $token;
     public $kegiatan;
 

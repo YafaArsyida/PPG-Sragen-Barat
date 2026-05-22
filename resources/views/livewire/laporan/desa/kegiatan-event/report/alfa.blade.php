@@ -1,4 +1,4 @@
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+<div class="card border-0 rounded-4 overflow-hidden">
     {{-- HEADER --}}
     <div class="card-header border-0 p-4">
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
@@ -38,7 +38,7 @@
                     Cari Nama Generus
                 </label>
                 <div class="search-box">
-                    <input type="text" class="form-control border-light shadow-sm rounded-3"
+                    <input type="text" class="form-control border-light rounded-3"
                         wire:model.debounce.400ms="search" placeholder="Ketik nama generus...">
                     <i class="ri-search-line search-icon">
                     </i>
@@ -49,7 +49,7 @@
                 <label class="form-label fw-semibold">
                     Kelompok
                 </label>
-                <select class="form-select rounded-3 shadow-sm border-light" wire:model="ms_kelompok_id" {{ !$ms_desa_id
+                <select class="form-select rounded-3 border-light" wire:model="ms_kelompok_id" {{ !$ms_desa_id
                     ? 'disabled' : '' }}>
                     <option value="">
                         Semua Kelompok
@@ -66,7 +66,7 @@
                 <label class="form-label fw-semibold">
                     Gender
                 </label>
-                <select class="form-select rounded-3 shadow-sm border-light" wire:model="gender">
+                <select class="form-select rounded-3 border-light" wire:model="gender">
                     <option value="">
                         Semua Generus
                     </option>

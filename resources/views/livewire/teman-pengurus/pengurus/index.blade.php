@@ -178,7 +178,7 @@
                                 @if($item->ms_penempatan_dapukan_count > 0)
                                 <a href="#PenempatanDapukan" data-bs-toggle="modal"
                                     wire:click.prevent="$emit('PenempatanDapukan', {{ $item->ms_pengurus_id }})"
-                                    class="btn btn-sm btn-primary rounded-pill px-3">
+                                    class="btn btn-primary rounded-pill px-3">
                                     <i class="ri-shield-user-line me-1">
                                     </i>
                                     {{ $item->ms_penempatan_dapukan_count }} Dapukan
@@ -186,7 +186,7 @@
                                 @else
                                 <a href="#PenempatanDapukan" data-bs-toggle="modal"
                                     wire:click.prevent="$emit('PenempatanDapukan', {{ $item->ms_pengurus_id }})"
-                                    class="btn btn-sm btn-soft-primary rounded-pill px-3">
+                                    class="btn btn-soft-primary rounded-pill px-3">
                                     <i class="ri-shield-user-line me-1">
                                     </i>
                                     Tambah Dapukan
@@ -197,7 +197,7 @@
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     {{-- DETAIL --}}
-                                    <a href="#PengurusDetail" data-bs-toggle="modal" class="btn btn-sm btn-light border rounded-pill"
+                                    <a href="#PengurusDetail" data-bs-toggle="modal" class="btn btn-sm btn-soft-primary border rounded-pill"
                                         wire:click.prevent="$emit('PengurusDetail', {{ $item->ms_pengurus_id }})">
                                         <i class="ri-eye-line me-1">
                                         </i>
@@ -238,8 +238,28 @@
         </div>
     
         {{-- PAGINATION --}}
-        <div class="mt-4">
-            {{ $data->links() }}
+        {{-- PAGINATION --}}
+        <div class="mt-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="text-muted fs-13">
+                    Menampilkan
+                    <span class="fw-semibold">
+                        {{ $data->firstItem() ?? 0 }}
+                    </span>
+                    -
+                    <span class="fw-semibold">
+                        {{ $data->lastItem() ?? 0 }}
+                    </span>
+                    dari
+                    <span class="fw-semibold">
+                        {{ $data->total() }}
+                    </span>
+                    data Pengurus
+                </div>
+                <div>
+                    {{ $data->links() }}
+                </div>
+            </div>
         </div>
     
     </div>

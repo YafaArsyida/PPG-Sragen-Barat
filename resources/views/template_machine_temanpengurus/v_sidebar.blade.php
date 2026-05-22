@@ -73,8 +73,8 @@
                 </li>
                 {{-- Kegiatan --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('administrasi.kegiatan-generus') ? 'active' : '' }}"
-                        href="{{ route('administrasi.kegiatan-generus') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('temanpengurus.administrasi.kegiatan-pengurus') ? 'active' : '' }}"
+                        href="{{ route('temanpengurus.administrasi.kegiatan-pengurus') }}">
                         <i class="mdi mdi-calendar-check-outline"></i>
                         <span>Kegiatan Pengurus</span>
                     </a>

@@ -4,7 +4,7 @@
     <div class="offcanvas-header border-bottom bg-white px-4 py-3 shadow-sm">
         <div class="d-flex align-items-center gap-3">
             <div class="avatar-sm">
-                <div class="avatar-title bg-success-subtle text-success rounded-circle fs-18">
+                <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-18">
                     <i class="ri-file-chart-line">
                     </i>
                 </div>

@@ -20,7 +20,9 @@ class Edit extends Component
 
     public $select_desa = [];
 
-    protected $listeners = ['editPengguna' => 'initEdit'];
+    protected $listeners = [
+        'editPengguna' => 'initEdit'
+    ];
 
     public function initEdit($id)
     {
