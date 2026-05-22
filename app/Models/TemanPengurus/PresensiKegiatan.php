@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PresensiKegiatan extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $table = 'presensi_pengurus'; // Nama tabel
     protected $primaryKey = 'presensi_pengurus_id'; // Nama kolom primary key
