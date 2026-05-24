@@ -27,32 +27,55 @@ class Delete extends Component
     {
         if (!$this->generusId) return;
 
-        $generus = Generus::find($this->generusId);
-
-        if (!$generus) {
-            $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Data Generus tidak ditemukan'
-            ]);
-            return;
-        }
-
         DB::beginTransaction();
+
         try {
-            $generus->delete(); // support soft delete jika pakai SoftDeletes
+
+            $generus = Generus::withCount('presensi_kegiatan_generus')
+                ->lockForUpdate()
+                ->find($this->generusId);
+
+            if (!$generus) {
+
+                DB::rollBack();
+
+                $this->dispatchBrowserEvent('alertify-error', [
+                    'message' => 'Data generus tidak ditemukan'
+                ]);
+
+                return;
+            }
+
+            // CEK PRESENSI
+            if ($generus->presensi_kegiatan_generus_count > 0) {
+
+                DB::rollBack();
+
+                $this->dispatchBrowserEvent('alertify-error', [
+                    'message' => 'Generus tidak dapat dihapus karena sudah memiliki riwayat presensi'
+                ]);
+
+                return;
+            }
+
+            $generus->delete();
+
             DB::commit();
 
-            // Tutup modal
+            // CLOSE MODAL
             $this->dispatchBrowserEvent('hide-modal', [
                 'modalId' => 'ModalDeleteGenerus'
             ]);
 
-            // Refresh Index
+            // REFRESH
             $this->emit('GenerusIndex');
 
+            // SUCCESS
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => 'Generus berhasil dihapus!'
             ]);
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             $this->dispatchBrowserEvent('alertify-error', [

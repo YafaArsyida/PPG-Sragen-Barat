@@ -65,4 +65,12 @@ class Generus extends Model
     {
         return $this->belongsTo(Kelompok::class, 'ms_kelompok_id', 'ms_kelompok_id');
     }
+
+    public function presensi_kegiatan_generus()
+    {
+        return $this->hasMany(
+            PresensiKegiatanGenerus::class,
+            'ms_generus_id'
+        );
+    }
 }
