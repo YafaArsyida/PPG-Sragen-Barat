@@ -13,7 +13,7 @@
                     Ringkasan Kegiatan Bulan Ini
                 </h5>
                 <small class="text-muted">
-                    Statistik kehadiran generus pada kegiatan terpilih
+                    Statistik kehadiran pengurus pada kegiatan terpilih
                 </small>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     -- Pilih Kegiatan Bulan Ini --
                 </option>
                 @foreach ($listKegiatan as $kegiatan)
-                <option value="{{ $kegiatan->ms_kegiatan_generus_id }}">
+                <option value="{{ $kegiatan->ms_kegiatan_pengurus_id }}">
                     {{ $kegiatan->nama_kegiatan }} — {{ $kegiatan->waktu }}
                 </option>
                 @endforeach
@@ -54,7 +54,7 @@
                         Hadir
                     </div>
                     <small class="text-muted">
-                        Generus mengikuti kegiatan
+                        Pengurus mengikuti kegiatan
                     </small>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                         Izin
                     </div>
                     <small class="text-muted">
-                        Generus berhalangan hadir
+                        Pengurus berhalangan hadir
                     </small>
                 </div>
             </div>

@@ -18,6 +18,7 @@ class Edit extends Component
     public $tempat_lahir;
     public $tanggal_lahir;
     public $jenis_kelamin;
+    public $status_generus;
     public $alamat;
     public $deskripsi;
 
@@ -66,6 +67,7 @@ class Edit extends Component
         $this->tempat_lahir   = $data->tempat_lahir;
         $this->tanggal_lahir  = $data->tanggal_lahir;
         $this->jenis_kelamin  = $data->jenis_kelamin;
+        $this->status_generus  = $data->status_generus;
         $this->alamat         = $data->alamat;
         $this->deskripsi      = $data->deskripsi;
 
@@ -87,6 +89,7 @@ class Edit extends Component
         'tempat_lahir'   => 'nullable|string|max:100',
         'tanggal_lahir'  => 'nullable|date',
         'jenis_kelamin'  => 'required|in:laki-laki,perempuan',
+        'status_generus'  => 'required',
         'alamat'         => 'nullable|string|max:255',
         'deskripsi'      => 'nullable|string|max:500',
     ];
@@ -101,6 +104,7 @@ class Edit extends Component
 
         'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
         'jenis_kelamin.in'       => 'Jenis kelamin tidak valid.',
+        'status_generus.required' => 'Status Sambung wajib dipilih.',
     ];
 
     public function updated($field)

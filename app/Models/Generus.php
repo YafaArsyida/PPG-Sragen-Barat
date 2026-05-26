@@ -25,8 +25,14 @@ class Generus extends Model
         'jenis_kelamin',
         'alamat',
         'deskripsi',
+        'status_generus',
     ];
 
+    public function scopeSambung($query)
+    {
+        return $query->where('status_generus', 'sambung');
+    }
+    
     public static function jenjangUsiaMap(): array
     {
         return [

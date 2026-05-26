@@ -189,11 +189,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($listGenerus as $i => $g) @php $status = $presensiMap[$g->ms_generus_id]
+                            @forelse($this->listGenerus as $i => $g) @php $status = $presensiMap[$g->ms_generus_id]
                             ?? null; @endphp
-                            <tr>
+                            <tr wire:key="generus-{{ $g->ms_generus_id }}">
                                 <td class="fw-semibold">
-                                    {{ $i + 1 }}
+                                    {{ $this->listGenerus->firstItem() + $i }}
                                 </td>
                                 <td class="fw-semibold">
                                     {{ $g->nama_generus }}
@@ -201,25 +201,22 @@
                                 <td>
                                     Kelompok {{ $g->ms_kelompok->nama_kelompok ?? '-' }}
                                 </td>
-                                {{-- <td>
-                                    @if($g->usia)
-                                    <span class="badge bg-light text-dark border">
-                                        {{ collect($g->jenjang_usia)->implode(', ') }}
-                                    </span>
-                                    @else - @endif
-                                </td> --}}
                                 {{-- ACTION --}}
-                                <td class="text-center text-nowrap">
+                                <td class="text-center text-nowrap" wire:key="action-{{ $g->ms_generus_id }}-{{ $status }}">
                                     @if(!$status)
                                     <div class="d-inline-flex align-items-center gap-2 flex-nowrap">
+                                        {{-- HADIR --}}
                                         <button class="btn btn-success btn-sm rounded-pill px-3"
-                                            wire:click="hadir({{ $g->ms_generus_id }})">
+                                            wire:click.prevent="hadir({{ $g->ms_generus_id }})" wire:loading.attr="disabled"
+                                            wire:target="hadir({{ $g->ms_generus_id }})" style="touch-action: manipulation;">
                                             <i class="ri-check-line me-1">
                                             </i>
                                             Hadir
                                         </button>
+                                        {{-- IZIN --}}
                                         <button class="btn btn-soft-danger btn-sm rounded-pill px-3"
-                                            wire:click="izin({{ $g->ms_generus_id }})">
+                                            wire:click.prevent="izin({{ $g->ms_generus_id }})" wire:loading.attr="disabled"
+                                            wire:target="izin({{ $g->ms_generus_id }})" style="touch-action: manipulation;">
                                             <i class="ri-close-line me-1">
                                             </i>
                                             Izin
@@ -227,25 +224,27 @@
                                     </div>
                                     @elseif($status === 'hadir')
                                     <div class="d-inline-flex align-items-center gap-2 flex-nowrap">
-                                        <button class="btn btn-soft-success btn-sm rounded-pill px-3">
+                                        <button class="btn btn-soft-success btn-sm rounded-pill px-3" disabled>
                                             <i class="ri-check-double-line me-1">
                                             </i>
                                             Sudah Hadir
                                         </button>
                                         <a class="text-danger small fw-semibold text-decoration-none"
-                                            wire:click="batalPresensi({{ $g->ms_generus_id }})" style="cursor:pointer;">
+                                            wire:click.prevent="batalPresensi({{ $g->ms_generus_id }})" wire:loading.attr="disabled"
+                                            wire:target="batalPresensi({{ $g->ms_generus_id }})" style="cursor:pointer;">
                                             Batalkan
                                         </a>
                                     </div>
                                     @elseif($status === 'izin')
                                     <div class="d-inline-flex align-items-center gap-2 flex-nowrap">
-                                        <button class="btn btn-soft-warning btn-sm rounded-pill px-3">
+                                        <button class="btn btn-soft-warning btn-sm rounded-pill px-3" disabled>
                                             <i class="ri-error-warning-line me-1">
                                             </i>
                                             Izin
                                         </button>
                                         <a class="text-danger small fw-semibold text-decoration-none"
-                                            wire:click="batalPresensi({{ $g->ms_generus_id }})" style="cursor:pointer;">
+                                            wire:click.prevent="batalPresensi({{ $g->ms_generus_id }})" wire:loading.attr="disabled"
+                                            wire:target="batalPresensi({{ $g->ms_generus_id }})" style="cursor:pointer;">
                                             Batalkan
                                         </a>
                                     </div>
@@ -265,6 +264,7 @@
                     </table>
                 </div>
             </div>
+            {{ $this->listGenerus->links() }}
         </div>
     </div>
 </div>

@@ -55,7 +55,7 @@
         </div>
         {{-- CTA --}}
         <div class="mt-auto">
-            <a href="{{ route('laporan.kelompok.event') }}" class="btn btn-primary w-100 rounded-pill">
+            <a href="" class="btn btn-primary w-100 rounded-pill">
                 <i class="ri-bar-chart-box-line me-1">
                 </i>
                 Lihat Laporan Event

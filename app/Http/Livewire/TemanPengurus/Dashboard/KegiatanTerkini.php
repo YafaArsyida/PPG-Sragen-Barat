@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Livewire\Dashboard;
+namespace App\Http\Livewire\TemanPengurus\Dashboard;
 
-use App\Models\KegiatanGenerus;
-use App\Models\PresensiKegiatanGenerus;
+use App\Models\TemanPengurus\KegiatanPengurus;
+use App\Models\TemanPengurus\PresensiKegiatanPengurus;
 use Livewire\Component;
 
-class RingkasanKegiatanHariIni extends Component
+class KegiatanTerkini extends Component
 {
-    public $selectedDesa = null;
     public $selectedKegiatan = null;
 
     public $listKegiatan = [];
@@ -17,21 +16,8 @@ class RingkasanKegiatanHariIni extends Component
     public $izin = 0;
     public $alfa = 0;
 
-    protected $listeners = [
-        'parameterUpdated'
-    ];
-
     public function mount()
     {
-        $this->loadKegiatan();
-    }
-
-    public function parameterUpdated($desaId)
-    {
-        $this->resetSummary();
-        $this->selectedDesa = $desaId;
-        $this->selectedKegiatan = null;
-
         $this->loadKegiatan();
     }
 
@@ -42,14 +28,7 @@ class RingkasanKegiatanHariIni extends Component
 
     private function loadKegiatan()
     {
-        if (!$this->selectedDesa) {
-            $this->listKegiatan = [];
-            return;
-        }
-
-        $this->listKegiatan = KegiatanGenerus::query()
-            ->where('ms_desa_id', $this->selectedDesa)
-            // ->whereDate('tanggal', Carbon::today())
+        $this->listKegiatan = KegiatanPengurus::query()
             ->whereBetween('tanggal', [
                 now()->startOfMonth(),
                 now()->endOfMonth()
@@ -65,7 +44,7 @@ class RingkasanKegiatanHariIni extends Component
             return;
         }
 
-        $query = PresensiKegiatanGenerus::where('ms_kegiatan_generus_id', $this->selectedKegiatan);
+        $query = PresensiKegiatanPengurus::where('ms_kegiatan_pengurus_id', $this->selectedKegiatan);
 
         $this->hadir = (clone $query)->where('status_hadir', 'hadir')->count();
         $this->izin = (clone $query)->where('status_hadir', 'izin')->count();
@@ -79,6 +58,6 @@ class RingkasanKegiatanHariIni extends Component
     }
     public function render()
     {
-        return view('livewire.dashboard.ringkasan-kegiatan-hari-ini');
+        return view('livewire.teman-pengurus.dashboard.kegiatan-terkini');
     }
 }

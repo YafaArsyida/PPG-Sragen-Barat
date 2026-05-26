@@ -5,7 +5,7 @@
             <div class="modal-header border-0 pb-0 p-4">
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
-                        <div class="avatar-title bg-warning-subtle text-warning rounded-circle fs-20">
+                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
                             <i class="ri-edit-2-line">
                             </i>
                         </div>
@@ -148,6 +148,34 @@
                                     </option>
                                 </select>
                                 @error('jenis_kelamin')
+                                <small class="text-danger d-block mt-1">
+                                    {{ $message }}
+                                </small>
+                                @enderror
+                            </div>
+                            {{-- Status Sambung --}}
+                            <div class="col-lg-4">
+                                <label class="form-label fw-semibold">
+                                    Status Sambung
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+                                </label>
+                                <select class="form-select" wire:model.defer="status_generus">
+                                    <option value="">
+                                        -- Pilih Status Sambung --
+                                    </option>
+                                    <option value="sambung">
+                                        Sambung
+                                    </option>
+                                    <option value="pindah sambung">
+                                        Pindah Sambung
+                                    </option>
+                                    <option class="text-danger" value="nonaktif">
+                                        Non-Aktif
+                                    </option>
+                                </select>
+                                @error('status_generus')
                                 <small class="text-danger d-block mt-1">
                                     {{ $message }}
                                 </small>

@@ -18,6 +18,7 @@ class Index extends Component
     
     public $search = '';
     public $gender = '';
+    public $status_generus = 'sambung';
     public $jenjangUsia = '';
 
     public $activeTab = 'semua';
@@ -72,6 +73,10 @@ class Index extends Component
         // Search
         if ($this->search) {
             $query->where('nama_generus', 'like', '%' . $this->search . '%');
+        }
+        // Status
+        if ($this->status_generus) {
+            $query->where('status_generus', $this->status_generus);
         }
 
         // Gender

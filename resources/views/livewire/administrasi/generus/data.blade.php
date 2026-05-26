@@ -6,6 +6,7 @@
                     <th width="60" class="text-center">No</th>
                     <th class="text-center">Hapus</th>
                     <th>Generus</th>
+                    <th>Status</th>
                     <th>Kontak</th>
                     <th>Kelompok</th>
                     <th class="text-center">Usia</th>
@@ -52,6 +53,9 @@
                                 </small>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        {{ $row->status_generus }}
                     </td>
                     {{-- TELEPON --}}
                     <td>
@@ -132,7 +136,7 @@
     
                             {{-- EDIT --}}
                             <a href="#ModalEditGenerus" data-bs-toggle="modal"
-                                class="btn btn-warning btn-sm rounded-pill px-3" title="Edit Data Generus"
+                                class="btn btn-primary btn-sm rounded-pill px-3" title="Edit Data Generus"
                                 wire:click.prevent="$emit('GenerusEdit', {{ $row->ms_generus_id }})">
                                 <i class="ri-pencil-line me-1"></i>
                                 Edit
@@ -143,7 +147,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="9" class="text-center py-5">
+                    <td colspan="10" class="text-center py-5">
                         <div class="d-flex flex-column align-items-center">
                             <div class="avatar-md mb-3">
                                 <div class="avatar-title bg-light text-muted rounded-circle">

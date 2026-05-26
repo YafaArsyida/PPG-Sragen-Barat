@@ -15,27 +15,21 @@ class Index extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    // ================= FILTER PENGURUS (KIRI) =================
     public $searchPengurus = '';
     public $ms_dapukan_id = '';
     public $genderPengurus = '';
 
-    public $jenis_kelamin = '';
-
     public $token;
     public $kegiatan;
 
-    public $presensiMap = [];   // untuk tombol di tabel Pengurus
+    public $presensiMap = [];
 
     public $listDapukan = [];
-    public $listPengurus = [];
 
     public function refreshPresensi()
     {
         $this->loadPresensiMap();
-        $this->loadPengurus(); // optional
     }
-
 
     public function mount($token)
     {
@@ -43,109 +37,115 @@ class Index extends Component
 
         $this->kegiatan = KegiatanPengurus::where('token', $token)
             ->where('status', 'aktif')
-            ->first();
-
-        if (!$this->kegiatan) {
-            abort(404);
-        }
+            ->firstOrFail();
 
         $this->loadDapukan();
 
-        $this->loadPengurus();
-        $this->loadPresensiMap(); // ⬅️ WAJIB di sini
+        $this->loadPresensiMap();
     }
-
     protected function loadDapukan()
     {
-        $query = Dapukan::query();
-
-        $this->listDapukan = $query
+        $this->listDapukan = Dapukan::query()
             ->orderBy('nama_dapukan')
             ->get();
     }
 
-    public function loadPengurus()
+    public function getListPengurusProperty()
     {
-        $this->listPengurus = Pengurus::with([
+        return Pengurus::with([
             'ms_kelompok.ms_desa',
             'ms_penempatan_dapukan'
         ])
-
             // SEARCH
-            ->when(
-                $this->searchPengurus,
-                fn($q) =>
-                $q->where('nama_pengurus', 'like', "%{$this->searchPengurus}%")
+            ->when($this->searchPengurus, fn($q) =>
+                $q->where(
+                    'nama_pengurus',
+                    'like',
+                    "%{$this->searchPengurus}%"
+                )
             )
 
             // FILTER DAPUKAN
-            ->when(
-                $this->ms_dapukan_id,
-                fn($q) =>
-                $q->whereHas('ms_penempatan_dapukan', function ($subQuery) {
+            ->when($this->ms_dapukan_id, fn($q) =>
+                $q->whereHas(
+                    'ms_penempatan_dapukan',
+                    fn($subQuery) =>
                     $subQuery->where(
                         'ms_dapukan_id',
                         $this->ms_dapukan_id
-                    );
-                })
+                    )
+                )
             )
 
             // FILTER GENDER
-            ->when(
-                $this->genderPengurus,
-                fn($q) =>
-                $q->where('jenis_kelamin', $this->genderPengurus)
+            ->when($this->genderPengurus, fn($q) =>
+                $q->where(
+                    'jenis_kelamin',
+                    $this->genderPengurus
+                )
             )
+
             ->orderBy('nama_pengurus')
-            ->get();
+            ->paginate(25);
     }
 
     protected function loadPresensiMap()
     {
-        $existing = PresensiKegiatanPengurus::where('ms_kegiatan_pengurus_id', $this->kegiatan->ms_kegiatan_pengurus_id)
-            ->get()
-            ->keyBy('ms_pengurus_id');
-
-        $this->presensiMap = $existing
-            ->map(fn($p) => $p->status_hadir)
+        $this->presensiMap =
+            PresensiKegiatanPengurus::where(
+                'ms_kegiatan_pengurus_id',
+                $this->kegiatan->ms_kegiatan_pengurus_id
+            )
+            ->pluck('status_hadir', 'ms_pengurus_id')
             ->toArray();
     }
 
-    public function updated($property)
+    public function updatedSearchPengurus()
     {
-        // filter Pengurus kiri
-        if (in_array($property, ['searchPengurus', 'ms_dapukan_id', 'genderPengurus'])) {
-            $this->loadPengurus();
-            $this->loadPresensiMap();
-        }
+        $this->resetPage();
+    }
+
+    public function updatedMsDapukanId()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedGenderPengurus()
+    {
+        $this->resetPage();
     }
 
     public function hadir($pengurusId)
     {
         $presensi = PresensiKegiatanPengurus::firstOrCreate(
             [
-                'ms_kegiatan_pengurus_id' => $this->kegiatan->ms_kegiatan_pengurus_id,
-                'ms_pengurus_id'  => $pengurusId,
+                'ms_kegiatan_pengurus_id' =>
+                $this->kegiatan->ms_kegiatan_pengurus_id,
+
+                'ms_pengurus_id' => $pengurusId,
+
                 'tanggal_presensi' => today(),
             ],
             [
-                'waktu_hadir'  => now(),
+                'waktu_hadir' => now(),
                 'status_hadir' => 'hadir',
-                'verifikasi'   => 'manual',
-                'deskripsi'    => null,
+                'verifikasi' => 'manual',
+                'deskripsi' => null,
             ]
         );
 
-        $this->loadPresensiMap();
-
-        // alertify
         if ($presensi->wasRecentlyCreated) {
+
+            // OPTIMISTIC UPDATE
+            $this->presensiMap[$pengurusId] = 'hadir';
+
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => 'Pengurus hadir berhasil dicatat'
             ]);
         } else {
+
             $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Presensi sudah ada, tidak diubah'
+                'message' => 'Presensi sudah ada'
             ]);
         }
     }
@@ -154,38 +154,47 @@ class Index extends Component
     {
         $presensi = PresensiKegiatanPengurus::firstOrCreate(
             [
-                'ms_kegiatan_pengurus_id' => $this->kegiatan->ms_kegiatan_pengurus_id,
-                'ms_pengurus_id'  => $pengurusId,
+                'ms_kegiatan_pengurus_id' =>
+                $this->kegiatan->ms_kegiatan_pengurus_id,
+
+                'ms_pengurus_id' => $pengurusId,
+
                 'tanggal_presensi' => today(),
             ],
             [
-                'waktu_hadir'  => null,
+                'waktu_hadir' => null,
                 'status_hadir' => 'izin',
-                'verifikasi'   => 'manual',
-                'deskripsi'    => 'Izin',
+                'verifikasi' => 'manual',
+                'deskripsi' => 'Izin',
             ]
         );
 
-        $this->loadPresensiMap();
-
         if ($presensi->wasRecentlyCreated) {
+
+            $this->presensiMap[$pengurusId] = 'izin';
+
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => 'Pengurus izin berhasil dicatat'
             ]);
         } else {
+
             $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Presensi izin sudah ada, tidak diubah'
+                'message' => 'Presensi izin sudah ada'
             ]);
         }
     }
 
     public function batalPresensi($pengurusId)
     {
-        PresensiKegiatanPengurus::where('ms_kegiatan_pengurus_id', $this->kegiatan->ms_kegiatan_pengurus_id)
-            ->where('ms_Pengurus_id', $pengurusId)
+        PresensiKegiatanPengurus::where(
+            'ms_kegiatan_pengurus_id',
+            $this->kegiatan->ms_kegiatan_pengurus_id
+        )
+            ->where('ms_pengurus_id', $pengurusId)
             ->delete();
 
-        $this->loadPresensiMap();
+        // OPTIMISTIC UPDATE
+        unset($this->presensiMap[$pengurusId]);
 
         $this->dispatchBrowserEvent('alertify-success', [
             'message' => 'Presensi berhasil dibatalkan'

@@ -97,7 +97,7 @@
                     <a class="nav-link menu-link {{ request()->routeIs('temanpengurus.dashboard.index') ? 'active' : '' }}"
                         href="{{ route('temanpengurus.dashboard.index') }}" target="_blank">
                         <i class="mdi mdi-shield-account-outline"></i>
-                        <span>TemamPengurus</span>
+                        <span>TemanPengurus</span>
                     </a>
                 </li>
                 @if(in_array($role, ['SUPERADMIN']))

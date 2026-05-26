@@ -58,7 +58,7 @@
     <div class="card-body border-top bg-light-subtle">
         <div class="row g-3 align-items-end">
             {{-- SEARCH --}}
-            <div class="col-xxl-7 col-lg-6">
+            <div class="col-xxl-5 col-lg-6">
                 <label class="form-label fw-semibold">
                     Cari Nama Generus
                 </label>
@@ -70,6 +70,22 @@
                 </div>
             </div>
             {{-- GENDER --}}
+            <div class="col-xxl-2 col-lg-3 col-sm-6">
+                <label class="form-label  fw-semibold">
+                    Status Sambung
+                </label>
+                <select class="form-select" wire:model="status_generus">
+                    <option value="sambung">
+                        Sambung
+                    </option>
+                    <option value="pindah sambung">
+                        Pindah Sambung
+                    </option>
+                    <option value="nonaktif">
+                        Non-Aktif
+                    </option>
+                </select>
+            </div>
             <div class="col-xxl-2 col-lg-3 col-sm-6">
                 <label class="form-label  fw-semibold">
                     Gender

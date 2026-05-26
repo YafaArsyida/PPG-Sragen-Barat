@@ -21,25 +21,18 @@ class Index extends Component
 
     public $selectedDesa = null;
 
-    // ================= FILTER GENERUS (KIRI) =================
     public $searchGenerus = '';
     public $kelompokGenerus = '';
     public $genderGenerus = '';
-
-    // ================= FILTER PRESENSI (KANAN) =================
-    public $searchPresensi = '';
-    public $kelompokPresensi = '';
-    public $genderPresensi = '';
 
     public $jenjangUsia = '';
 
     public $token;
     public $kegiatan;
 
-    public $presensiMap = [];   // untuk tombol di tabel generus
+    public $presensiMap = [];
 
     public $listKelompok = [];
-    public $listGenerus = [];
 
     protected $listeners = [
         'parameterUpdated' => 'setParameterDesa'
@@ -49,22 +42,15 @@ class Index extends Component
     {
         $this->selectedDesa = $desaId;
 
-        // reset filter lanjutan
+        // reset filter
         $this->kelompokGenerus = null;
-        $this->kelompokPresensi = null;
 
+        // reset pagination
+        $this->resetPage();
+
+        // reload dropdown kelompok
         $this->loadKelompok();
-
-        $this->loadGenerus();
-        $this->loadPresensiMap(); // ⬅️ tambahkan
     }
-
-    public function refreshPresensi()
-    {
-        $this->loadPresensiMap();
-        $this->loadGenerus(); // optional
-    }
-
 
     public function mount($token)
     {
@@ -76,18 +62,13 @@ class Index extends Component
         ])
             ->where('token', $token)
             ->where('status', 'aktif')
-            ->first();
-
-        if (!$this->kegiatan) {
-            abort(404);
-        }
+            ->firstOrFail();
 
         $this->jenjangUsia = $this->kegiatan->jenjang;
 
         $this->loadKelompok();
 
-        $this->loadGenerus();
-        $this->loadPresensiMap(); // ⬅️ WAJIB di sini
+        $this->loadPresensiMap();
     }
 
     protected function loadKelompok()
@@ -114,32 +95,29 @@ class Index extends Component
             ->get();
     }
 
-    public function loadGenerus()
+    public function getListGenerusProperty()
     {
-        $this->listGenerus = Generus::with(['ms_kelompok.ms_desa'])
+        return Generus::with(['ms_kelompok.ms_desa'])
 
-            // SEARCH GENERUS
             ->when(
                 $this->searchGenerus,
                 fn($q) =>
                 $q->where('nama_generus', 'like', "%{$this->searchGenerus}%")
             )
 
-            // FILTER KELOMPOK GENERUS
             ->when(
                 $this->kelompokGenerus,
                 fn($q) =>
                 $q->where('ms_kelompok_id', $this->kelompokGenerus)
             )
 
-            // FILTER GENDER GENERUS
             ->when(
                 $this->genderGenerus,
                 fn($q) =>
                 $q->where('jenis_kelamin', $this->genderGenerus)
             )
 
-            // ===== SCOPE KEGIATAN (tetap sama) =====
+            // scope daerah
             ->when(
                 $this->kegiatan->scope === 'daerah' && $this->selectedDesa,
                 fn($q) =>
@@ -150,6 +128,7 @@ class Index extends Component
                 )
             )
 
+            // scope desa
             ->when(
                 $this->kegiatan->scope === 'desa',
                 fn($q) =>
@@ -160,14 +139,16 @@ class Index extends Component
                 )
             )
 
+            // scope kelompok
             ->when(
                 $this->kegiatan->scope === 'kelompok',
                 fn($q) =>
                 $q->where('ms_kelompok_id', $this->kegiatan->ms_kelompok_id)
             )
 
-            // ===== JENJANG =====
+            // jenjang
             ->when($this->kegiatan->jenjang, function ($q) {
+
                 $jenjang = $this->kegiatan->jenjang;
 
                 if (!isset(Generus::jenjangUsiaMap()[$jenjang])) {
@@ -183,32 +164,33 @@ class Index extends Component
             })
 
             ->orderBy('nama_generus')
-            ->get();
+
+            ->paginate(50);
     }
 
     protected function loadPresensiMap()
     {
-        $existing = PresensiKegiatanGenerus::where('ms_kegiatan_generus_id', $this->kegiatan->ms_kegiatan_generus_id)
-            ->get()
-            ->keyBy('ms_generus_id');
-
-        $this->presensiMap = $existing
-            ->map(fn($p) => $p->status_hadir)
+        $this->presensiMap = PresensiKegiatanGenerus::where(
+            'ms_kegiatan_generus_id',
+            $this->kegiatan->ms_kegiatan_generus_id
+        )
+            ->pluck('status_hadir', 'ms_generus_id')
             ->toArray();
     }
 
-    public function updated($property)
+    public function updatedSearchGenerus()
     {
-        // filter generus kiri
-        if (in_array($property, ['searchGenerus', 'kelompokGenerus', 'genderGenerus'])) {
-            $this->loadGenerus();
-            $this->loadPresensiMap();
-        }
+        $this->resetPage();
+    }
 
-        // filter presensi kanan
-        if (in_array($property, ['searchPresensi', 'kelompokPresensi', 'genderPresensi'])) {
-            $this->resetPage(); // pagination kanan
-        }
+    public function updatedKelompokGenerus()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedGenderGenerus()
+    {
+        $this->resetPage();
     }
 
     public function hadir($generusId)
@@ -216,27 +198,28 @@ class Index extends Component
         $presensi = PresensiKegiatanGenerus::firstOrCreate(
             [
                 'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
-                'ms_generus_id'  => $generusId,
+                'ms_generus_id' => $generusId,
                 'tanggal_presensi' => today(),
             ],
             [
-                'waktu_hadir'  => now(),
+                'waktu_hadir' => now(),
                 'status_hadir' => 'hadir',
-                'verifikasi'   => 'manual',
-                'deskripsi'    => null,
+                'verifikasi' => 'manual',
             ]
         );
 
-        $this->loadPresensiMap();
-
-        // alertify
         if ($presensi->wasRecentlyCreated) {
+
+            // OPTIMISTIC UPDATE
+            $this->presensiMap[$generusId] = 'hadir';
+
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => 'Generus hadir berhasil dicatat'
             ]);
         } else {
+
             $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Presensi sudah ada, tidak diubah'
+                'message' => 'Presensi sudah ada'
             ]);
         }
     }
@@ -246,37 +229,36 @@ class Index extends Component
         $presensi = PresensiKegiatanGenerus::firstOrCreate(
             [
                 'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
-                'ms_generus_id'  => $generusId,
+                'ms_generus_id' => $generusId,
                 'tanggal_presensi' => today(),
             ],
             [
-                'waktu_hadir'  => null,
                 'status_hadir' => 'izin',
-                'verifikasi'   => 'manual',
-                'deskripsi'    => 'Izin',
+                'verifikasi' => 'manual',
+                'deskripsi' => 'Izin',
             ]
         );
 
-        $this->loadPresensiMap();
-
         if ($presensi->wasRecentlyCreated) {
+
+            $this->presensiMap[$generusId] = 'izin';
+
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => 'Generus izin berhasil dicatat'
-            ]);
-        } else {
-            $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Presensi izin sudah ada, tidak diubah'
             ]);
         }
     }
 
     public function batalPresensi($generusId)
     {
-        PresensiKegiatanGenerus::where('ms_kegiatan_generus_id', $this->kegiatan->ms_kegiatan_generus_id)
+        PresensiKegiatanGenerus::where(
+            'ms_kegiatan_generus_id',
+            $this->kegiatan->ms_kegiatan_generus_id
+        )
             ->where('ms_generus_id', $generusId)
             ->delete();
 
-        $this->loadPresensiMap();
+        unset($this->presensiMap[$generusId]);
 
         $this->dispatchBrowserEvent('alertify-success', [
             'message' => 'Presensi berhasil dibatalkan'

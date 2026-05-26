@@ -142,7 +142,9 @@ class KegiatanGenerus extends Model
 
     public function targetPesertaQuery()
     {
-        $query = Generus::query()->with('ms_kelompok.ms_desa');
+        $query = Generus::query()
+            ->sambung()
+            ->with('ms_kelompok.ms_desa');
 
         // Scope kegiatan
         if ($this->scope === 'desa' && $this->ms_desa_id) {
