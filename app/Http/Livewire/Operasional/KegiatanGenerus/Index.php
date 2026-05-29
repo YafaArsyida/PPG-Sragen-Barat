@@ -97,11 +97,6 @@ class Index extends Component
 
     public function getQueryProperty()
     {
-        // guard clause
-        if (!$this->ms_desa_id) {
-            return KegiatanGenerus::query()->whereRaw('1 = 0');
-        }
-
         $query = KegiatanGenerus::query()
             ->with([
                 'ms_desa',
@@ -117,6 +112,11 @@ class Index extends Component
                     $q->where('status_hadir', 'izin');
                 },
             ]);
+
+        // Guard clause
+        if (!$this->ms_desa_id) {
+            return $query->whereRaw('1 = 0');
+        }
 
         // VISIBILITY RULE
         $query->where(function ($q) {

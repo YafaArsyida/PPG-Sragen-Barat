@@ -97,13 +97,13 @@ class Index extends Component
 
     public function getQueryProperty()
     {
-        // guard clause
-        if (!$this->ms_desa_id) {
-            return KegiatanGenerus::query()->whereRaw('1 = 0');
-        }
-
         $query = KegiatanGenerus::query()
             ->with(['ms_desa', 'ms_kelompok.ms_desa']);
+
+        // Guard clause
+        if (!$this->ms_desa_id) {
+            return $query->whereRaw('1 = 0');
+        }
 
         // VISIBILITY RULE
         $query->where(function ($q) {

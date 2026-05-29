@@ -17,7 +17,7 @@
         </div>
     
         <div class="row">
-            <div class="row-xxl-12">
+            <div class="col-xxl-12">
                 @livewire('administrasi.kegiatan-generus.index')
                 @livewire('administrasi.kegiatan-generus.detail')
                 @livewire('administrasi.kegiatan-generus.edit')

@@ -56,24 +56,22 @@ class Index extends Component
 
     public function getAllGenerusProperty()
     {
-        $query = Generus::query()
-            ->with(['ms_kelompok.ms_desa'])
-            ->orderBy('nama_generus');
-
         // Guard clause
         if (!$this->selectedDesa) {
-            return $query->whereRaw('1 = 0')->paginate(50);
+            return Generus::query()->whereRaw('1 = 0');
         }
 
-        // Filter desa
-        $query->whereHas('ms_kelompok', function ($q) {
-            $q->where('ms_desa_id', $this->selectedDesa);
-        });
+        $query = Generus::with('ms_kelompok.ms_desa')
+            ->whereHas('ms_kelompok', function ($q) {
+                $q->where('ms_desa_id', $this->selectedDesa);
+            });
+
 
         // Search
         if ($this->search) {
             $query->where('nama_generus', 'like', '%' . $this->search . '%');
         }
+
         // Status
         if ($this->status_generus) {
             $query->where('status_generus', $this->status_generus);
@@ -103,16 +101,18 @@ class Index extends Component
         // Filter tab kelompok
         if (str_contains($this->activeTab, 'kelompok-')) {
             $kelompokId = str_replace('kelompok-', '', $this->activeTab);
+
             $query->where('ms_kelompok_id', $kelompokId);
         }
-        return $query->paginate(50);
+
+        return $query;
     }
 
     public function render()
     {
         return view('livewire.administrasi.generus.index', [
             'kelompok'   => $this->kelompok,
-            'allGenerus' => $this->allGenerus,
+            'allGenerus' => $this->allGenerus->paginate(50),
         ]);
     }
 }

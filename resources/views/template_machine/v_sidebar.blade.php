@@ -78,7 +78,37 @@
                         <i class="mdi mdi-calendar-check-outline"></i>
                         <span>Kegiatan Generus</span>
                     </a>
-                </li>                
+                </li>         
+                
+                <li class="menu-title"><span data-key="t-menu">Kurikulum KBM</span></li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.periode-jenjang') ? 'active' : '' }}"
+                        href="{{ route('kurikulum-kbm.periode-jenjang') }}">
+                        <i class="mdi mdi-calendar-check-outline"></i>
+                        <span>Periode & Jenjang</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.aspek-materi') ? 'active' : '' }}"
+                        href="{{ route('kurikulum-kbm.aspek-materi') }}">
+                        <i class="mdi mdi-calendar-check-outline"></i>
+                        <span>Aspek Materi</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.laporan-kbm') ? 'active' : '' }}"
+                        href="{{ route('kurikulum-kbm.laporan-kbm') }}">
+                        <i class="mdi mdi-calendar-check-outline"></i>
+                        <span>Laporan KBM</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.rekap-kbm') ? 'active' : '' }}"
+                        href="{{ route('kurikulum-kbm.rekap-kbm') }}">
+                        <i class="mdi mdi-calendar-check-outline"></i>
+                        <span>Rekap Kurikulum</span>
+                    </a>
+                </li>
                 @php($role = auth()->user()->peran)
                 
                 {{-- DESA --}}

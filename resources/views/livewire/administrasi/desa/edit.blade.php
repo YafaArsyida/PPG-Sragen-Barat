@@ -6,7 +6,7 @@
             <div class="modal-header border-0 pb-0 p-4">
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
-                        <div class="avatar-title bg-warning-subtle text-warning rounded-circle fs-20">
+                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
                             <i class="ri-edit-2-line">
                             </i>
                         </div>
@@ -30,7 +30,7 @@
                     {{-- INFORMASI UTAMA --}}
                     <div class="mb-4">
                         <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
+                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
                                 Informasi Utama
                             </span>
                         </div>
@@ -145,7 +145,7 @@
                         </i>
                         Tutup
                     </button>
-                    <button type="submit" class="btn btn-warning rounded-pill px-4 text-white">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 text-white">
                         <i class="ri-save-3-line me-1">
                         </i>
                         Perbarui Data

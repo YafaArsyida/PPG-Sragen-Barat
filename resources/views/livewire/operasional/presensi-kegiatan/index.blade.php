@@ -5,7 +5,7 @@
             {{-- TOP BAR --}}
             <div class="bg-primary bg-gradient" style="height: 5px;">
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-4 pb-1">
                 <div class="row g-4 align-items-center">
                     {{-- LEFT --}}
                     <div class="col-lg-7">
@@ -81,7 +81,7 @@
                     <div class="col-lg-5 text-lg-end">
                         <div class="d-flex flex-column gap-3 align-items-lg-end">
                             {{-- SUMMARY --}}
-                            <div class="d-flex gap-3 flex-wrap justify-content-lg-end">
+                            {{-- <div class="d-flex gap-3 flex-wrap justify-content-lg-end">
                                 <div class="border rounded-4 px-3 py-2 text-center bg-success-subtle">
                                     <div class="fw-bold fs-5 text-success">
                                         {{ collect($presensiMap)->filter(fn($v) => $v === 'hadir')->count() }}
@@ -98,7 +98,7 @@
                                         Izin
                                     </small>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{-- PARAMETER --}} @if($kegiatan->scope === 'daerah')
                             <div>
                                 @livewire('parameter.desa')
@@ -111,7 +111,7 @@
             <div class="card-body border-top border-bottom bg-light-subtle">
                 <div class="row g-3 align-items-end">
                     {{-- SEARCH --}}
-                    <div class="col-lg-4">
+                    <div class="col-lg-6 col-md-4 col-sm-12">
                         <label class="form-label fw-semibold">
                             Cari Generus
                         </label>
@@ -123,7 +123,7 @@
                         </div>
                     </div>
                     {{-- KELOMPOK --}}
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-4 col-sm-6">
                         <label class="form-label fw-semibold">
                             Kelompok
                         </label>
@@ -139,7 +139,7 @@
                         </select>
                     </div>
                     {{-- GENDER --}}
-                    <div class="col-lg-2">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
                         <label class="form-label fw-semibold">
                             L / P
                         </label>
@@ -154,17 +154,6 @@
                                 P
                             </option>
                         </select>
-                    </div>
-                    {{-- JENJANG --}}
-                    <div class="col-lg-2">
-                        <label class="form-label fw-semibold">
-                            Jenjang
-                        </label>
-                        <div class="alert alert-primary py-2 px-3 mb-0 rounded-3 text-center">
-                            <strong>
-                                {{ strtoupper($kegiatan->jenjang ?? 'SEMUA') }}
-                            </strong>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -57,7 +57,7 @@
 
                 <div class="row justify-content-center">
                     <div class="col-md-8 col-lg-6 col-xl-5">
-                        <div class="card mt-4">
+                        <div class="card rounded-4 mt-4">
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">

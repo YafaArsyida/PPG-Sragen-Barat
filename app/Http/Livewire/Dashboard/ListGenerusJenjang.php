@@ -39,14 +39,15 @@ class ListGenerusJenjang extends Component
 
     public function getGenerusProperty()
     {
-        $query = Generus::with('ms_kelompok.ms_desa');
+        // Guard clause
+        if (!$this->selectedDesa) {
+            return Generus::query()->whereRaw('1 = 0');
+        }
 
-        // Filter desa
-        if ($this->selectedDesa) {
-            $query->whereHas('ms_kelompok', function ($q) {
+        $query = Generus::with('ms_kelompok.ms_desa')
+            ->whereHas('ms_kelompok', function ($q) {
                 $q->where('ms_desa_id', $this->selectedDesa);
             });
-        }
 
         // Search
         if ($this->search) {
@@ -63,13 +64,13 @@ class ListGenerusJenjang extends Component
             $query->whereBetween('tanggal_lahir', [$startDate, $endDate]);
         }
 
-        return $query->orderBy('nama_generus')->paginate(20);
+        return $query->orderBy('nama_generus');
     }
 
     public function render()
     {
         return view('livewire.dashboard.list-generus-jenjang',[
-            'data' => $this->generus
+            'data' => $this->generus->paginate(25)
         ]);
     }
 }

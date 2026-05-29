@@ -28,12 +28,15 @@ class TotalKegiatan extends Component
 
     public function loadData()
     {
-        $query = KegiatanGenerus::query();
-
-        if ($this->selectedDesa) {
-            $query->where('ms_desa_id', $this->selectedDesa);
+        // Guard clause
+        if (!$this->selectedDesa) {
+            $this->totalKegiatan = 0;
+            return;
         }
 
+        $query = KegiatanGenerus::query()
+            ->where('ms_desa_id', $this->selectedDesa);
+    
         $this->totalKegiatan = $query->count();
     }
     public function render()

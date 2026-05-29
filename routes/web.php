@@ -4,7 +4,9 @@ use App\Http\Controllers\AksesPengguna;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesaKelompok;
 use App\Http\Controllers\GenerasiPenerus;
+use App\Http\Controllers\KBMdanKurikulum;
 use App\Http\Controllers\KegiatanGenerus;
+use App\Http\Controllers\KurikulumKBM;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OperasionalKegiatanGenerus;
 
@@ -75,6 +77,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/temanpengurus/operasional/presensi-kegiatan/{token}',  [OperasionalKegiatanPengurus::class, 'manual'])->name('temanpengurus.operasional.presensi-kegiatan');
 
+
+    
     // =========================
     // ADMINISTRASI (SUPERADMIN, DAERAH, DESA, KELOMPOK)
     // =========================
@@ -90,6 +94,19 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/operasional/kegiatan-generus', [OperasionalKegiatanGenerus::class, 'index'])
             ->name('operasional.kegiatan-generus');
+
+        //Kurikulum KBM
+        Route::get('/kurikulum-kbm/periode-jenjang', [KurikulumKBM::class, 'periodeDanJenjang'])
+            ->name('kurikulum-kbm.periode-jenjang');
+
+        Route::get('/kurikulum-kbm/aspek-materi', [KurikulumKBM::class, 'aspekDanMateri'])
+            ->name('kurikulum-kbm.aspek-materi');
+
+        Route::get('/kurikulum-kbm/laporan-kbm', [KurikulumKBM::class, 'laporanKBM'])
+            ->name('kurikulum-kbm.laporan-kbm');
+
+        Route::get('/kurikulum-kbm/rekap-kbm', [KurikulumKBM::class, 'rekapKBM'])
+            ->name('kurikulum-kbm.rekap-kbm');
     });
 
 

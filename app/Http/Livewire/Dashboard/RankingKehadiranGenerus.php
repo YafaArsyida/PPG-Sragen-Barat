@@ -45,28 +45,34 @@ class RankingKehadiranGenerus extends Component
     {
         [$start, $end] = $this->getRangeTanggal();
 
-        return PresensiKegiatanGenerus::query()
+        $query = PresensiKegiatanGenerus::query()
             ->select(
                 'ms_generus_id',
                 DB::raw('COUNT(*) as total_hadir')
             )
             ->with(['ms_generus.ms_kelompok'])
             ->whereBetween('tanggal_presensi', [$start, $end])
-            ->where('status_hadir', 'hadir')
-            ->whereHas('ms_generus.ms_kelompok', function ($q) {
-                if ($this->selectedDesa) {
-                    $q->where('ms_desa_id', $this->selectedDesa);
-                }
-            })
+            ->where('status_hadir', 'hadir');
+
+        // Guard clause
+        if (!$this->selectedDesa) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        // Filter desa
+        $query->whereHas('ms_generus.ms_kelompok', function ($q) {
+            $q->where('ms_desa_id', $this->selectedDesa);
+        });
+
+        return $query
             ->groupBy('ms_generus_id')
-            ->orderByDesc('total_hadir')
-            ->paginate(20);
+            ->orderByDesc('total_hadir');
     }
 
     public function render()
     {
-        return view('livewire.dashboard.ranking-kehadiran-generus',[
-            'data' => $this->data
+        return view('livewire.dashboard.ranking-kehadiran-generus', [
+            'data' => $this->data->paginate(20)
         ]);
     }
 }

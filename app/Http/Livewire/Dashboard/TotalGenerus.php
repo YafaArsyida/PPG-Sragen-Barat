@@ -28,6 +28,12 @@ class TotalGenerus extends Component
 
     public function loadData()
     {
+        // Guard clause
+        if (!$this->selectedDesa) {
+            $this->totalGenerus = 0;
+            return;
+        }
+
         $query = Generus::query()
             ->whereHas('ms_kelompok', function ($q) {
                 if ($this->selectedDesa) {

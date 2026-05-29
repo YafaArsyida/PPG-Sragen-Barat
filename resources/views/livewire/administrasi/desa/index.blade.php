@@ -28,13 +28,16 @@
             <table class="table align-middle mb-0">
                 <thead class="table-light">
                     <tr class="text-uppercase fw-semibold">
-                        <th width="70" class="text-center">
+                        <th width="50" class="text-center">
+                            No
+                        </th>
+                        <th class="text-center">
                             Hapus
                         </th>
                         <th class="">
                             Informasi Desa
                         </th>
-                        <th width="220" class="text-center">
+                        <th width="150" class="text-center">
                             Aksi
                         </th>
                     </tr>
@@ -43,39 +46,28 @@
                     @forelse($data as $index => $kat)
                     <tr>
                         {{-- NO --}}
-                        {{-- <td class="text-center">
+                        <td class="text-center">
                             <span class="badge bg-light text-dark rounded-pill px-3 py-2">
                                 {{ $index + 1 }}
                             </span>
-                        </td> --}}
-                        {{-- HAPUS --}}
+                        </td>
                         <td class="text-center">
                             {{-- DELETE --}}
                             <a href="#ModalDeleteDesa" data-bs-toggle="modal"
                                 class="btn btn-soft-danger btn-sm rounded-pill" title="Hapus Data Generus"
                                 wire:click.prevent="$emit('DesaDelete', {{ $kat->ms_desa_id }})">
                                 <i class="ri-delete-bin-5-line"></i>
-                                {{-- Hapus --}}
+                                Hapus
                             </a>
                         </td>
                         {{-- INFORMASI --}}
                         <td>
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="avatar-xs flex-shrink-0">
-                                    <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-14">
-                                        <i class="ri-community-line">
-                                        </i>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="fw-semibold mb-1">
-                                        Desa {{ $kat->nama_desa }}
-                                    </div>
-                                    <small>
-                                        {{ $kat->nama_masjid ?? 'Masjid belum tersedia' }}
-                                    </small>
-                                </div>
+                            <div class="fw-semibold mb-1">
+                                Desa {{ $kat->nama_desa }}
                             </div>
+                            <small>
+                                {{ $kat->nama_masjid ?? 'Masjid belum tersedia' }}
+                            </small>
                         </td>
                         {{-- ACTION --}}
                         <td>
@@ -89,7 +81,7 @@
                                 </a>
                                 {{-- EDIT --}}
                                 <a href="#ModalEditDesa" data-bs-toggle="modal"
-                                    class="btn btn-warning btn-sm rounded-pill text-white"
+                                    class="btn btn-primary btn-sm rounded-pill text-white"
                                     wire:click.prevent="$emit('loadDataDesa', {{ $kat->ms_desa_id }})">
                                     <i class="ri-pencil-line me-1">
                                     </i>

@@ -262,7 +262,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-5">
+                        <td colspan="8" class="text-center py-5">
                             <div class="d-flex flex-column align-items-center">
                                 <div class="avatar-md mb-3">
                                     <div class="avatar-title bg-light text-muted rounded-circle fs-2">

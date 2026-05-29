@@ -66,7 +66,7 @@
     </div>
     {{-- TABS --}}
     <div class="card-body">
-        <div class="border rounded-4 overflow-hidden">
+        <div class="overflow-hidden">
             {{-- NAV TAB --}}
             <div class="px-3 pt-3">
                 <ul class="nav nav-pills gap-2 flex-nowrap overflow-auto pb-3" role="tablist">
@@ -94,13 +94,11 @@
                 </ul>
             </div>
             {{-- CONTENT --}}
-            <div class="bg-light p-3 p-lg-4">
+            <div class="bg-white">
                 <div class="tab-content">
                     {{-- SEMUA KELOMPOK --}}
                     <div class="tab-pane fade {{ $activeTab === 'semua' ? 'show active' : '' }}" id="tabAll" role="tabpanel">
-                        <div class="row g-4">
-                            @include('livewire.administrasi.kelompok.data', [ 'listKelompok' => $allKelompok])
-                        </div>
+                        @include('livewire.administrasi.kelompok.data', [ 'listKelompok' => $allKelompok])
                     </div>
                     {{-- PER DESA --}} 
                     @foreach($desa as $kat)
@@ -108,9 +106,7 @@
                         @php 
                             $kelompokDesa = $allKelompok->where( 'ms_desa_id', $kat->ms_desa_id);
                         @endphp
-                        <div class="row g-4">
-                            @include('livewire.administrasi.kelompok.data', [ 'listKelompok' => $kelompokDesa])
-                        </div>
+                        @include('livewire.administrasi.kelompok.data', [ 'listKelompok' => $kelompokDesa])
                     </div>
                     @endforeach
                 </div>

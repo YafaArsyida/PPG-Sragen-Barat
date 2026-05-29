@@ -28,11 +28,14 @@ class TotalKelompok extends Component
 
     public function loadData()
     {
-        $query = Kelompok::query();
-
-        if ($this->selectedDesa) {
-            $query->where('ms_desa_id', $this->selectedDesa);
+        // Guard clause
+        if (!$this->selectedDesa) {
+            $this->totalKelompok = 0;
+            return;
         }
+
+        $query = Kelompok::query()
+            ->where('ms_desa_id', $this->selectedDesa);
 
         $this->totalKelompok = $query->count();
     }
