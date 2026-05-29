@@ -116,37 +116,75 @@
                     </small>
                     @endif {{-- HASIL --}} 
                     @if($penilaian)
-                    <div class="row g-2 mt-3">
-                        {{-- KEHADIRAN --}}
-                        <div class="col-lg-3">
-                            <div class="border rounded-3 p-2 text-center">
-                                <small class="text-muted d-block">
-                                    Kehadiran
-                                </small>
-                                <div class="fw-bold text-primary">
-                                    {{ $penilaian->kehadiran }}%
+                    <div class="mt-4">
+                        {{-- SUMMARY --}}
+                       <div class="row g-3">
+                            {{-- KEHADIRAN --}}
+                            <div class="col-lg-3 col-6">
+                                <div class="border rounded-4 p-3 h-100 bg-primary-subtle border-primary-subtle">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <small class="text-muted fw-semibold">
+                                            Kehadiran
+                                        </small>
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-white text-primary">
+                                                <i class="ri-user-follow-line">
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="fw-bold text-primary mb-0">
+                                        {{ $penilaian->kehadiran }}%
+                                    </h4>
+                                    <small class="text-muted">
+                                        Tingkat kehadiran generus
+                                    </small>
                                 </div>
                             </div>
-                        </div>
-                        {{-- KEBERHASILAN --}}
-                        <div class="col-lg-3">
-                            <div class="border rounded-3 p-2 text-center">
-                                <small class="text-muted d-block">
-                                    Keberhasilan
-                                </small>
-                                <div class="fw-bold text-success">
-                                    {{ $penilaian->keberhasilan }}%
+                            {{-- KEBERHASILAN --}}
+                            <div class="col-lg-3 col-6">
+                                <div class="border rounded-4 p-3 h-100 bg-success-subtle border-success-subtle">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <small class="text-muted fw-semibold">
+                                            Keberhasilan
+                                        </small>
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-white text-success">
+                                                <i class="ri-award-line">
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="fw-bold text-success mb-0">
+                                        {{ $penilaian->keberhasilan }}%
+                                    </h4>
+                                    <small class="text-muted">
+                                        Capaian pemahaman materi
+                                    </small>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="border rounded-3 p-2 text-center">
-                                <small class="text-muted d-block">
-                                    Catatan
-                                </small>
-                                <p>
-                                    {{ $penilaian->catatan }}
-                                </p>
+                            {{-- CATATAN --}}
+                            <div class="col-lg-4">
+                                <div class="border rounded-4 p-3 h-100">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="text-warning">
+                                            <i class="ri-sticky-note-line">
+                                            </i>
+                                        </div>
+                                        <small class="fw-semibold text-muted">
+                                            Catatan Pembinaan
+                                        </small>
+                                    </div>
+                                    @if($penilaian->catatan)
+                                    <p class="mb-0 text-muted lh-base fs-13">
+                                        {{ $penilaian->catatan }}
+                                    </p>
+                                    @else
+                                    <small class="text-muted fst-italic">
+                                        Tidak ada catatan tambahan
+                                    </small>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,11 +192,11 @@
                 </div>
             </div>
             {{-- ACTION --}}
-            <button type="button" class="btn btn-primary rounded-pill px-3"
+            <button type="button" class="btn btn-sm btn-primary rounded-pill px-3"
                 wire:click="edit({{ $item->ms_materi_kurikulum_id }})">
-                <i class="ri-edit-line me-1">
+                <i class="ri-flashlight-line me-1">
                 </i>
-                {{ $penilaian ? 'Edit Penilaian' : 'Input Penilaian' }}
+                {{ $penilaian ? 'Edit' : 'Input Penilaian' }}
             </button>
         </div>
     </div>
