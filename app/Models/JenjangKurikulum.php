@@ -18,4 +18,13 @@ class JenjangKurikulum extends Model
         'nama_jenjang',
         'deskripsi',
     ];
+
+    public function ms_aspek_kurikulum()
+    {
+        return $this->hasMany(
+            AspekKurikulum::class,
+            'ms_jenjang_kurikulum_id',
+            'ms_jenjang_kurikulum_id'
+        );
+    }
 }

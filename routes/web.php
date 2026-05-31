@@ -105,8 +105,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kurikulum-kbm/laporan-kbm', [KurikulumKBM::class, 'laporanKBM'])
             ->name('kurikulum-kbm.laporan-kbm');
 
-        Route::get('/kurikulum-kbm/rekap-kbm', [KurikulumKBM::class, 'rekapKBM'])
-            ->name('kurikulum-kbm.rekap-kbm');
+        Route::get('/kurikulum-kbm/monitoring-kbm', [KurikulumKBM::class, 'monitoringKBM'])
+            ->name('kurikulum-kbm.monitoring-kbm');
     });
 
 

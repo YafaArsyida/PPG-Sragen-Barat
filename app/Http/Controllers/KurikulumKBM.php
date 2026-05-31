@@ -19,8 +19,8 @@ class KurikulumKBM extends Controller
     {
         return view('KurikulumKBM.laporan-kbm.v_index');
     }
-    public function rekapKBM()
+    public function monitoringKBM()
     {
-        return view('KurikulumKBM.rekap-kbm.v_index');
+        return view('KurikulumKBM.monitoring-kbm.v_index');
     }
 }

@@ -46,6 +46,7 @@
 
             <div id="two-column-menu">
             </div>
+            @php($role = auth()->user()->peran)
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
                     <a href="{{ route('dashboard.index') }}"
@@ -78,7 +79,17 @@
                         <i class="mdi mdi-calendar-check-outline"></i>
                         <span>Kegiatan Generus</span>
                     </a>
-                </li>         
+                </li>     
+                @if(in_array($role, ['SUPERADMIN','DESA']))
+                <li class="menu-title"><span data-key="t-menu">Operasional</span></li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-generus') ? 'active' : '' }}"
+                        href="{{ route('operasional.kegiatan-generus') }}">
+                        <i class="mdi mdi-calendar-check-outline"></i>
+                        <span>Operasional Kegiatan</span>
+                    </a>
+                </li>
+                @endif    
                 
                 <li class="menu-title"><span data-key="t-menu">Kurikulum KBM</span></li>
                 <li class="nav-item">
@@ -103,25 +114,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.rekap-kbm') ? 'active' : '' }}"
-                        href="{{ route('kurikulum-kbm.rekap-kbm') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('kurikulum-kbm.monitoring-kbm') ? 'active' : '' }}"
+                        href="{{ route('kurikulum-kbm.monitoring-kbm') }}">
                         <i class="mdi mdi-calendar-check-outline"></i>
-                        <span>Rekap Kurikulum</span>
+                        <span>Monitoring Kurikulum</span>
                     </a>
                 </li>
-                @php($role = auth()->user()->peran)
-                
-                {{-- DESA --}}
-                @if(in_array($role, ['SUPERADMIN','DESA']))
-                <li class="menu-title"><span data-key="t-menu">Operasional</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-generus') ? 'active' : '' }}"
-                        href="{{ route('operasional.kegiatan-generus') }}">
-                        <i class="mdi mdi-calendar-check-outline"></i>
-                        <span>Operasional Kegiatan</span>
-                    </a>
-                </li>
-                @endif
                 <li class="menu-title"><span data-key="t-menu">MODUL</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('temanpengurus.dashboard.index') ? 'active' : '' }}"

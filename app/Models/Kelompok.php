@@ -39,6 +39,6 @@ class Kelompok extends Model
 
     public function ms_kegiatan()
     {
-        return $this->hasMany(Kegiatan::class, 'ms_kelompok_id', 'ms_kelompok_id');
+        return $this->hasMany(KegiatanGenerus::class, 'ms_kelompok_id', 'ms_kelompok_id');
     }
 }
