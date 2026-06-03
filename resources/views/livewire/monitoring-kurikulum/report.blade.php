@@ -1,6 +1,6 @@
 <div>
     {{-- MONITORING KEBERHASILAN --}}
-    <div class="">
+    <div class="mb-3">
         <div class="mb-3">
             <h6 class="fw-semibold mb-1">
                 Monitoring Keberhasilan
@@ -65,7 +65,7 @@
         </div>
     </div>
     {{-- MONITORING KEHADIRAN --}}
-    <div class="mb-2">
+    <div class="">
         <div class="mb-3">
             <h6 class="fw-semibold mb-1">
                 Monitoring Kehadiran

@@ -374,4 +374,25 @@
             </div>
         </div>
     </div>
+    <script>
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    if (window.alertify) {
+                        alertify.success('URL berhasil dicopy!');
+                    } else {
+                        alert('URL berhasil dicopy!');
+                    }
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin:', err);
+
+                    if (window.alertify) {
+                        alertify.error('Gagal menyalin URL');
+                    } else {
+                        alert('Gagal menyalin URL');
+                    }
+                });
+        }
+    </script>
 </div>

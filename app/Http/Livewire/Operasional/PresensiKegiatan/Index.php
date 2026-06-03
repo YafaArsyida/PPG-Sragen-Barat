@@ -98,6 +98,7 @@ class Index extends Component
     public function getListGenerusProperty()
     {
         return Generus::with(['ms_kelompok.ms_desa'])
+            ->where('status_generus', 'sambung')
 
             ->when(
                 $this->searchGenerus,
@@ -147,21 +148,21 @@ class Index extends Component
             )
 
             // jenjang
-            ->when($this->kegiatan->jenjang, function ($q) {
+            // ->when($this->kegiatan->jenjang, function ($q) {
 
-                $jenjang = $this->kegiatan->jenjang;
+            //     $jenjang = $this->kegiatan->jenjang;
 
-                if (!isset(Generus::jenjangUsiaMap()[$jenjang])) {
-                    return;
-                }
+            //     if (!isset(Generus::jenjangUsiaMap()[$jenjang])) {
+            //         return;
+            //     }
 
-                [$min, $max] = Generus::jenjangUsiaMap()[$jenjang];
+            //     [$min, $max] = Generus::jenjangUsiaMap()[$jenjang];
 
-                $q->whereRaw(
-                    "TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN ? AND ?",
-                    [$min, $max]
-                );
-            })
+            //     $q->whereRaw(
+            //         "TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN ? AND ?",
+            //         [$min, $max]
+            //     );
+            // })
 
             ->orderBy('nama_generus')
 

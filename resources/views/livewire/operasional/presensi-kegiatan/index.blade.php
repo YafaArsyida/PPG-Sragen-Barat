@@ -184,11 +184,30 @@
                                 <td class="fw-semibold">
                                     {{ $this->listGenerus->firstItem() + $i }}
                                 </td>
-                                <td class="fw-semibold">
-                                    {{ $g->nama_generus }}
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="avatar-xs flex-shrink-0">
+                                            <div class="avatar-title 
+                                                {{ $g->jenis_kelamin == 'perempuan'
+                                                ? 'bg-danger-subtle text-danger'
+                                                : 'bg-primary-subtle text-primary' 
+                                                }} 
+                                                rounded-circle fw-semibold">
+                                                {{ strtoupper(substr($g->nama_generus, 0, 1)) }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">
+                                                {{ $g->nama_generus }}
+                                            </div>
+                                            {{-- <small class="text-muted">
+                                                {{ strtoupper($g->jenis_kelamin) }}
+                                            </small> --}}
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    Kelompok {{ $g->ms_kelompok->nama_kelompok ?? '-' }}
+                                    {{ $g->ms_kelompok->nama_kelompok ?? '-' }}
                                 </td>
                                 {{-- ACTION --}}
                                 <td class="text-center text-nowrap" wire:key="action-{{ $g->ms_generus_id }}-{{ $status }}">
