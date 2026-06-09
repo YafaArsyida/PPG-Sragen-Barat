@@ -196,6 +196,8 @@ class Index extends Component
 
     public function hadir($generusId)
     {
+        $lokasi = $this->kegiatan->lokasi_final;
+
         $presensi = PresensiKegiatanGenerus::firstOrCreate(
             [
                 'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
@@ -206,6 +208,11 @@ class Index extends Component
                 'waktu_hadir' => now(),
                 'status_hadir' => 'hadir',
                 'verifikasi' => 'manual',
+
+                // snapshot lokasi
+                'tempat' => $lokasi['tempat'],
+                'alamat' => $lokasi['alamat'],
+                'peta' => $lokasi['peta'],
             ]
         );
 

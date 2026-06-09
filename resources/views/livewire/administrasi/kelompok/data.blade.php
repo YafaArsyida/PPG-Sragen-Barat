@@ -39,14 +39,15 @@
                                     Detail
                                 </a>
                             </li>
+                            @if(auth()->user()->canManageKelompok($item->ms_kelompok_id))
                             <li>
                                 <a class="dropdown-item" href="#ModalEditKelompok" data-bs-toggle="modal"
                                     wire:click.prevent="$emit('KelompokEdit', {{ $item->ms_kelompok_id }})">
-                                    <i class="ri-pencil-line me-2 text-warning">
-                                    </i>
+                                    <i class="ri-pencil-line me-2 text-warning"></i>
                                     Edit
                                 </a>
                             </li>
+                            @endif
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

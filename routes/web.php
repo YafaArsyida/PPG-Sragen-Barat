@@ -9,7 +9,7 @@ use App\Http\Controllers\KegiatanGenerus;
 use App\Http\Controllers\KurikulumKBM;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OperasionalKegiatanGenerus;
-
+use App\Http\Controllers\SistemController;
 // TEMANPENGURUS
 use App\Http\Controllers\TemanPengurus\Dashboard;
 use App\Http\Controllers\TemanPengurus\DesaKelompok as TemanPengurusDesaKelompok;
@@ -63,6 +63,10 @@ Route::get('/operasional/presensi-kegiatan/{token}',  [OperasionalKegiatanGeneru
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
+    // NOTULA
+    Route::get('/notula', [DashboardController::class, 'notula'])->name('notula');
+
+
     /*
     |--------------------------------------------------------------------------
     | TEMAN PENGURUS
@@ -78,7 +82,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/temanpengurus/operasional/presensi-kegiatan/{token}',  [OperasionalKegiatanPengurus::class, 'manual'])->name('temanpengurus.operasional.presensi-kegiatan');
 
 
-    
     // =========================
     // ADMINISTRASI
     // =========================
@@ -133,5 +136,7 @@ Route::middleware(['auth'])->group(function () {
     // });
 
     // sistem
-    Route::get('/sistem/akses-pengguna',  [AksesPengguna::class, 'index'])->name('sistem.akses-pengguna');
+    Route::get('/sistem/profil-pengguna',  [SistemController::class, 'profil_pengguna'])->name('sistem.profil-pengguna');
+    Route::get('/sistem/akses-pengguna',  [SistemController::class, 'akses_pengguna'])->name('sistem.akses-pengguna');
+    Route::get('/sistem/template-pesan',  [SistemController::class, 'template_pesan'])->name('sistem.template-pesan');
 });

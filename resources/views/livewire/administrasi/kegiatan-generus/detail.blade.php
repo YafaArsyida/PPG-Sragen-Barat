@@ -242,7 +242,7 @@
                             </div>
                             <div class="row g-3">
                                 {{-- Pengumuman --}}
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="border rounded-4 p-3 h-100 bg-light-subtle">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="avatar-sm">
@@ -256,7 +256,7 @@
                                                     Pengumuman
                                                 </p>
                                                 <a style="cursor: pointer"
-                                                    wire:click.prevent="kegiatanPengumuman({{ $kegiatan->ms_kegiatan_id }})"
+                                                    wire:click.prevent="kegiatanPengumuman({{ $kegiatan->ms_kegiatan_generus_id }})"
                                                     class="fw-semibold text-success">
                                                     Cetak Pengumuman
                                                 </a>
@@ -265,7 +265,7 @@
                                     </div>
                                 </div>
                                 {{-- Laporan --}}
-                                <div class="col-lg-3 col-sm-6">
+                                {{-- <div class="col-lg-3 col-sm-6">
                                     <div class="border rounded-4 p-3 h-100 bg-light-subtle">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="avatar-sm">
@@ -278,16 +278,16 @@
                                                 <p class="text-muted fs-13 mb-1">
                                                     Laporan
                                                 </p>
-                                                <a wire:click.prevent="$emit('KegiatanPengumuman', {{ $kegiatan->ms_kegiatan_id }})"
+                                                <a wire:click.prevent="$emit('KegiatanPengumuman', {{ $kegiatan->ms_kegiatan_generus_id }})"
                                                     class="fw-semibold text-danger">
                                                     Cetak Laporan
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 {{-- Presensi Kartu --}}
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="border rounded-4 p-3 h-100 bg-light-subtle">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="avatar-sm">
@@ -317,7 +317,7 @@
                                     </div>
                                 </div>
                                 {{-- Presensi Manual --}}
-                                <div class="col-lg-3 col-sm-6">
+                                <div class="col-lg-4 col-sm-6">
                                     <div class="border rounded-4 p-3 h-100 bg-light-subtle">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="avatar-sm">

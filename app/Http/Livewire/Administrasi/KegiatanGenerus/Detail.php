@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Administrasi\KegiatanGenerus;
 
 use App\Models\Kegiatan;
 use App\Models\KegiatanGenerus;
+use App\Models\TemplatePesanGenerus;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -57,8 +58,10 @@ class Detail extends Component
             'message' => 'Pengumuman sedang disiapkan...'
         ]);
 
-        $kegiatan = KegiatanGenerus::with(['ms_desa', 'ms_kelompok.ms_desa'])
-            ->find($kegiatanId);
+        $kegiatan = KegiatanGenerus::with([
+            'ms_desa',
+            'ms_kelompok.ms_desa'
+        ])->find($kegiatanId);
 
         if (!$kegiatan) {
             $this->dispatchBrowserEvent('alertify-error', [
@@ -67,56 +70,108 @@ class Detail extends Component
             return;
         }
 
-        // ===== TARGET =====
+        // =========================
+        // TARGET PENERIMA
+        // =========================
         if ($kegiatan->scope === 'daerah') {
-            $target = "Semua Remaja/i se-\nDaerah Solo Selatan";
+
+            $target = "Semua Remaja/i se-Daerah";
         } elseif ($kegiatan->scope === 'desa') {
-            $target = "Semua Remaja/i se-\nDesa " . ($kegiatan->ms_desa->nama_desa ?? '-');
+            $target = "Semua Remaja/i se-Desa "
+                . ($kegiatan->ms_desa->nama_desa ?? '-');
         } elseif ($kegiatan->scope === 'kelompok') {
-            $target = "Semua Remaja/i\nKelompok " . ($kegiatan->ms_kelompok->nama_kelompok ?? '-') .
-                "\n(Desa " . ($kegiatan->ms_kelompok->ms_desa->nama_desa ?? '-') . ")";
+
+            $target = "Semua Remaja/i Kelompok "
+                . ($kegiatan->ms_kelompok->nama_kelompok ?? '-')
+                . "\n(Desa "
+                . ($kegiatan->ms_kelompok->ms_desa->nama_desa ?? '-')
+                . ")";
         } else {
             $target = "Seluruh Remaja/i";
         }
 
+        // =========================
+        // TEMPLATE DESA
+        // =========================
+        $template = null;
+
+        if ($kegiatan->scope === 'desa' && !empty($kegiatan->ms_desa_id)) {
+            $template = TemplatePesanGenerus::where('ms_desa_id', $kegiatan->ms_desa_id)->first();
+        }
+
+        $judul = $template->judul
+            ?? 'UNDANGAN KEGIATAN GENERUS';
+
+        $salamPembuka = $template->salam_pembuka
+            ?? "Assalamu'alaikum Wr. Wb.";
+
+        $kalimatPembuka = $template->kalimat_pembuka
+            ?? "Mengharap kehadiran Saudara/Saudari pada kegiatan berikut:";
+
+        $kalimatPenutup = $template->kalimat_penutup
+            ?? "Kami berharap seluruh peserta dapat hadir tepat waktu dan berpartisipasi dalam infaq fisabilillah. Atas perhatian dan kehadirannya kami ucapkan terima kasih. Jazakumullahu Khairan.";
+
+        $salamPenutup = $template->salam_penutup
+            ?? "Wassalamu'alaikum Wr. Wb.";
+
+        // =========================
+        // FORMAT TANGGAL
+        // =========================
         $tanggal = \App\Http\Controllers\HelperController::formatTanggalIndonesia(
             $kegiatan->tanggal,
             'd F Y'
         );
 
-        // ===== BUILD PESAN =====
-        $pesan  = "*🔥UNDANGAN🔥*\n\n";
-        $pesan .= "Kepada \n- {$target}\n\n";
-        $pesan .= "Assalamualaikum wr wb.\n";
-        $pesan .= "Mengharap kehadiran Sdr/Sdri pada :\n\n";
+        // =========================
+        // PESAN
+        // =========================
+        $pesan = '';
 
-        $pesan .= "📆 _{$tanggal}_\n";
-        $pesan .= "🕌 *" . ($kegiatan->lokasi_final['tempat'] ?? '-') . "*\n";
-        $pesan .= "⏰ *" . ($kegiatan->waktu ?? 'Waktu belum ditentukan') . "*\n";
-        $pesan .= "🗒 *" . $kegiatan->nama_kegiatan . "*\n";
+        $pesan .= "*{$judul}*\n\n";
 
-        if (!empty($kegiatan->deskripsi)) {
-            $pesan .= "📝 " . $kegiatan->deskripsi . "\n";
+        $pesan .= "Kepada:\n";
+        $pesan .= "{$target}\n\n";
+
+        $pesan .= $salamPembuka . "\n\n";
+
+        $pesan .= $kalimatPembuka . "\n\n";
+
+        $pesan .= "*{$kegiatan->nama_kegiatan}*\n";
+        $pesan .= "Hari, Tanggal : " . $tanggal . "\n";
+        $pesan .= "Waktu :" . ($kegiatan->waktu ?: 'Belum ditentukan') . "\n\n";
+
+        $pesan .= "**".($kegiatan->lokasi_final['tempat'] ?? '-') ."*\n";
+
+        if (!empty($kegiatan->lokasi_final['alamat'])) {
+            $pesan .= $kegiatan->lokasi_final['alamat'] . "\n";
         }
 
-        $pesan .= "🖋️ Membawa *Al-Qur'an* dan *K. Adillah*\n";
-
         if (!empty($kegiatan->lokasi_final['peta'])) {
+            $pesan .= "\n";
             $pesan .= $kegiatan->lokasi_final['peta'] . "\n";
         }
 
-        $pesan .= "\nAmal sholih para remaja/i dapat datang tepat waktu dan jangan lupa membawa uang untuk infaq fisabilillah.\n\n";
-        $pesan .= "Atas perhatiannya dan kesakdermoannya kami ucapkan.\n\n";
-        $pesan .= "Alhamdulillahi Jaza Kumullohu Khoiro.\n\n";
-        $pesan .= "Wassalamualaikum Wr. Wb";
+        if (!empty($kegiatan->deskripsi)) {
+            $pesan .= "\n";
+            $pesan .= trim($kegiatan->deskripsi) . "\n";
+        }
 
-        // ===== NOMOR DARI USER LOGIN =====
+        $pesan .= "\n";
+        $pesan .= $kalimatPenutup;
+
+        $pesan .= $salamPenutup;
+
+        // =========================
+        // USER LOGIN
+        // =========================
         $user = Auth::user();
 
         if (!$user || empty($user->telepon)) {
+
             $this->dispatchBrowserEvent('alertify-error', [
                 'message' => 'Nomor WhatsApp akun Anda belum diatur'
             ]);
+
             return;
         }
 
@@ -127,9 +182,11 @@ class Detail extends Component
         }
 
         if (!str_starts_with($telepon, '62')) {
+
             $this->dispatchBrowserEvent('alertify-error', [
                 'message' => 'Format nomor WhatsApp akun tidak valid'
             ]);
+
             return;
         }
 

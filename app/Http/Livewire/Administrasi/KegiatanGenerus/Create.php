@@ -240,6 +240,7 @@ class Create extends Component
         try {
             KegiatanGenerus::create([
                 'scope' => $this->scope,
+                'ms_daerah_id' => '1',
                 'ms_kelompok_id' => $this->ms_kelompok_id,
                 'ms_desa_id' => $this->ms_desa_id,
                 'nama_kegiatan' => $this->nama_kegiatan,

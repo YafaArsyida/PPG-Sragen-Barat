@@ -18,8 +18,9 @@ class KegiatanGenerus extends Model
     protected $fillable = [
         'scope',
         'token',
-        'ms_kelompok_id', //di isi ketika khusus acara kelmpok
+        'ms_daerah_id',
         'ms_desa_id', //di isi ketika khusus acara desa
+        'ms_kelompok_id', //di isi ketika khusus acara kelmpok
         'nama_kegiatan',
         'jenjang',
         'tempat',
@@ -77,9 +78,10 @@ class KegiatanGenerus extends Model
             }
         });
     }
-    public function ms_kelompok()
+
+    public function ms_daerah()
     {
-        return $this->belongsTo(Kelompok::class, 'ms_kelompok_id', 'ms_kelompok_id');
+        return $this->belongsTo(Daerah::class, 'ms_daerah_id', 'ms_daerah_id');
     }
 
     /** 🔗 Relasi ke Desa */
@@ -87,6 +89,12 @@ class KegiatanGenerus extends Model
     {
         return $this->belongsTo(Desa::class, 'ms_desa_id', 'ms_desa_id');
     }
+
+    public function ms_kelompok()
+    {
+        return $this->belongsTo(Kelompok::class, 'ms_kelompok_id', 'ms_kelompok_id');
+    }
+
 
     // Lokasi final
     public function getLokasiFinalAttribute(): array
@@ -118,12 +126,11 @@ class KegiatanGenerus extends Model
             ];
         }
 
-        // 4️⃣ Scope daerah (hardcode)
-        if ($this->scope === 'daerah') {
+        if ($this->scope === 'daerah' && $this->ms_daerah) {
             return [
-                'tempat' => 'Masjid Roudhotul Jannah Solo Selatan',
-                'alamat' => 'Jl. Porong, Pucangsawit, Kec. Jebres, Kota Surakarta, Jawa Tengah 57125',
-                'peta' => 'https://maps.app.goo.gl/UMT2cpkYGkmrKYVn7',
+                'tempat' => $this->ms_daerah->nama_masjid ?? '-',
+                'alamat' => $this->ms_daerah->alamat ?? '-',
+                'peta' => $this->ms_daerah->peta,
             ];
         }
 

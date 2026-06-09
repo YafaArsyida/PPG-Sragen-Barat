@@ -135,10 +135,32 @@
                         <span>TemanPengurus</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('notula') ? 'active' : '' }}"
+                        href="{{ route('notula') }}" target="_blank">
+                        <i class="mdi mdi-shield-account-outline"></i>
+                        <span>Notula</span>
+                    </a>
+                </li>
                 @endcan
-                @can('is-superadmin')
                 <li class="menu-title"><span data-key="t-menu">sistem</span></li>
+                <!-- Profil Petugas -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('sistem.profil-pengguna') ? 'active' : '' }}"
+                        href="{{ route('sistem.profil-pengguna') }}">
+                        <i class="mdi mdi-account-circle"></i>
+                        <span>Profil Pengguna</span>
+                    </a>
+                </li>
                 <!-- Akses Petugas -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('sistem.template-pesan') ? 'active' : '' }}"
+                        href="{{ route('sistem.template-pesan') }}">
+                        <i class="mdi mdi-whatsapp"></i>
+                        <span>Pesan Pengumuman</span>
+                    </a>
+                </li>
+                @can('is-superadmin')
                 <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('sistem.akses-pengguna') ? 'active' : '' }}"
                         href="{{ route('sistem.akses-pengguna') }}">

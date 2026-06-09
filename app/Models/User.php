@@ -102,4 +102,36 @@ class User extends Authenticatable
         return $this->ms_akses_pengguna()->where('scope_type', 'daerah');
     }
 
+    public function canManageKelompok($kelompokId): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        if ($this->isAdminDaerah()) {
+            return true;
+        }
+
+        $kelompok = Kelompok::find($kelompokId);
+
+        if (!$kelompok) {
+            return false;
+        }
+
+        // akses langsung kelompok
+        if (
+            $this->ms_akses_pengguna()
+            ->where('scope_type', 'kelompok')
+            ->where('scope_id', $kelompokId)
+            ->exists()
+        ) {
+            return true;
+        }
+
+        // akses desa
+        return $this->ms_akses_pengguna()
+            ->where('scope_type', 'desa')
+            ->where('scope_id', $kelompok->ms_desa_id)
+            ->exists();
+    }
 }

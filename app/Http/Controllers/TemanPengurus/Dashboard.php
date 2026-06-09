@@ -11,4 +11,5 @@ class Dashboard extends Controller
     {
         return view('TEMANPENGURUS.DASHBOARD.v_index');
     }
+
 }

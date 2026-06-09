@@ -111,7 +111,7 @@ class Import extends Component
                 // optional default
                 'nomor_kartu' => null,
                 'alamat'      => null,
-                'deskripsi'   => 'Import',
+                'deskripsi'   => '',
             ]);
         }
 

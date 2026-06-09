@@ -19,6 +19,9 @@ class PresensiKegiatanGenerus extends Model
         'tanggal_presensi',
         'waktu_hadir',
         'status_hadir',
+        'tempat',
+        'alamat',
+        'peta',
         'verifikasi',  //kartu, manual
         'deskripsi',
     ];

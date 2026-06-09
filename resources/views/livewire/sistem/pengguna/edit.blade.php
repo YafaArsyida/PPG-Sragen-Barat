@@ -184,14 +184,8 @@
                                                     <option value="SUPERADMIN">
                                                         SUPERADMIN
                                                     </option>
-                                                    <option value="DAERAH">
-                                                        Admin Daerah
-                                                    </option>
-                                                    <option value="DESA">
-                                                        Admin Desa
-                                                    </option>
-                                                    <option value="KELOMPOK">
-                                                        Admin Kelompok
+                                                    <option value="ADMIN">
+                                                        Admin
                                                     </option>
                                                 </select>
                                                 @error('peran')

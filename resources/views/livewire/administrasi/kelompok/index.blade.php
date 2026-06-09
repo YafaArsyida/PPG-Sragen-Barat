@@ -80,7 +80,8 @@
                             Semua Kelompok
                         </button>
                     </li>
-                    {{-- DESA --}} @foreach($desa as $item)
+                    {{-- DESA --}} 
+                    @foreach($desa as $item)
                     <li class="nav-item flex-shrink-0">
                         <button type="button"
                             class="nav-link rounded-pill px-4 py-2 fw-medium {{ $activeTab === 'desa-'.$item->ms_desa_id ? 'active' : '' }}"
