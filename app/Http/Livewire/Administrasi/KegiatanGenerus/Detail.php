@@ -140,7 +140,7 @@ class Detail extends Component
         $pesan .= "Hari, Tanggal : " . $tanggal . "\n";
         $pesan .= "Waktu :" . ($kegiatan->waktu ?: 'Belum ditentukan') . "\n\n";
 
-        $pesan .= "**".($kegiatan->lokasi_final['tempat'] ?? '-') ."*\n";
+        $pesan .= "*".($kegiatan->lokasi_final['tempat'] ?? '-') ."*\n";
 
         if (!empty($kegiatan->lokasi_final['alamat'])) {
             $pesan .= $kegiatan->lokasi_final['alamat'] . "\n";

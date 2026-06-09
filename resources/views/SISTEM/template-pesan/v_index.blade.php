@@ -16,10 +16,10 @@
         </div>
         <!-- end page title -->
         <div class="row">
-            <div class="col-4">
+            <div class="col-xxl-4">
                 @livewire('sistem.template-pesan.index')
             </div>
-            <div class="col-8">
+            <div class="col-xxl-8">
                 @livewire('sistem.template-pesan.create')
             </div>
         </div>        
