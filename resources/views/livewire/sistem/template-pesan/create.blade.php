@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     {{-- HEADER --}}
     <div class="card-header border-0 pb-0">
         <div class="d-flex align-items-center gap-3">

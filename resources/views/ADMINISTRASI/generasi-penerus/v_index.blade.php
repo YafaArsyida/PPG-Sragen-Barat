@@ -18,6 +18,7 @@
         <div class="row">
             <div class="col-xxl-12">
                 @livewire('administrasi.generus.index')
+                @livewire('administrasi.generus.import-kartu')
                 @livewire('administrasi.generus.detail')
                 @livewire('administrasi.generus.create')
                 @livewire('administrasi.generus.import')

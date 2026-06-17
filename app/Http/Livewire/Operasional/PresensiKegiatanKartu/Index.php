@@ -4,8 +4,9 @@ namespace App\Http\Livewire\Operasional\PresensiKegiatanKartu;
 
 use App\Http\Controllers\HelperController;
 use App\Models\Generus;
-use App\Models\Kegiatan;
+use App\Models\KegiatanGenerus;
 use App\Models\PresensiKegiatan;
+use App\Models\PresensiKegiatanGenerus;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -21,7 +22,7 @@ class Index extends Component
     {
         $this->token = $token;
 
-        $this->kegiatan = Kegiatan::with([
+        $this->kegiatan = KegiatanGenerus::with([
             'ms_desa',
             'ms_kelompok'
         ])
@@ -38,10 +39,10 @@ class Index extends Component
 
     public function loadRiwayatAbsensi()
     {
-        $this->riwayatAbsensi = PresensiKegiatan::with([
+        $this->riwayatAbsensi = PresensiKegiatanGenerus::with([
             'ms_generus'
         ])
-            ->where('ms_kegiatan_id', $this->kegiatan->ms_kegiatan_id)
+            ->where('ms_kegiatan_generus_id', $this->kegiatan->ms_kegiatan_generus_id)
             ->orderBy('waktu_hadir', 'desc')
             ->limit(20)
             ->get();
@@ -82,17 +83,25 @@ class Index extends Component
             return;
         }
 
+        $lokasi = $this->kegiatan->lokasi_final;
+
         // 2️⃣ Catat presensi sekali menggunakan firstOrCreate
-        $presensi = PresensiKegiatan::firstOrCreate(
+        $presensi = PresensiKegiatanGenerus::firstOrCreate(
             [
-                'ms_kegiatan_id' => $this->kegiatan->ms_kegiatan_id,
+                'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
                 'ms_generus_id'  => $generus->ms_generus_id,
+                'tanggal_presensi' => today(),
             ],
             [
                 'waktu_hadir'  => $now,
                 'status_hadir' => 'hadir',
                 'verifikasi'   => 'kartu',
-                'deskripsi'    => 'Presensi masuk via kartu',
+                'deskripsi'    => 'Presensi via kartu' . $kodeKartu,
+
+                // snapshot lokasi
+                'tempat' => $lokasi['tempat'],
+                'alamat' => $lokasi['alamat'],
+                'peta' => $lokasi['peta'],
             ]
         );
 

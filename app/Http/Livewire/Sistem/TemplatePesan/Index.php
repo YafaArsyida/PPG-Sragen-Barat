@@ -21,7 +21,7 @@ class Index extends Component
 
     protected $listeners = [
         'parameterUpdated' => 'setParameterDesa',
-        'refreshPengguna' => 'loadTemplate'
+        'refreshPesan' => 'loadTemplate'
     ];
 
     public function mount()
@@ -35,7 +35,7 @@ class Index extends Component
         $this->loadTemplate();
     }
 
-    protected function loadTemplate()
+    public function loadTemplate()
     {
         if (!$this->ms_desa_id) {
             $this->resetForm();

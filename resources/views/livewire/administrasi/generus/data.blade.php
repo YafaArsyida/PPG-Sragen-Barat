@@ -6,6 +6,7 @@
                     <th width="60" class="text-center">No</th>
                     <th class="text-center">Hapus</th>
                     <th>Generus</th>
+                    <th>Kartu</th>
                     <th>Status</th>
                     <th>Kontak</th>
                     <th>Kelompok</th>
@@ -26,7 +27,7 @@
                         <a href="#ModalDeleteGenerus" data-bs-toggle="modal"
                             class="btn btn-soft-danger btn-sm rounded-pill px-3" title="Hapus Data Generus"
                             wire:click.prevent="$emit('GenerusDelete', {{ $row->ms_generus_id }})">
-    
+
                             <i class="ri-delete-bin-5-line me-1"></i>
                             Hapus
                         </a>
@@ -53,6 +54,9 @@
                                 </small>
                             </div>
                         </div>
+                    </td>
+                    <td>
+                        {{ $row->nomor_kartu }}
                     </td>
                     <td>
                         {{ $row->status_generus }}

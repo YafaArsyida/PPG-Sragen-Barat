@@ -37,10 +37,10 @@
                     $kelompokId = str_replace('kelompok-', '', $activeTab);
                     @endphp
                 
-                    <button type="button" class="btn btn-primary border rounded-pill px-4" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-soft-primary border rounded-pill px-4" data-bs-toggle="modal"
                         data-bs-target="#ModalImportKartu" wire:click.prevent="$emit('showImportKartu', {{ $kelompokId }})">
                     
-                        <i class="ri-database-2-line me-1 text-white"></i>
+                        <i class="ri-bank-card-line me-1"></i>
                         Import Kartu
                     </button>
                 @endif
