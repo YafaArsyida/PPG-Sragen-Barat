@@ -16,6 +16,8 @@ class AttendanceMatrix extends Component
     public $ms_kelompok_id;
 
     public $kegiatan;
+    public $kegiatanId;
+    public $kelompokId;
 
     public $nama_kelompok = '-';
 
@@ -30,8 +32,18 @@ class AttendanceMatrix extends Component
         'setParameter' => 'setParameter'
     ];
 
+    public function mount($kegiatanId = null, $kelompokId = null)
+    {
+        if ($kegiatanId && $kelompokId) {
+            $this->setParameter($kegiatanId, $kelompokId);
+        }
+    }
+
     public function setParameter($kegiatanId, $kelompokId)
     {
+        $this->kegiatanId = $kegiatanId;
+        $this->kelompokId = $kelompokId;
+
         $this->ms_kegiatan_id = $kegiatanId;
         $this->ms_kelompok_id = $kelompokId;
 

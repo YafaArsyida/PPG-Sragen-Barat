@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanGenerus;
+namespace App\Http\Livewire\Operasional\KegiatanRutin;
 
 use App\Models\KegiatanGenerus;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,9 @@ class Status extends Component
     {
         $kegiatan = KegiatanGenerus::find($kegiatanId);
 
-        if (!$kegiatan) return;
+        if (!$kegiatan) {
+            return;
+        }
 
         $this->kegiatanId = $kegiatan->ms_kegiatan_generus_id;
         $this->status = $kegiatan->status;
@@ -29,12 +31,13 @@ class Status extends Component
 
     public function updateStatus()
     {
-        if (!$this->kegiatanId) return;
+        if (!$this->kegiatanId) {
+            return;
+        }
 
         DB::beginTransaction();
 
         try {
-
             $kegiatan = KegiatanGenerus::where(
                 'ms_kegiatan_generus_id',
                 $this->kegiatanId
@@ -43,13 +46,10 @@ class Status extends Component
                 ->first();
 
             if (!$kegiatan) {
-
                 DB::rollBack();
-
                 $this->dispatchBrowserEvent('alertify-error', [
                     'message' => 'Data kegiatan tidak ditemukan'
                 ]);
-
                 return;
             }
 
@@ -63,24 +63,19 @@ class Status extends Component
 
             DB::commit();
 
-            // CLOSE MODAL
             $this->dispatchBrowserEvent('hide-modal', [
                 'modalId' => 'KegiatanStatus'
             ]);
 
-            // REFRESH
             $this->emit('KegiatanIndex');
 
-            // ALERT
             $this->dispatchBrowserEvent('alertify-success', [
                 'message' => $newStatus === 'aktif'
                     ? 'Kegiatan berhasil diaktifkan'
                     : 'Kegiatan berhasil diselesaikan'
             ]);
         } catch (\Exception $e) {
-
             DB::rollBack();
-
             $this->dispatchBrowserEvent('alertify-error', [
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
@@ -89,6 +84,6 @@ class Status extends Component
 
     public function render()
     {
-        return view('livewire.operasional.kegiatan-generus.status');
+        return view('livewire.operasional.kegiatan-rutin.status');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanGenerus;
+namespace App\Http\Livewire\Operasional\KegiatanEvent;
 
 use App\Models\Desa;
 use App\Models\KegiatanGenerus;
@@ -62,7 +62,7 @@ class Report extends Component
 
         // CHILD COMPONENT
         $this->emitTo(
-            'operasional.kegiatan-generus.attendance',
+            'operasional.kegiatan-event.attendance',
             'setKegiatan',
             $kegiatanId,
             $desaId
@@ -255,6 +255,6 @@ class Report extends Component
     // RENDER
     public function render()
     {
-        return view('livewire.operasional.kegiatan-generus.report');
+        return view('livewire.operasional.kegiatan-event.report');
     }
 }

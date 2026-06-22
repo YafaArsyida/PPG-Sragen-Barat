@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanGenerus;
+namespace App\Http\Livewire\Operasional\KegiatanEvent;
 
 use App\Models\Kelompok;
 use App\Models\PresensiKegiatanGenerus;
@@ -96,7 +96,7 @@ class Attendance extends Component
 
     public function render()
     {
-        return view('livewire.operasional.kegiatan-generus.attendance',[
+        return view('livewire.operasional.kegiatan-event.attendance',[
             'presensi' => $this->presensi,
             'listKelompok' => $this->listKelompok,
         ]);

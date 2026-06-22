@@ -137,7 +137,10 @@ class Index extends Component
         $query->when(
             $this->startDate && $this->endDate,
             fn($q) =>
-            $q->whereBetween('tanggal', [$this->startDate, $this->endDate])
+            $q->where(function($qq) {
+                $qq->whereBetween('tanggal', [$this->startDate, $this->endDate])
+                   ->orWhere('tipe_kegiatan', 'rutin'); // Include kegiatan rutin (tanggal bisa NULL)
+            })
         );
 
         // FILTER TIPE KEGIATAN

@@ -84,12 +84,19 @@
                 @can('view-operasional')
                 <li class="menu-title"><span data-key="t-menu">Operasional</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-generus') ? 'active' : '' }}"
-                        href="{{ route('operasional.kegiatan-generus') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-event') ? 'active' : '' }}"
+                        href="{{ route('operasional.kegiatan-event') }}">
                         <i class="mdi mdi-clipboard-check-outline"></i>
-                        <span>Operasional Kegiatan</span>
+                        <span>Kegiatan Event</span>
                     </a>
-                </li>        
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-rutin') ? 'active' : '' }}"
+                        href="{{ route('operasional.kegiatan-rutin') }}">
+                        <i class="mdi mdi-clipboard-list-outline"></i>
+                        <span>Kegiatan Rutin</span>
+                    </a>
+                </li>
                 @endcan
                 @can('view-kurikulum')        
                 <li class="menu-title"><span data-key="t-menu">Kurikulum KBM</span></li>

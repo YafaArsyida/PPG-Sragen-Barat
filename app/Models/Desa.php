@@ -35,6 +35,6 @@ class Desa extends Model
     }
     public function ms_kegiatan()
     {
-        return $this->hasMany(Kegiatan::class, 'ms_desa_id', 'ms_desa_id');
+        return $this->hasMany(KegiatanGenerus::class, 'ms_desa_id', 'ms_desa_id');
     }
 }

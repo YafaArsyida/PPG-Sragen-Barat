@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\AksesPengguna;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DesaKelompok;
 use App\Http\Controllers\GenerasiPenerus;
-use App\Http\Controllers\KBMdanKurikulum;
 use App\Http\Controllers\KegiatanGenerus;
 use App\Http\Controllers\KurikulumKBM;
 use App\Http\Controllers\LoginController;
@@ -95,8 +93,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/administrasi/kegiatan-generus', [KegiatanGenerus::class, 'index'])
             ->name('administrasi.kegiatan-generus');
 
-        Route::get('/operasional/kegiatan-generus', [OperasionalKegiatanGenerus::class, 'index'])
-            ->name('operasional.kegiatan-generus');
+        Route::get('/operasional/kegiatan-event', [OperasionalKegiatanGenerus::class, 'event'])
+            ->name('operasional.kegiatan-event');
+
+        Route::get('/operasional/kegiatan-rutin', [OperasionalKegiatanGenerus::class, 'rutin'])
+            ->name('operasional.kegiatan-rutin');
 
         //Kurikulum KBM
         Route::get('/kurikulum-kbm/periode-jenjang', [KurikulumKBM::class, 'periodeDanJenjang'])

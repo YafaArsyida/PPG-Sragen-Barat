@@ -57,6 +57,8 @@
                                 <h2 style="text-align:center;">
                                     NOTULA HASIL MUSYAWARAH
                                 </h2>
+
+                                <h1 style="text-align:center; ">------ON DEVELOPMENT------</h1>
                             
                                 <br>
                             

@@ -127,8 +127,9 @@
                             / $grandTotal['target_total']) * 100) : 0 }}%
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="table-warning">
                         <td colspan="2" class="text-center">
+                            <i class="ri-money-dollar-circle-line me-1"></i>
                             INFAQ
                         </td>
                         <td colspan="7" class="fw-bold">
@@ -142,7 +143,7 @@
         <div class="row g-4">
             {{-- PRESENSI --}}
             <div class="col-xxl-12 col-lg-12">
-                @livewire('operasional.kegiatan-generus.attendance', [ 'kegiatanId' => $kegiatanId ])
+                @livewire('operasional.kegiatan-event.attendance', [ 'kegiatanId' => $kegiatanId ])
             </div>
         </div>
         @endif

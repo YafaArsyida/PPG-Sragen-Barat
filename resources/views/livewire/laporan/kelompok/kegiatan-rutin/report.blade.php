@@ -234,9 +234,14 @@
 
             <div class="col-12">
 
-                @livewire('laporan.kelompok.kegiatan-rutin.report.attendance-matrix', [
-                'kegiatanId' => $kegiatanId
-                ])
+                @livewire(
+                    'laporan.kelompok.kegiatan-rutin.report.attendance-matrix',
+                    [
+                        'kegiatanId' => $kegiatanId,
+                        'kelompokId' => $ms_kelompok_id,
+                    ],
+                    key("attendance-matrix-{$kegiatanId}-{$ms_kelompok_id}")
+                )
 
             </div>
 

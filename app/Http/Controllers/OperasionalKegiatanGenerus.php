@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 
 class OperasionalKegiatanGenerus extends Controller
 {
-    public function index()
+    public function event()
     {
-        return view('OPERASIONAL.kegiatan-generus.v_index');
+        return view('OPERASIONAL.kegiatan-event.v_index');
+    }
+    
+    public function rutin()
+    {
+        return view('OPERASIONAL.kegiatan-rutin.v_index');
     }
     
     public function kartu($token)

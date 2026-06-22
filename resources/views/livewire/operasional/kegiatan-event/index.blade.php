@@ -14,7 +14,7 @@
 
                     <div>
                         <h5 class="fw-bold mb-1">
-                            Operasional Kegiatan Generus
+                            Operasional Kegiatan Event
                         </h5>
                         <small>
                             Kelola presensi, infaq, dan laporan kegiatan yang sedang berjalan
@@ -46,7 +46,7 @@
     <div class="card-body border-top border-bottom bg-light-subtle">
         <div class="row g-3 align-items-end">
             {{-- SEARCH --}}
-            <div class="col-12 col-lg-6 col-xxl-3">
+            <div class="col-12 col-lg-6 col-xxl-5">
                 <label class="form-label fw-semibold">
                     Cari Kegiatan
                 </label>
@@ -56,23 +56,6 @@
                     <i class="ri-search-line search-icon">
                     </i>
                 </div>
-            </div>
-            {{-- TIPE --}}
-            <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
-                <label class="form-label fw-semibold">
-                    Tipe Kegiatan
-                </label>
-                <select class="form-select" wire:model="tipeKegiatan">
-                    <option value="">
-                        Semua Kegiatan
-                    </option>
-                    <option value="rutin">
-                        Kegiatan Rutin
-                    </option>
-                    <option value="sekali">
-                        Event / Sekali
-                    </option>
-                </select>
             </div>
             {{-- KELOMPOK --}}
             <div class="col-6 col-md-4 col-lg-3 col-xxl-2">

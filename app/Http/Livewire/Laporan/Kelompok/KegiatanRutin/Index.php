@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Laporan\Kelompok\KegiatanRutin;
 
-use App\Models\Kegiatan;
+use App\Models\KegiatanGenerus;
 use App\Models\Kelompok;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -77,27 +77,27 @@ class Index extends Component
     {
         if (!$this->ms_desa_id) {
             // kalau desa belum dipilih, kosongkan dulu (biar UX jelas)
-            return Kegiatan::whereRaw('1 = 0');
+            return KegiatanGenerus::whereRaw('1 = 0');
         }
 
-        return Kegiatan::with(['ms_desa'])
+        return KegiatanGenerus::with(['ms_desa'])
             ->where('tipe_kegiatan', 'rutin')
             ->where(function ($q) {
 
                 // EVENT DAERAH → semua kelompok ikut
                 $q->where('scope', 'daerah')
 
-                    // EVENT DESA → hanya desa kelompok
-                    ->orWhere(function ($qq) {
-                        $qq->where('scope', 'desa')
-                            ->where('ms_desa_id', $this->ms_desa_id);
-                    })
+                // EVENT DESA → hanya desa kelompok
+                ->orWhere(function ($qq) {
+                    $qq->where('scope', 'desa')
+                        ->where('ms_desa_id', $this->ms_desa_id);
+                })
 
-                    // EVENT KELOMPOK → hanya kelompok ini
-                    ->orWhere(function ($qqq) {
-                        $qqq->where('scope', 'kelompok')
-                            ->where('ms_kelompok_id', $this->ms_kelompok_id);
-                    });
+                // EVENT KELOMPOK → hanya kelompok ini
+                ->orWhere(function ($qqq) {
+                    $qqq->where('scope', 'kelompok')
+                        ->where('ms_kelompok_id', $this->ms_kelompok_id);
+                });
             })
 
             ->when(

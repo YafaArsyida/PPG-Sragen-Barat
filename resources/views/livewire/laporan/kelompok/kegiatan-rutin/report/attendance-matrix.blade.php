@@ -1,6 +1,12 @@
-<div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
-    {{-- HEADER --}}
-    <div class="card-header bg-white border-0 p-4">
+<div class="position-relative">
+    <div wire:loading.delay class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-75 d-flex justify-content-center align-items-center rounded-4"
+        style="z-index: 10;">
+        <div class="spinner-border text-success" role="status"></div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+        {{-- HEADER --}}
+        <div class="card-header bg-white border-0 p-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
             {{-- TITLE --}}
             <div>

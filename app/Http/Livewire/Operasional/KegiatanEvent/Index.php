@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanGenerus;
+namespace App\Http\Livewire\Operasional\KegiatanEvent;
 
 use App\Models\KegiatanGenerus;
 use App\Models\Kelompok;
@@ -180,7 +180,7 @@ class Index extends Component
     }
     public function render()
     {
-        return view('livewire.operasional.kegiatan-generus.index',[
+        return view('livewire.operasional.kegiatan-event.index',[
             'listKegiatan' => $this->query->paginate(25)
         ]);
     }
