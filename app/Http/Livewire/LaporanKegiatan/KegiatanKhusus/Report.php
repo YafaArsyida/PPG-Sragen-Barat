@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanRutin;
+namespace App\Http\Livewire\LaporanKegiatan\KegiatanKhusus;
 
-use App\Models\Desa;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use App\Models\KegiatanGenerus;
 use App\Models\Kelompok;
 use App\Models\PresensiKegiatanGenerus;
 use App\Models\TRInfaq;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class Report extends Component
@@ -18,77 +16,45 @@ class Report extends Component
     public $ms_desa_id;
     public $nama_desa = '-';
 
-    public $startDate = null;
-    public $endDate = null;
+    public $search = '';
 
     public $laporanRows = [];
     public $tanggalMatrix = [];
     public $totalPerTanggal = [];
 
-    public function mount()
-    {
-        $this->startDate = now()->startOfMonth()->format('Y-m-d');
-        $this->endDate   = now()->endOfMonth()->format('Y-m-d');
-    }
-
-     public function resetTanggal()
-    {
-        $this->startDate = now()->startOfMonth()->format('Y-m-d');
-        $this->endDate   = now()->endOfMonth()->format('Y-m-d');
-
-        $this->generateTableReport();
-
-        $this->dispatchBrowserEvent('alertify-success', [
-            'message' => 'Periode diperbarui'
-        ]);
-    }
-
-     public function updatedStartDate()
-    {
-        $this->generateTableReport();
-
-        $this->dispatchBrowserEvent('alertify-success', [
-            'message' => 'Periode diperbarui'
-        ]);
-    }
-
-    public function updatedEndDate()
-    {
-       $this->generateTableReport();
-
-        $this->dispatchBrowserEvent('alertify-success', [
-            'message' => 'Periode diperbarui'
-        ]);
-    }
-
     protected $listeners = [
-        'KegiatanReport' => 'loadReport',
+        'ReportKhusus' => 'loadReport',
     ];
+
+    public function updatedSearch()
+    {
+        $this->generateTableReport();
+        $this->dispatchBrowserEvent('alertify-success', [
+            'message' => 'Memperbarui'
+        ]);
+    }
 
     public function loadReport($kegiatanId)
     {
         $this->resetReport();
+
         $this->kegiatanId = $kegiatanId;
-         $this->kegiatan = KegiatanGenerus::with([
+
+        $this->kegiatan = KegiatanGenerus::with([
             'ms_desa',
-            'ms_kelompok'
         ])->find($kegiatanId);
 
-        $this->ms_desa_id = $this->kegiatan?->ms_desa_id ?? null;
-
-        $this->nama_desa = $this->kegiatan?->ms_desa?->nama_desa ?? '-';
-
         if (!$this->kegiatan) {
-            $this->dispatchBrowserEvent('alertify-error', [
-                'message' => 'Data kegiatan tidak ditemukan'
-            ]);
             return;
         }
 
+        $this->ms_desa_id = $this->kegiatan->ms_desa_id;
+        $this->nama_desa  = $this->kegiatan->ms_desa->nama_desa;
+
         $this->generateTableReport();
 
-         $this->emitTo(
-            'operasional.kegiatan-rutin.attendance',
+        $this->emitTo(
+            'laporan-kegiatan.kegiatan-khusus.attendance',
             'setKegiatan',
             $kegiatanId,
         );
@@ -98,65 +64,39 @@ class Report extends Component
         ]);
     }
 
+    private function generateTanggalMatrix()
+    {
+        return collect($this->kegiatan->jadwal_khusus ?? [])
+            ->pluck('tanggal')
+            ->sort()
+            ->values()
+            ->toArray();
+    }
     private function resetReport()
     {
-        $this->kegiatan = null;
+        $this->search = '';
+
         $this->laporanRows = [];
         $this->tanggalMatrix = [];
         $this->totalPerTanggal = [];
     }
-
-    private function generateTanggalMatrix()
-    {
-        $mapHari = [
-            'minggu' => Carbon::SUNDAY,
-            'senin'  => Carbon::MONDAY,
-            'selasa' => Carbon::TUESDAY,
-            'rabu'   => Carbon::WEDNESDAY,
-            'kamis'  => Carbon::THURSDAY,
-            'jumat'  => Carbon::FRIDAY,
-            'sabtu'  => Carbon::SATURDAY,
-        ];
-
-        $hariRutin = $this->kegiatan->hari_rutin ?? [];
-
-        $tanggal = [];
-
-        $start = Carbon::parse($this->startDate);
-        $end   = Carbon::parse($this->endDate);
-
-        while ($start->lte($end)) {
-
-            foreach ($hariRutin as $hari) {
-
-                if (
-                    isset($mapHari[$hari]) &&
-                    $start->dayOfWeek === $mapHari[$hari]
-                ) {
-                    $tanggal[] = $start->format('Y-m-d');
-                    break;
-                }
-            }
-
-            $start->addDay();
-        }
-
-        return $tanggal;
-    }
-
     private function generateTableReport()
     {
-        if (
-            !$this->kegiatanId ||
-            !$this->startDate ||
-            !$this->endDate ||
-            Carbon::parse($this->endDate)->lt(Carbon::parse($this->startDate))
-        ) {
+        if (!$this->kegiatanId) {
             return;
         }
 
         $kelompoks = Kelompok::query()
             ->where('ms_desa_id', $this->ms_desa_id)
+
+            ->when($this->search, function ($query) {
+                $query->where(
+                    'nama_kelompok',
+                    'like',
+                    '%' . $this->search . '%'
+                );
+            })
+
             ->withCount('ms_generus')
             ->orderBy('nama_kelompok')
             ->get();
@@ -179,10 +119,10 @@ class Report extends Component
             ->with('ms_generus')
             ->where('ms_kegiatan_generus_id', $this->kegiatanId)
             ->where('status_hadir', 'hadir')
-            ->whereBetween('tanggal_presensi', [
-                $this->startDate,
-                $this->endDate
-            ])
+            ->whereIn(
+                'tanggal_presensi',
+                $this->tanggalMatrix
+            )
             ->get();
 
         /*
@@ -279,20 +219,17 @@ class Report extends Component
         |--------------------------------------------------------------------------
         */
         $infaqs = TRInfaq::query()
-            ->where('ms_kegiatan_generus_id', $this->kegiatanId)
-            ->whereBetween('tanggal', [
-                $this->startDate,
-                $this->endDate
-            ])
+            ->where('ms_kegiatan_generus_id',$this->kegiatanId)
             ->get()
-            ->groupBy(function ($item) {
+            ->groupBy(function($item){
+
                 return Carbon::parse(
                     $item->tanggal
                 )->format('Y-m-d');
+
             });
 
-        foreach ($this->tanggalMatrix as $tanggal) {
-
+        foreach($this->tanggalMatrix as $tanggal){
             $this->totalPerTanggal[$tanggal]['infaq'] =
                 ($infaqs[$tanggal] ?? collect())
                     ->sum('nominal');
@@ -300,7 +237,6 @@ class Report extends Component
     }
     public function render()
     {
-        return view('livewire.operasional.kegiatan-rutin.report');
+        return view('livewire.laporan-kegiatan.kegiatan-khusus.report');
     }
-
 }

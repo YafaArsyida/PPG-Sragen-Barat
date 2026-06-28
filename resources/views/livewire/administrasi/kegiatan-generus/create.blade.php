@@ -146,7 +146,7 @@
                                             <span class="text-danger">*</span>
                                         </label>
                                         <div class="row g-3">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label
                                                     class="border rounded-4 p-4 w-100 cursor-pointer bg-light-subtle">
                                                     <div class="d-flex align-items-start gap-3">
@@ -160,7 +160,7 @@
                                                     </div>
                                                 </label>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label
                                                     class="border rounded-4 p-4 w-100 cursor-pointer bg-light-subtle">
                                                     <div class="d-flex align-items-start gap-3">
@@ -174,6 +174,19 @@
                                                     </div>
                                                 </label>
                                             </div>
+                                            <div class="col-lg-4">
+                                                <label class="border rounded-4 p-4 w-100 cursor-pointer bg-light-subtle">
+                                                    <div class="d-flex align-items-start gap-3">
+                                                        <input type="radio" wire:model="tipe_kegiatan" value="khusus" class="form-check-input mt-1">
+                                                        <div>
+                                                            <h5 class="fw-semibold mb-1">
+                                                                Kegiatan Khusus
+                                                            </h5>
+                                                            <small>Digunakan untuk kegiatan tertentu yang tidak berulang.</small>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </div>
                                         @error('tipe_kegiatan')
                                         <small class="text-danger">
@@ -182,76 +195,170 @@
                                         @enderror
                                     </div>
                                     {{-- Waktu --}}
+                                    @if(in_array($tipe_kegiatan, ['sekali', 'rutin']))
                                     <div class="col-lg-3">
                                         <label class="form-label fw-semibold">
                                             Waktu Kegiatan
                                             <span class="text-danger">*</span>
                                         </label>
+
                                         <input type="time" step="1" class="form-control rounded-3" wire:model.defer="waktu">
+
                                         @error('waktu')
-                                        <small class="text-danger">
-                                            {{ $message }}
-                                        </small>
+                                            <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                    {{-- Tanggal --}} @if($tipe_kegiatan === 'sekali')
-                                    <div class="col-lg-4">
-                                        <label class="form-label fw-semibold">
-                                            Tanggal Kegiatan
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="date" class="form-control rounded-3" wire:model.defer="tanggal">
-                                        @error('tanggal')
-                                        <small class="text-danger">
-                                            {{ $message }}
-                                        </small>
-                                        @enderror
-                                    </div>
-                                    @endif {{-- Hari Rutin --}} @if($tipe_kegiatan === 'rutin')
-                                    <div class="col-lg-9">
-                                        <label class="form-label fw-semibold">
-                                            Hari Rutin
-                                            <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="row g-3">
-                                            @foreach($listHari as $key => $label)
-                                            <div class="col-6 col-md-3">
-                                                <label class="border rounded-3 p-3 w-100 cursor-pointer bg-light-subtle">
-                                                    <div class="form-check mb-0">
-                                                        <input class="form-check-input" type="checkbox" wire:model="hari_rutin" value="{{ $key }}" id="hari_{{ $key }}">
-                                                        <label class="form-check-label fw-medium" for="hari_{{ $key }}">
-                                                            {{ $label }}
-                                                        </label>
+                                    @endif
+                                    {{-- EVENT/sekali --}} 
+                                    @if($tipe_kegiatan === 'sekali')
+                                        <div class="col-lg-4">
+                                            <label class="form-label fw-semibold">
+                                                Tanggal Kegiatan
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="date" class="form-control rounded-3" wire:model.defer="tanggal">
+                                            @error('tanggal')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                            @enderror
+                                        </div>
+                                    @endif 
+                                    {{-- Hari Rutin --}} 
+                                    @if($tipe_kegiatan === 'rutin')
+                                        <div class="col-lg-9">
+                                            <label class="form-label fw-semibold">
+                                                Hari Rutin
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="row g-3">
+                                                @foreach($listHari as $key => $label)
+                                                <div class="col-6 col-md-3">
+                                                    <label class="border rounded-3 p-3 w-100 cursor-pointer bg-light-subtle">
+                                                        <div class="form-check mb-0">
+                                                            <input class="form-check-input" type="checkbox" wire:model="hari_rutin" value="{{ $key }}" id="hari_{{ $key }}">
+                                                            <label class="form-check-label fw-medium" for="hari_{{ $key }}">
+                                                                {{ $label }}
+                                                            </label>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                            @error('hari_rutin')
+                                            <small class="text-danger">
+                                                {{ $message }}
+                                            </small>
+                                            @enderror
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="alert alert-info border-0 rounded-4 mb-0">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="avatar-sm">
+                                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
+                                                            <i class="ri-information-line"></i>
+                                                        </div>
                                                     </div>
+                                                    <div>
+                                                        <h5 class="fw-semibold mb-0">
+                                                            Informasi Kegiatan Rutin
+                                                        </h5>
+                                                        <small>
+                                                            Lokasi kegiatan dapat disesuaikan kembali saat presensi apabila terjadi perpindahan tempat.
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if($tipe_kegiatan === 'khusus')
+                                        <div class="col-12">
+                                            <div class="alert alert-warning border-0 rounded-4 mb-0">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="avatar-sm">
+                                                        <div class="avatar-title bg-warning-subtle text-warning rounded-circle fs-20">
+                                                            <i class="ri-calendar-event-line"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="fw-semibold mb-0">
+                                                            Informasi Kegiatan Khusus
+                                                        </h5>
+                                                        <small>
+                                                            Satu kegiatan dapat memiliki beberapa tanggal pelaksanaan dengan waktu yang berbeda-beda.
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <label class="form-label fw-semibold mb-0">
+                                                    Jadwal Kegiatan
+                                                    <span class="text-danger">*</span>
                                                 </label>
+
+                                                {{-- <button type="button" class="btn btn-soft-primary btn-sm" wire:click="addJadwalKhusus">
+
+                                                    <i class="ri-add-line"></i>
+                                                    Tambah Jadwal
+                                                </button> --}}
+                                            </div>
+
+                                            @foreach($jadwal_khusus as $index => $jadwal)
+                                            <div class="card border shadow-none mb-3">
+                                                <div class="card-body">
+
+                                                    <div class="row g-3">
+
+                                                        <div class="col-md-5">
+                                                            <label class="form-label">
+                                                                Jadwal #{{ $index + 1 }}
+                                                            </label>
+
+                                                            <input type="date" class="form-control" wire:model="jadwal_khusus.{{ $index }}.tanggal">
+
+                                                            @error('jadwal_khusus.'.$index.'.tanggal')
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="col-md-5">
+                                                            <label class="form-label">
+                                                                Waktu
+                                                            </label>
+
+                                                            <input type="time" step="1" class="form-control" wire:model="jadwal_khusus.{{ $index }}.waktu">
+                                                            @error('jadwal_khusus.'.$index.'.waktu')
+                                                                <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="col-md-2 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-soft-danger w-100" wire:click="removeJadwalKhusus({{ $index }})">
+                                                                <i class="ri-delete-bin-line"></i>
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
                                             </div>
                                             @endforeach
-                                        </div>
-                                        @error('hari_rutin')
-                                        <small class="text-danger">
-                                            {{ $message }}
-                                        </small>
-                                        @enderror
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="alert alert-info border-0 rounded-4 mb-0">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar-sm">
-                                                    <div class="avatar-title bg-primary-subtle text-primary rounded-circle fs-20">
-                                                        <i class="ri-information-line"></i>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <h5 class="fw-semibold mb-0">
-                                                        Informasi Kegiatan Rutin
-                                                    </h5>
-                                                    <small>
-                                                        Lokasi kegiatan dapat disesuaikan kembali saat presensi apabila terjadi perpindahan tempat.
-                                                    </small>
-                                                </div>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-soft-primary rounded-pill px-4" wire:click="addJadwalKhusus">
+                                                    <i class="ri-add-line me-1">
+                                                    </i>
+                                                    Tambah Jadwal
+                                                </button>
                                             </div>
+                                            @error('jadwal_khusus')
+                                                <small class="text-danger d-block">
+                                                    {{ $message }}
+                                                </small>
+                                            @enderror
                                         </div>
-                                    </div>
                                     @endif
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 <div class="card mb-0">
     <div class="table-responsive">
-        <table class="table table-hover align-middle table-nowrap mb-0">
+        <table id="DataGenerus" class="table table-hover align-middle table-nowrap mb-0">
             <thead class="table-light">
                 <tr class="text-uppercase fw-semibold">
                     <th width="60" class="text-center">No</th>

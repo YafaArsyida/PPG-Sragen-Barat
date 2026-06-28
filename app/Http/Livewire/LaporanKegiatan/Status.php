@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanRutin;
+namespace App\Http\Livewire\LaporanKegiatan;
 
 use App\Models\KegiatanGenerus;
 use Illuminate\Support\Facades\DB;
@@ -84,6 +84,6 @@ class Status extends Component
 
     public function render()
     {
-        return view('livewire.operasional.kegiatan-rutin.status');
+        return view('livewire.laporan-kegiatan.status');
     }
 }

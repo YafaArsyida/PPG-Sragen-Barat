@@ -6,15 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class OperasionalKegiatanGenerus extends Controller
-{
-    public function event()
+{   
+    public function laporan()
     {
-        return view('OPERASIONAL.kegiatan-event.v_index');
-    }
-    
-    public function rutin()
-    {
-        return view('OPERASIONAL.kegiatan-rutin.v_index');
+        return view('OPERASIONAL.laporan-kegiatan.v_index');
     }
     
     public function kartu($token)

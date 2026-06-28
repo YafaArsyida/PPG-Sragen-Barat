@@ -72,8 +72,7 @@
                             Keterangan
                         </label>
                         <textarea class="form-control" rows="3" wire:model.defer="keterangan"
-                            placeholder="Tambahkan catatan...">
-            </textarea>
+                            placeholder="Tambahkan catatan..."></textarea>
                         @error('keterangan')
                         <small class="text-danger">
                             {{ $message }}

@@ -7,16 +7,23 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="avatar-sm">
                         <div class="avatar-title rounded-circle fs-20
-            {{ $kegiatan?->tipe_kegiatan === 'rutin'
-            ? 'bg-success-subtle text-success'
-            : 'bg-primary-subtle text-primary' }}">
+
                             @if($kegiatan?->tipe_kegiatan === 'rutin')
-                            <i class="ri-repeat-line">
-                            </i>
+                                bg-success-subtle text-success
+                            @elseif($kegiatan?->tipe_kegiatan === 'khusus')
+                                bg-warning-subtle text-warning
                             @else
-                            <i class="ri-calendar-event-line">
-                            </i>
+                                bg-primary-subtle text-primary
+                            @endif">
+
+                            @if($kegiatan?->tipe_kegiatan === 'rutin')
+                                <i class="ri-repeat-line"></i>
+                            @elseif($kegiatan?->tipe_kegiatan === 'khusus')
+                                <i class="ri-calendar-check-line"></i>
+                            @else
+                                <i class="ri-calendar-event-line"></i>
                             @endif
+
                         </div>
                     </div>
                     <div>
@@ -41,17 +48,24 @@
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
                                 <span class="badge rounded-pill px-3 py-2
-                {{ $kegiatan->tipe_kegiatan === 'rutin'
-                ? 'bg-success-subtle text-success'
-                : 'bg-primary-subtle text-primary' }}">
                                     @if($kegiatan->tipe_kegiatan === 'rutin')
-                                    <i class="ri-repeat-line me-1">
-                                    </i>
-                                    Kegiatan Rutin @else
-                                    <i class="ri-calendar-event-line me-1">
-                                    </i>
-                                    Event Sekali @endif
-                                </span>
+                                        bg-success-subtle text-success
+                                    @elseif($kegiatan->tipe_kegiatan === 'khusus')
+                                        bg-warning-subtle text-warning
+                                    @else
+                                        bg-primary-subtle text-primary
+                                    @endif">
+                                    @if($kegiatan->tipe_kegiatan === 'rutin')
+                                        <i class="ri-repeat-line me-1"></i>
+                                        Kegiatan Rutin
+                                    @elseif($kegiatan->tipe_kegiatan === 'khusus')
+                                        <i class="ri-calendar-check-line me-1"></i>
+                                        Kegiatan Khusus
+                                    @else
+                                        <i class="ri-calendar-event-line me-1"></i>
+                                        Event Sekali
+                                    @endif
+                                    </span>
                                 <span class="badge bg-dark-subtle text-dark rounded-pill px-3 py-2">
                                     {{ ucfirst($kegiatan->scope) }}
                                 </span>
@@ -127,11 +141,22 @@
                                     <p class="text-muted mb-1 fs-13">
                                         Tanggal / Hari
                                     </p>
+
                                     <h6 class="mb-0 fw-semibold">
-                                        @if($kegiatan->tipe_kegiatan === 'sekali') {{ $kegiatan->tanggal ?
-                                        \App\Http\Controllers\HelperController::formatTanggalIndonesia($kegiatan->tanggal,
-                                        'd F Y') : '-' }} @else @if(!empty($kegiatan->hari_rutin_label)) Rutin
-                                        : {{ $kegiatan->hari_rutin_label }} @endif @endif
+
+                                        @if($kegiatan->tipe_kegiatan === 'sekali')
+
+                                            {{ $kegiatan->tanggal
+                                                ? \App\Http\Controllers\HelperController::formatTanggalIndonesia(
+                                                    $kegiatan->tanggal,
+                                                    'd F Y'
+                                                )
+                                                : '-' }}
+                                        @elseif($kegiatan->tipe_kegiatan === 'rutin')
+                                            {{ $kegiatan->hari_label ?: '-' }}
+                                        @elseif($kegiatan->tipe_kegiatan === 'khusus')
+                                            {{ count($kegiatan->jadwal_khusus ?? []) }} Jadwal Khusus
+                                        @endif
                                     </h6>
                                 </div>
                                 {{-- Waktu --}}
@@ -139,10 +164,39 @@
                                     <p class="text-muted mb-1 fs-13">
                                         Waktu Pelaksanaan
                                     </p>
+
                                     <h6 class="mb-0 fw-semibold">
-                                        {{ $kegiatan->waktu ?? '-' }}
+
+                                        @if($kegiatan->tipe_kegiatan === 'khusus')
+                                            Lihat Jadwal Khusus
+                                        @else
+                                            {{ $kegiatan->waktu ?? '-' }}
+                                        @endif
                                     </h6>
                                 </div>
+                                {{-- JADWAL KHUSUS --}}
+                                @if($kegiatan->tipe_kegiatan === 'khusus')
+                                <div class="border border-2 border-dashed rounded-4 p-3 bg-light-subtle">
+                                    <p class="text-muted mb-1 fs-13">
+                                        Jadwal Pelaksanaan
+                                    </p>
+                                    @foreach($kegiatan->jadwal_khusus as $jadwal)
+                                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                            <span>
+                                                <i class="ri-calendar-line me-1"></i>
+                                                {{ \App\Http\Controllers\HelperController::formatTanggalIndonesia(
+                                                    $jadwal['tanggal'],
+                                                    'd F Y'
+                                                ) }}
+                                            </span>
+
+                                            <span class="fw-semibold">
+                                                {{ $jadwal['waktu'] }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @endif
                                 {{-- Jenjang --}}
                                 <div class="border border-2 border-dashed rounded-4 p-3 bg-light-subtle">
                                     <p class="text-muted mb-1 fs-13">

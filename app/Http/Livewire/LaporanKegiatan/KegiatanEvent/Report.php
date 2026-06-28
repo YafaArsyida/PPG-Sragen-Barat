@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanEvent;
+namespace App\Http\Livewire\LaporanKegiatan\KegiatanEvent;
 
 use App\Models\Desa;
 use App\Models\KegiatanGenerus;
@@ -30,7 +30,7 @@ class Report extends Component
     ];
 
     protected $listeners = [
-        'KegiatanReport' => 'loadReport'
+        'ReportEvent' => 'loadReport'
     ];
 
     public function loadReport($kegiatanId, $desaId)
@@ -62,7 +62,7 @@ class Report extends Component
 
         // CHILD COMPONENT
         $this->emitTo(
-            'operasional.kegiatan-event.attendance',
+            'laporan-kegiatan.kegiatan-event.attendance',
             'setKegiatan',
             $kegiatanId,
             $desaId
@@ -251,10 +251,9 @@ class Report extends Component
             ) * 100
         );
     }
-
-    // RENDER
+    
     public function render()
     {
-        return view('livewire.operasional.kegiatan-event.report');
+        return view('livewire.laporan-kegiatan.kegiatan-event.report');
     }
 }

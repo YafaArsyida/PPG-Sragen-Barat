@@ -32,12 +32,14 @@ class KegiatanGenerus extends Model
 
         'tipe_kegiatan',     // ENUM('rutin','sekali')
         'hari_rutin',
-        
+        'jadwal_khusus',
+
         'deskripsi',
     ];
 
     protected $casts = [
         'hari_rutin' => 'array',
+        'jadwal_khusus' => 'array',
     ];
 
     public function getHariLabelAttribute()
@@ -61,6 +63,20 @@ class KegiatanGenerus extends Model
             ->implode(', ');
 
         return $labels;
+    }
+
+    public function getJadwalKhususLabelAttribute()
+    {
+        if (empty($this->jadwal_khusus)) {
+            return null;
+        }
+
+        return collect($this->jadwal_khusus)
+            ->map(function ($jadwal) {
+                return \Carbon\Carbon::parse($jadwal['tanggal'])->translatedFormat('d M Y')
+                    . ' ' . $jadwal['waktu'];
+            })
+            ->implode(', ');
     }
 
     protected static function booted()

@@ -93,11 +93,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/administrasi/kegiatan-generus', [KegiatanGenerus::class, 'index'])
             ->name('administrasi.kegiatan-generus');
 
-        Route::get('/operasional/kegiatan-event', [OperasionalKegiatanGenerus::class, 'event'])
-            ->name('operasional.kegiatan-event');
-
-        Route::get('/operasional/kegiatan-rutin', [OperasionalKegiatanGenerus::class, 'rutin'])
-            ->name('operasional.kegiatan-rutin');
+        Route::get('/operasional/laporan-kegiatan', [OperasionalKegiatanGenerus::class, 'laporan'])
+            ->name('operasional.laporan-kegiatan');
 
         //Kurikulum KBM
         Route::get('/kurikulum-kbm/periode-jenjang', [KurikulumKBM::class, 'periodeDanJenjang'])

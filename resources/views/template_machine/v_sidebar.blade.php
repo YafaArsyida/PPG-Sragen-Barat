@@ -84,17 +84,10 @@
                 @can('view-operasional')
                 <li class="menu-title"><span data-key="t-menu">Operasional</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-event') ? 'active' : '' }}"
-                        href="{{ route('operasional.kegiatan-event') }}">
-                        <i class="mdi mdi-clipboard-check-outline"></i>
-                        <span>Kegiatan Event</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link {{ request()->routeIs('operasional.kegiatan-rutin') ? 'active' : '' }}"
-                        href="{{ route('operasional.kegiatan-rutin') }}">
+                    <a class="nav-link menu-link {{ request()->routeIs('operasional.laporan-kegiatan') ? 'active' : '' }}"
+                        href="{{ route('operasional.laporan-kegiatan') }}">
                         <i class="mdi mdi-clipboard-list-outline"></i>
-                        <span>Kegiatan Rutin</span>
+                        <span>Laporan Kegiatan</span>
                     </a>
                 </li>
                 @endcan

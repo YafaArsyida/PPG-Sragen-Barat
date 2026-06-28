@@ -34,6 +34,7 @@ class Edit extends Component
 
     public $tipe_kegiatan = 'sekali'; // default
     public $hari_rutin = []; // array: ['senin','rabu',...]
+    public $jadwal_khusus = [];
 
     public $listHari = [
         'senin'  => 'Senin',
@@ -73,12 +74,17 @@ class Edit extends Component
         $this->jenjang        = $kegiatan->jenjang;
 
         $this->tipe_kegiatan = $kegiatan->tipe_kegiatan ?? 'sekali';
+
         $this->tanggal = $kegiatan->tanggal;
         $this->waktu = $kegiatan->waktu;
         $this->deskripsi = $kegiatan->deskripsi;
 
         $this->hari_rutin = $kegiatan->tipe_kegiatan === 'rutin'
             ? ($kegiatan->hari_rutin ?? [])
+            : [];
+
+        $this->jadwal_khusus = $kegiatan->tipe_kegiatan === 'khusus'
+            ? ($kegiatan->jadwal_khusus ?? [])
             : [];
 
         // Deteksi lokasi custom
@@ -97,14 +103,28 @@ class Edit extends Component
     public function updatedTipeKegiatan($value)
     {
         if ($value === 'rutin') {
-            $this->tanggal = null;      // tanggal tidak dipakai
+            $this->tanggal = null;
+            $this->jadwal_khusus = [];
         }
 
         if ($value === 'sekali') {
-            $this->hari_rutin = [];     // hapus hari_rutin
+            $this->hari_rutin = [];
+            $this->jadwal_khusus = [];
+        }
+
+        if ($value === 'khusus') {
+            $this->tanggal = null;
+            $this->hari_rutin = [];
+            $this->waktu = null;
+
+            if (count($this->jadwal_khusus) === 0) {
+                $this->jadwal_khusus[] = [
+                    'tanggal' => '',
+                    'waktu' => '',
+                ];
+            }
         }
     }
-
 
     /* =========================
      * RULES
@@ -114,12 +134,17 @@ class Edit extends Component
         $rules = [
             'scope'          => 'required|in:daerah,desa,kelompok',
             'nama_kegiatan'  => 'required|string|min:3|max:150',
-            'tipe_kegiatan'  => 'required|in:rutin,sekali',
+           
+            'tipe_kegiatan'  => 'required|in:rutin,sekali,khusus',
+           
             'jenjang'        => 'nullable|in:semua,caberawit,remaja,gp,pra_remaja,mandiri',
-            'waktu'          => 'required|date_format:H:i:s',
+
+            'waktu'          => 'nullable',
+
             'tempat'         => 'nullable|string|max:150',
             'alamat'         => 'nullable|string|max:255',
             'peta'           => 'nullable|url',
+
             'deskripsi'      => 'nullable|string|max:500',
         ];
 
@@ -129,19 +154,27 @@ class Edit extends Component
             $rules['ms_kelompok_id'] = 'nullable';
         }
 
-        // 🔹 Kegiatan sekali → wajib tanggal
+        // Sekali
         if ($this->tipe_kegiatan === 'sekali') {
             $rules['tanggal'] = 'required|date';
-        } else {
-            $rules['tanggal'] = 'nullable';
         }
 
-        // 🔹 Kegiatan rutin → wajib hari_rutin (array)
+        // Rutin
         if ($this->tipe_kegiatan === 'rutin') {
             $rules['hari_rutin'] = 'required|array|min:1';
             $rules['hari_rutin.*'] = 'in:senin,selasa,rabu,kamis,jumat,sabtu,minggu';
-        } else {
-            $rules['hari_rutin'] = 'nullable';
+        }
+
+        // Khusus
+        if ($this->tipe_kegiatan === 'khusus') {
+            $rules['jadwal_khusus'] = 'required|array|min:1';
+            $rules['jadwal_khusus.*.tanggal'] = 'required|date';
+            $rules['jadwal_khusus.*.waktu'] = 'required|date_format:H:i:s';
+        }
+
+        // Waktu utama
+        if (in_array($this->tipe_kegiatan, ['sekali', 'rutin'])) {
+            $rules['waktu'] = 'required|date_format:H:i:s';
         }
 
         if ($this->use_custom_lokasi) {
@@ -181,6 +214,16 @@ class Edit extends Component
         'hari_rutin.min'         => 'Pilih minimal satu hari kegiatan.',
         'hari_rutin.*.in'        => 'Hari rutin tidak valid.',
 
+        'jadwal_khusus.required' => 'Tambahkan minimal satu jadwal khusus.',
+        'jadwal_khusus.array' => 'Format jadwal khusus tidak valid.',
+        'jadwal_khusus.min' => 'Tambahkan minimal satu jadwal.',
+
+        'jadwal_khusus.*.tanggal.required' => 'Tanggal jadwal wajib diisi.',
+        'jadwal_khusus.*.tanggal.date' => 'Format tanggal jadwal tidak valid.',
+
+        'jadwal_khusus.*.waktu.required' => 'Waktu jadwal wajib diisi.',
+        'jadwal_khusus.*.waktu.date_format' => 'Format waktu jadwal harus HH:MM:SS.',
+
         'waktu.required'         => 'Waktu kegiatan wajib diisi.',
         'waktu.date_format'      => 'Format waktu harus HH:MM:SS.',
 
@@ -208,6 +251,22 @@ class Edit extends Component
     {
         $this->resetLokasiCustom();
         $this->loadLokasiDefault();
+    }
+
+    
+    public function addJadwalKhusus()
+    {
+        $this->jadwal_khusus[] = [
+            'tanggal' => '',
+            'waktu' => '',
+        ];
+    }
+
+    public function removeJadwalKhusus($index)
+    {
+        unset($this->jadwal_khusus[$index]);
+
+        $this->jadwal_khusus = array_values($this->jadwal_khusus);
     }
 
     /* =========================
@@ -276,20 +335,35 @@ class Edit extends Component
                 'scope' => $this->scope,
                 'ms_desa_id' => $this->ms_desa_id,
                 'ms_kelompok_id' => $this->ms_kelompok_id,
+
                 'nama_kegiatan' => $this->nama_kegiatan,
                 'jenjang' => $this->jenjang,
+
+                'tipe_kegiatan' => $this->tipe_kegiatan,
 
                 'tempat' => $this->use_custom_lokasi ? $this->tempat : null,
                 'alamat' => $this->use_custom_lokasi ? $this->alamat : null,
                 'peta'   => $this->use_custom_lokasi ? $this->peta : null,
 
+                // event
                 'tanggal' => $this->tipe_kegiatan === 'sekali' ? $this->tanggal : null,
-                'waktu' => $this->waktu,
-
-                'tipe_kegiatan' => $this->tipe_kegiatan,
-                'hari_rutin' => $this->tipe_kegiatan === 'rutin'
-                    ? json_encode($this->hari_rutin)
+                
+                'waktu' => in_array($this->tipe_kegiatan, ['sekali', 'rutin'])
+                    ? $this->waktu
                     : null,
+                // event
+
+                // rutin
+                'hari_rutin' => $this->tipe_kegiatan === 'rutin'
+                    ? $this->hari_rutin
+                    : null,
+                // rutin
+
+                // khusus
+                 'jadwal_khusus' => $this->tipe_kegiatan === 'khusus'
+                    ? $this->jadwal_khusus
+                    : null,
+                // khusus
 
                 'deskripsi' => $this->deskripsi,
             ]);

@@ -11,31 +11,29 @@
                             </i>
                         </div>
                     </div>
-
+    
                     <div>
                         <h5 class="fw-bold mb-1">
-                            Operasional Kegiatan Event
+                            Laporan Kegiatan Generasi Penerus
                         </h5>
                         <small>
-                            Kelola presensi, infaq, dan laporan kegiatan yang sedang berjalan
+                            Kelola laporan kegiatan generus 
                         </small>
                     </div>
                 </div>
             </div>
-
+    
             {{-- ACTION --}}
             <div class="d-flex gap-2 flex-wrap">
                 {{-- IMPORT --}}
-                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal"
-                    data-bs-target="#ExportLaporanExcel">
+                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportLaporanExcel">
                     <i class="ri-database-2-line me-1 text-secondary"></i>
                     Export Data
                 </button>
-
+    
                 {{-- TAMBAH --}}
-                <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal"
-                    data-bs-target="#ModalKegiatanCreate"
-                    wire:click.prevent="$emit('KegiatanCreate', {{ $ms_desa_id }})">
+                <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ModalKegiatanCreate"
+                        wire:click.prevent="$emit('KegiatanCreate', {{ $ms_desa_id }})">
                     <i class="ri-add-line me-1"></i>Tambah Kegiatan
                 </button>
             </div>
@@ -46,7 +44,7 @@
     <div class="card-body border-top border-bottom bg-light-subtle">
         <div class="row g-3 align-items-end">
             {{-- SEARCH --}}
-            <div class="col-12 col-lg-6 col-xxl-5">
+            <div class="col-12 col-lg-6 col-xxl-3">
                 <label class="form-label fw-semibold">
                     Cari Kegiatan
                 </label>
@@ -56,6 +54,26 @@
                     <i class="ri-search-line search-icon">
                     </i>
                 </div>
+            </div>
+            {{-- TIPE --}}
+            <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
+                <label class="form-label fw-semibold">
+                    Tipe Kegiatan
+                </label>
+                <select class="form-select" wire:model="tipeKegiatan">
+                    <option value="">
+                        Semua Kegiatan
+                    </option>
+                    <option value="rutin">
+                        Kegiatan Rutin
+                    </option>
+                    <option value="sekali">
+                        Event / Sekali
+                    </option>
+                    <option value="khusus">
+                        Khusus
+                    </option>
+                </select>
             </div>
             {{-- KELOMPOK --}}
             <div class="col-6 col-md-4 col-lg-3 col-xxl-2">
@@ -124,7 +142,7 @@
                 <thead class="table-light">
                     <tr class="text-uppercase fw-semibold">
                         <th class="text-center" width="50">No</th>
-                        <th class="text-center" width="50">Status</th>
+                        <th class="text-center" width="50">Hapus</th>
                         <th>Jadwal</th>
                         <th>Kegiatan</th>
                         <th>Peserta</th>
@@ -140,7 +158,6 @@
                         <td class="text-muted text-center">
                             {{ $listKegiatan->firstItem() + $index }}
                         </td>
-                        {{-- STATUS --}}
                         <td class="text-center">
                             @if($item->status === 'aktif')
                             <a href="#KegiatanStatus" data-bs-toggle="modal"
@@ -160,99 +177,116 @@
                         </td>
                         {{-- JADWAL --}}
                         <td>
-                            <div>
-                                @if($item->tipe_kegiatan === 'rutin')
-                                <i class="ri-repeat-line text-primary me-1"></i>
-                                {{ $item->hari_label ?: 'Jadwal Mingguan' }}
-                                @else
-                                <i class="ri-calendar-event-line text-danger me-1"></i>
-                                {{ $item->tanggal ?
-                                \App\Http\Controllers\HelperController::formatTanggalIndonesia($item->tanggal, 'd F Y')
-                                : '-' }}
-                                @endif
-                            </div>
-                            <small class="text-muted">
-                                <i class="ri-time-line me-1"></i>
-                                {{ $item->waktu }}
-                            </small>
+                            @if($item->tipe_kegiatan === 'rutin')
+                                <div>
+                                    <i class="ri-repeat-line text-primary me-1"></i>
+                                    {{ $item->hari_label ?: 'Jadwal Mingguan' }}
+                                </div>
+
+                                <small class="text-muted">
+                                    <i class="ri-time-line me-1"></i>
+                                    {{ $item->waktu }}
+                                </small>
+                            @elseif($item->tipe_kegiatan === 'khusus')
+                                <div>
+                                    <i class="ri-calendar-check-line text-warning me-1"></i>
+                                    {{ count($item->jadwal_khusus ?? []) }} Jadwal Khusus
+                                </div>
+                                <small class="text-muted">
+                                    Tanggal tertentu
+                                </small>
+                            @else
+                                <div>
+                                    <i class="ri-calendar-event-line text-danger me-1"></i>
+                                    {{ $item->tanggal
+                                        ? \App\Http\Controllers\HelperController::formatTanggalIndonesia($item->tanggal, 'd F Y')
+                                        : '-' }}
+                                </div>
+                                <small class="text-muted">
+                                    <i class="ri-time-line me-1"></i>
+                                    {{ $item->waktu }}
+                                </small>
+                            @endif
                         </td>
                         {{-- KEGIATAN --}}
                         <td>
                             <div>{{ $item->nama_kegiatan }}</div>
                             @if($item->tipe_kegiatan === 'rutin')
-                            <span class="badge bg-primary-subtle text-primary">
-                                Rutin
-                            </span>
+                                <span class="badge bg-primary-subtle text-primary">
+                                    <i class="ri-repeat-line me-1"></i>
+                                    Rutin
+                                </span>
+                            @elseif($item->tipe_kegiatan === 'khusus')
+                                <span class="badge bg-warning-subtle text-warning">
+                                    <i class="ri-calendar-check-line me-1"></i>
+                                    Khusus
+                                </span>
                             @else
-                            <span class="badge bg-danger-subtle text-danger">
-                                Event
-                            </span>
+                                <span class="badge bg-danger-subtle text-danger">
+                                    <i class="ri-calendar-event-line me-1"></i>
+                                    Event
+                                </span>
                             @endif
                         </td>
-
                         {{-- PESERTA --}}
                         <td>
                             @php
                             if ($item->jenjang) {
-                            [$jenjangLabel, $jenjangClass] = match($item->jenjang) {
-                            'caberawit' => ['Caberawit', 'primary'],
-                            'remaja' => ['Remaja', 'success'],
-                            'gp' => ['GP', 'info'],
-                            'mandiri' => ['Mandiri', 'danger'],
-                            default => ['semua jenjang', 'secondary'],
-                            };
+                                [$jenjangLabel, $jenjangClass] = match($item->jenjang) {
+                                    'caberawit' => ['Caberawit', 'primary'],
+                                    'remaja' => ['Remaja', 'success'],
+                                    'gp' => ['GP', 'info'],
+                                    'mandiri' => ['Mandiri', 'danger'],
+                                    default => ['semua jenjang', 'secondary'],
+                                };
                             } else {
-                            [$jenjangLabel, $jenjangClass] = ['Semua Jenjang', 'secondary'];
+                                [$jenjangLabel, $jenjangClass] = ['Semua Jenjang', 'secondary'];
                             }
 
                             @endphp
                             <div>
                                 @if($item->scope === 'kelompok')
-                                Kelompok {{ $item->ms_kelompok->nama_kelompok ?? '-' }}
+                                    Kelompok {{ $item->ms_kelompok->nama_kelompok ?? '-' }}
                                 @elseif($item->scope === 'desa')
-                                Desa {{ $item->ms_desa->nama_desa ?? '-' }}
+                                    Desa {{ $item->ms_desa->nama_desa ?? '-' }}
                                 @else
-                                Daerah Sragen Barat
+                                    Daerah Sragen Barat
                                 @endif
                             </div>
                             <span class="badge bg-{{ $jenjangClass }}-subtle text-{{ $jenjangClass }}">
                                 {{ $jenjangLabel }}
                             </span>
                         </td>
+
                         <td class="text-center">
                             {{ $item->hadir_count }}
                             hadir
                             @if($item->izin_count > 0)
                             / {{ $item->izin_count }} izin
                             @endif
-                        
                         </td>
+
                         <td class="text-center">
-                            @php $totalInfaq = $item->tr_infaq_sum_nominal ?? 0; @endphp {{-- KEGIATAN
-                            SELESAI --}} @if($item->status === 'selesai')
-                            <span class="btn btn-sm btn-light rounded-pill px-3">
-                                <i class="ri-lock-line me-1">
-                                </i>
-                                Rp {{ number_format($totalInfaq, 0, ',', '.') }}
-                            </span>
-                            @else {{-- SUDAH ADA INFAQ --}} @if($totalInfaq > 0)
-                            <a href="#ModalInfaqEdit" data-bs-toggle="modal"
-                                wire:click.prevent="$emit('InfaqEdit', {{ $item->ms_kegiatan_generus_id }})"
-                                class="btn btn-sm btn-primary rounded-pill px-3">
-                                <i class="ri-money-dollar-circle-line me-1">
-                                </i>
-                                Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                            @php 
+                                $totalInfaq = $item->tr_infaq_sum_nominal ?? 0; 
+                            @endphp 
+                            @if($item->status === 'selesai')
+                                <span class="btn btn-sm btn-light rounded-pill px-3">
+                                    <i class="ri-lock-line me-1"></i>
+                                    Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                                </span>
+                            @else
+                                <a href="#ModalInfaq" data-bs-toggle="modal" wire:click.prevent="$emit('InfaqCreate', {{ $item->ms_kegiatan_generus_id }})" class="btn btn-sm btn-soft-primary rounded-pill px-3">
+                                <i class="ri-hand-coin-line me-1"></i>
+                                @if($totalInfaq > 0)
+                                    Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                                @else
+                                    Catat Infaq
+                                @endif
                             </a>
-                            @else {{-- BELUM ADA --}}
-                            <a href="#ModalInfaqCreate" data-bs-toggle="modal"
-                                wire:click.prevent="$emit('InfaqCreate', {{ $item->ms_kegiatan_generus_id }})"
-                                class="btn btn-sm btn-soft-primary rounded-pill px-3">
-                                <i class="ri-hand-coin-line me-1">
-                                </i>
-                                Catat Infaq
-                            </a>
-                            @endif @endif
+                            @endif
                         </td>
+
                         {{-- AKSI --}}
                         <td>
                             <div class="d-flex justify-content-center gap-2">
@@ -263,12 +297,28 @@
                                     Detail
                                 </a>
                                 {{-- REPORT --}}
-                                <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
-                                    data-bs-target="#offcanvasLaporan" aria-controls="offcanvasLaporan" title="Laporan Kegiatan"
-                                    wire:click.prevent="$emit('KegiatanReport', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
-                                    <i class="ri-file-chart-line"></i>
-                                    Laporan
-                                </a>
+                                @if($item->tipe_kegiatan === 'rutin')
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanRutin" aria-controls="offcanvasLaporanRutin" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportRutin', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @elseif($item->tipe_kegiatan === 'khusus')
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanKhusus" aria-controls="offcanvasLaporanKhusus" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportKhusus', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @else
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanEvent" aria-controls="offcanvasLaporan" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportEvent', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -320,18 +370,16 @@
         </div>
     </div>
     {{-- MODAL EXPORT --}}
-    <div class="modal fade" id="ExportLaporanExcel" tabindex="-1" aria-labelledby="exportRecordLabel" aria-hidden="true"
-        wire:ignore.self>
+    <div class="modal fade" id="ExportLaporanExcel" tabindex="-1" aria-labelledby="exportRecordLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 {{-- HEADER --}}
                 <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn btn-light btn-icon rounded-circle ms-auto" data-bs-dismiss="modal"
-                        aria-label="Close">
+                    <button type="button" class="btn btn-light btn-icon rounded-circle ms-auto" data-bs-dismiss="modal" aria-label="Close">
                         <i class="ri-close-line fs-18"></i>
                     </button>
                 </div>
-
+    
                 {{-- BODY --}}
                 <div class="modal-body px-4 pb-5 pt-2 text-center">
                     {{-- ICON --}}
@@ -352,13 +400,13 @@
                         <h3 class="fw-bold mb-2" id="exportRecordLabel">
                             Export Data Kegiatan?
                         </h3>
-
+    
                         <p class="text-muted mb-0 lh-lg px-lg-4">
                             Laporan kegiatan generus akan diekspor sesuai
                             filter dan data tabel yang sedang ditampilkan.
                         </p>
                     </div>
-
+    
                     {{-- INFO --}}
                     <div class="alert alert-light border rounded-4 text-start mt-4 mb-0">
                         <div class="d-flex align-items-start gap-3">
@@ -369,7 +417,7 @@
                                 <h6 class="fw-semibold mb-1">
                                     Informasi Export
                                 </h6>
-
+    
                                 <p class="text-muted mb-0 fs-13">
                                     File akan diunduh dalam format Excel (.xlsx)
                                     dan hanya mencakup data yang tampil pada tabel.
@@ -384,7 +432,7 @@
                         <i class="ri-close-line me-1"></i>
                         Batal
                     </button>
-
+    
                     <button type="button" class="btn btn-success rounded-pill px-4" id="konfirmasiExportLaporan"
                         data-bs-dismiss="modal">
                         <i class="ri-file-excel-2-line me-1"></i>
@@ -394,4 +442,75 @@
             </div>
         </div>
     </div>
-</div>
+    <script>
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    if (window.alertify) {
+                        alertify.success('URL berhasil dicopy!');
+                    } else {
+                        alert('URL berhasil dicopy!');
+                    }
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin:', err);
+
+                    if (window.alertify) {
+                        alertify.error('Gagal menyalin URL');
+                    } else {
+                        alert('Gagal menyalin URL');
+                    }
+                });
+        }
+
+        document.getElementById('konfirmasiExportLaporan').addEventListener('click', function () {
+            alertify.success("Menyiapkan Dokumen");
+
+            setTimeout(function () {
+                var table = document.getElementById("Laporan");
+
+                var data = [];
+                // Kolom yang ingin diexport 
+                var exportCols = [0,1,2,3,4,5];
+
+                // Ambil header
+                var headers = [];
+                for(var i=0; i<exportCols.length; i++){
+                    headers.push(table.tHead.rows[0].cells[exportCols[i]].innerText.trim());
+                }
+                data.push(headers);
+
+                // Ambil data tbody
+                for(var i=0; i<table.tBodies[0].rows.length; i++){
+                    var row = table.tBodies[0].rows[i];
+                    var rowData = [];
+                    for(var j=0; j<exportCols.length; j++){
+                        rowData.push(row.cells[exportCols[j]].innerText.trim());
+                    }
+                    data.push(rowData);
+                }
+
+                // Ambil data tfoot (jika ada)
+                if(table.tFoot){
+                    for(var i=0; i<table.tFoot.rows.length; i++){
+                        var row = table.tFoot.rows[i];
+                        var rowData = [];
+                        for(var j=0; j<exportCols.length; j++){
+                            rowData.push(row.cells[exportCols[j]].innerText.trim());
+                        }
+                        data.push(rowData);
+                    }
+                }
+
+                // Buat workbook
+                var wb = XLSX.utils.book_new();
+                var ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+                XLSX.writeFile(wb, "Laporan-Kegiatan-Generus.xlsx");
+
+            }, 1000);
+        });
+        
+    </script>
+</div>  

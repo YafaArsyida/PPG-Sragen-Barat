@@ -32,6 +32,7 @@ class Create extends Component
 
     public $tipe_kegiatan = 'sekali'; // default
     public $hari_rutin = []; // array: ['senin','rabu',...]
+    public $jadwal_khusus = [];
 
     public $listHari = [
         'senin'  => 'Senin',
@@ -59,11 +60,11 @@ class Create extends Component
             'scope'          => 'required|in:daerah,desa,kelompok',
             'nama_kegiatan'  => 'required|string|min:3|max:150',
 
-            'tipe_kegiatan'  => 'required|in:rutin,sekali',
+            'tipe_kegiatan' => 'required|in:rutin,sekali,khusus',
 
             'jenjang'        => 'nullable|in:semua,caberawit,remaja,gp,pra_remaja,mandiri',
 
-            'waktu'          => 'required|date_format:H:i:s',
+            'waktu'          => 'nullable',
 
             'tempat'         => 'nullable|string|max:150',
             'alamat'         => 'nullable|string|max:255',
@@ -79,19 +80,27 @@ class Create extends Component
             $rules['ms_kelompok_id'] = 'nullable';
         }
 
-        // 🔹 Kegiatan sekali → wajib tanggal
+        // Sekali
         if ($this->tipe_kegiatan === 'sekali') {
             $rules['tanggal'] = 'required|date';
-        } else {
-            $rules['tanggal'] = 'nullable';
         }
 
-        // 🔹 Kegiatan rutin → wajib hari_rutin (array)
+        // Rutin
         if ($this->tipe_kegiatan === 'rutin') {
             $rules['hari_rutin'] = 'required|array|min:1';
             $rules['hari_rutin.*'] = 'in:senin,selasa,rabu,kamis,jumat,sabtu,minggu';
-        } else {
-            $rules['hari_rutin'] = 'nullable';
+        }
+
+        // Khusus
+        if ($this->tipe_kegiatan === 'khusus') {
+            $rules['jadwal_khusus'] = 'required|array|min:1';
+            $rules['jadwal_khusus.*.tanggal'] = 'required|date';
+            $rules['jadwal_khusus.*.waktu'] = 'required|date_format:H:i:s';
+        }
+
+        // Waktu utama
+        if (in_array($this->tipe_kegiatan, ['sekali', 'rutin'])) {
+            $rules['waktu'] = 'required|date_format:H:i:s';
         }
 
         // 🔹 Custom lokasi aktif → minimal TEMPAT wajib
@@ -132,6 +141,16 @@ class Create extends Component
         'hari_rutin.min'         => 'Pilih minimal satu hari kegiatan.',
         'hari_rutin.*.in'        => 'Hari rutin tidak valid.',
 
+        'jadwal_khusus.required' => 'Tambahkan minimal satu jadwal khusus.',
+        'jadwal_khusus.array' => 'Format jadwal khusus tidak valid.',
+        'jadwal_khusus.min' => 'Tambahkan minimal satu jadwal.',
+
+        'jadwal_khusus.*.tanggal.required' => 'Tanggal jadwal wajib diisi.',
+        'jadwal_khusus.*.tanggal.date' => 'Format tanggal jadwal tidak valid.',
+
+        'jadwal_khusus.*.waktu.required' => 'Waktu jadwal wajib diisi.',
+        'jadwal_khusus.*.waktu.date_format' => 'Format waktu jadwal harus HH:MM:SS.',
+
         'waktu.required'         => 'Waktu kegiatan wajib diisi.',
         'waktu.date_format'      => 'Format waktu harus HH:MM:SS.',
 
@@ -165,11 +184,26 @@ class Create extends Component
     public function updatedTipeKegiatan($value)
     {
         if ($value === 'rutin') {
-            $this->tanggal = null;      // tidak dipakai
+            $this->tanggal = null;
+            $this->jadwal_khusus = [];
         }
 
         if ($value === 'sekali') {
-            $this->hari_rutin = [];     // tidak dipakai
+            $this->hari_rutin = [];
+            $this->jadwal_khusus = [];
+        }
+
+        if ($value === 'khusus') {
+            $this->tanggal = null;
+            $this->hari_rutin = [];
+            $this->waktu = null;
+
+            if (count($this->jadwal_khusus) === 0) {
+                $this->jadwal_khusus[] = [
+                    'tanggal' => '',
+                    'waktu' => '',
+                ];
+            }
         }
     }
 
@@ -177,6 +211,21 @@ class Create extends Component
     {
         $this->resetLokasiCustom();
         $this->loadLokasiDefault();
+    }
+
+    public function addJadwalKhusus()
+    {
+        $this->jadwal_khusus[] = [
+            'tanggal' => '',
+            'waktu' => '',
+        ];
+    }
+
+    public function removeJadwalKhusus($index)
+    {
+        unset($this->jadwal_khusus[$index]);
+
+        $this->jadwal_khusus = array_values($this->jadwal_khusus);
     }
 
     private function loadLokasiDefault()
@@ -250,13 +299,26 @@ class Create extends Component
                 'alamat' => $this->use_custom_lokasi ? $this->alamat : null,
                 'peta'   => $this->use_custom_lokasi ? $this->peta : null,
 
-                'tanggal' => $this->tipe_kegiatan === 'sekali' ? $this->tanggal : null,
-                'waktu' => $this->waktu,
-
                 'tipe_kegiatan' => $this->tipe_kegiatan,
+
+                // event
+                'tanggal' => $this->tipe_kegiatan === 'sekali' ? $this->tanggal : null,
+                'waktu' => in_array($this->tipe_kegiatan, ['sekali', 'rutin'])
+                    ? $this->waktu
+                    : null,
+                // event
+
+                // rutin
                 'hari_rutin' => $this->tipe_kegiatan === 'rutin'
                     ? $this->hari_rutin
                     : null,
+                // rutin
+
+                // khusus
+                 'jadwal_khusus' => $this->tipe_kegiatan === 'khusus'
+                    ? $this->jadwal_khusus
+                    : null,
+                // khusus
 
                 'status' => 'aktif',
                 'deskripsi' => $this->deskripsi,
@@ -294,6 +356,7 @@ class Create extends Component
 
         $this->tipe_kegiatan = 'sekali';
         $this->hari_rutin = [];
+        $this->jadwal_khusus = [];
 
         $this->tanggal = '';
         $this->waktu = '';

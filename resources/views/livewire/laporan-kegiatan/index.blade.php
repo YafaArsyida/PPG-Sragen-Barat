@@ -14,10 +14,10 @@
     
                     <div>
                         <h5 class="fw-bold mb-1">
-                            Kegiatan Generasi Penerus
+                            Laporan Kegiatan Generasi Penerus
                         </h5>
                         <small>
-                            Kelola data kegiatan generus sesuai jenjang usia
+                            Kelola laporan kegiatan generus 
                         </small>
                     </div>
                 </div>
@@ -146,8 +146,8 @@
                         <th>Jadwal</th>
                         <th>Kegiatan</th>
                         <th>Peserta</th>
-                        <th>Level</th>
-                        <th>Tempat</th>
+                        <th class="text-center">Presensi</th>
+                        <th class="text-center">Infaq</th>
                         <th class="text-center" width="170">Aksi</th>
                     </tr>
                 </thead>
@@ -159,12 +159,21 @@
                             {{ $listKegiatan->firstItem() + $index }}
                         </td>
                         <td class="text-center">
-                            {{-- DELETE --}}
-                            <a href="#ModalDeleteKegiatan" data-bs-toggle="modal" class="btn btn-soft-danger btn-sm rounded-pill px-3"
-                                title="Hapus Kegiatan" wire:click.prevent="$emit('KegiatanDelete', {{ $item->ms_kegiatan_generus_id }})">
-                                <i class="ri-delete-bin-5-line me-1"></i>
-                                Hapus
+                            @if($item->status === 'aktif')
+                            <a href="#KegiatanStatus" data-bs-toggle="modal"
+                                wire:click.prevent="$emit('KegiatanStatus', {{ $item->ms_kegiatan_generus_id }})"
+                                class="btn btn-sm btn-success rounded-pill px-3">
+                                <i class="ri-radio-button-line me-1"></i>
+                                Aktif
                             </a>
+                            @else
+                            <a href="#KegiatanStatus" data-bs-toggle="modal"
+                                wire:click.prevent="$emit('KegiatanStatus', {{ $item->ms_kegiatan_generus_id }})"
+                                class="btn btn-sm btn-primary rounded-pill px-3">
+                                <i class="ri-checkbox-circle-line me-1"></i>
+                                Selesai
+                            </a>
+                            @endif
                         </td>
                         {{-- JADWAL --}}
                         <td>
@@ -249,22 +258,33 @@
                             </span>
                         </td>
 
-                        {{-- TINGKAT --}}
-                        <td>
-                            @if($item->scope === 'daerah')
-                            Kegiatan Daerah
-                            @elseif($item->scope === 'desa')
-                            Kegiatan Desa
-                            @else
-                            Kegiatan Kelompok
+                        <td class="text-center">
+                            {{ $item->hadir_count }}
+                            kehadiran
+                            @if($item->izin_count > 0)
+                            / {{ $item->izin_count }} izin
                             @endif
                         </td>
 
-                        {{-- TEMPAT --}}
-                        <td>
-                            @php $lokasi = $item->lokasi_final; @endphp
-                            <i class="ri-map-pin-line text-danger me-1"></i>
-                            {{ $lokasi['tempat'] }}
+                        <td class="text-center">
+                            @php 
+                                $totalInfaq = $item->tr_infaq_sum_nominal ?? 0; 
+                            @endphp 
+                            @if($item->status === 'selesai')
+                                <span class="btn btn-sm btn-light rounded-pill px-3">
+                                    <i class="ri-lock-line me-1"></i>
+                                    Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                                </span>
+                            @else
+                                <a href="#ModalInfaq" data-bs-toggle="modal" wire:click.prevent="$emit('InfaqCreate', {{ $item->ms_kegiatan_generus_id }})" class="btn btn-sm btn-soft-primary rounded-pill px-3">
+                                <i class="ri-hand-coin-line me-1"></i>
+                                @if($totalInfaq > 0)
+                                    Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                                @else
+                                    Catat Infaq
+                                @endif
+                            </a>
+                            @endif
                         </td>
 
                         {{-- AKSI --}}
@@ -276,13 +296,29 @@
                                     <i class="ri-eye-line me-1"></i>
                                     Detail
                                 </a>
-
-                                {{-- EDIT --}}
-                                <a href="#ModalEditKegiatan" data-bs-toggle="modal" class="btn btn-primary btn-sm rounded-pill px-3"
-                                    title="Edit Kegiatan" wire:click.prevent="$emit('KegiatanEdit', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
-                                    <i class="ri-pencil-line me-1"></i>
-                                    Edit
-                                </a>
+                                {{-- REPORT --}}
+                                @if($item->tipe_kegiatan === 'rutin')
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanRutin" aria-controls="offcanvasLaporanRutin" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportRutin', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @elseif($item->tipe_kegiatan === 'khusus')
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanKhusus" aria-controls="offcanvasLaporanKhusus" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportKhusus', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @else
+                                    <a href="javascript:void(0)" data-bs-toggle="offcanvas" class="btn btn-primary btn-sm rounded-pill px-3"
+                                        data-bs-target="#offcanvasLaporanEvent" aria-controls="offcanvasLaporanEvent" title="Laporan Kegiatan"
+                                        wire:click.prevent="$emit('ReportEvent', {{ $item->ms_kegiatan_generus_id }}, {{ $ms_desa_id }})">
+                                        <i class="ri-file-chart-line"></i>
+                                        Laporan
+                                    </a>
+                                @endif
                             </div>
                         </td>
                     </tr>

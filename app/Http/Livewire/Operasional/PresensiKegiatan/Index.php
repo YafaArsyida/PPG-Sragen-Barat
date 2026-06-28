@@ -29,6 +29,7 @@ class Index extends Component
 
     public $token;
     public $kegiatan;
+    public $tanggalPresensi;
 
     public $presensiMap = [];
 
@@ -67,6 +68,8 @@ class Index extends Component
         $this->jenjangUsia = $this->kegiatan->jenjang;
 
         $this->loadKelompok();
+
+        $this->tanggalPresensi = today()->format('Y-m-d');
 
         $this->loadPresensiMap();
     }
@@ -147,23 +150,6 @@ class Index extends Component
                 $q->where('ms_kelompok_id', $this->kegiatan->ms_kelompok_id)
             )
 
-            // jenjang
-            // ->when($this->kegiatan->jenjang, function ($q) {
-
-            //     $jenjang = $this->kegiatan->jenjang;
-
-            //     if (!isset(Generus::jenjangUsiaMap()[$jenjang])) {
-            //         return;
-            //     }
-
-            //     [$min, $max] = Generus::jenjangUsiaMap()[$jenjang];
-
-            //     $q->whereRaw(
-            //         "TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN ? AND ?",
-            //         [$min, $max]
-            //     );
-            // })
-
             ->orderBy('nama_generus')
 
             ->paginate(50);
@@ -171,11 +157,18 @@ class Index extends Component
 
     protected function loadPresensiMap()
     {
-        $this->presensiMap = PresensiKegiatanGenerus::where(
-            'ms_kegiatan_generus_id',
-            $this->kegiatan->ms_kegiatan_generus_id
-        )
-            ->pluck('status_hadir', 'ms_generus_id')
+        $this->presensiMap = PresensiKegiatanGenerus::query()
+
+            ->where(
+                'ms_kegiatan_generus_id', $this->kegiatan->ms_kegiatan_generus_id
+            )
+
+            ->whereDate(
+                'tanggal_presensi', $this->tanggalPresensi
+            )
+
+            ->pluck('status_hadir','ms_generus_id')
+
             ->toArray();
     }
 
@@ -202,7 +195,8 @@ class Index extends Component
             [
                 'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
                 'ms_generus_id' => $generusId,
-                'tanggal_presensi' => today(),
+                'tanggal_presensi'=>$this->tanggalPresensi
+                // 'tanggal_presensi' => today(),
             ],
             [
                 'waktu_hadir' => now(),
@@ -238,7 +232,8 @@ class Index extends Component
             [
                 'ms_kegiatan_generus_id' => $this->kegiatan->ms_kegiatan_generus_id,
                 'ms_generus_id' => $generusId,
-                'tanggal_presensi' => today(),
+                'tanggal_presensi'=>$this->tanggalPresensi
+                // 'tanggal_presensi' => today(),
             ],
             [
                 'status_hadir' => 'izin',
@@ -264,6 +259,7 @@ class Index extends Component
             $this->kegiatan->ms_kegiatan_generus_id
         )
             ->where('ms_generus_id', $generusId)
+            ->whereDate('tanggal_presensi', $this->tanggalPresensi)
             ->delete();
 
         unset($this->presensiMap[$generusId]);

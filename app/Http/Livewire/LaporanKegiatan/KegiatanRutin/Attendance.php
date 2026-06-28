@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanRutin;
+namespace App\Http\Livewire\LaporanKegiatan\KegiatanRutin;
 
 use App\Models\Kelompok;
 use App\Models\KegiatanGenerus;
@@ -113,8 +113,6 @@ class Attendance extends Component
                 }
             }
         }
-        // compute per-date percentages after tanggalMatrix is ready
-        $this->computeDailyPercentages();
     }
 
     public function getGenerusProperty()
@@ -191,71 +189,10 @@ class Attendance extends Component
 
     public function render()
     {
-        return view('livewire.operasional.kegiatan-rutin.attendance', [
+        return view('livewire.laporan-kegiatan.kegiatan-rutin.attendance', [
             'generusList' => $this->generus,
             'tanggalMatrix' => $this->tanggalMatrix,
             'listKelompok' => $this->listKelompok,
         ]);
     }
-    
-    protected function computeDailyPercentages()
-    {
-        $stats = [];
-
-        if (!$this->kegiatan) {
-            $this->emit('attendancePeriodStats', [
-                'start' => $this->startDate,
-                'end' => $this->endDate,
-                'stats' => $stats,
-            ]);
-            return;
-        }
-
-        $targetQuery = $this->kegiatan->targetPesertaQuery();
-
-        if ($this->ms_desa_id) {
-            $targetQuery->whereHas('ms_kelompok', function ($q) {
-                $q->where('ms_desa_id', $this->ms_desa_id);
-            });
-        }
-
-        if ($this->ms_kelompok_id) {
-            $targetQuery->where('ms_kelompok_id', $this->ms_kelompok_id);
-        }
-
-        $targetTotal = $targetQuery->count();
-
-        foreach ($this->tanggalMatrix as $date) {
-            $hadir = PresensiKegiatanGenerus::where('ms_kegiatan_generus_id', $this->ms_kegiatan_generus_id)
-                ->where('tanggal_presensi', $date)
-                ->where('status_hadir', 'hadir')
-                ->when($this->ms_desa_id, function ($q) {
-                    $q->whereHas('ms_generus.ms_kelompok', function ($qq) {
-                        $qq->where('ms_desa_id', $this->ms_desa_id);
-                    });
-                })
-                ->when($this->ms_kelompok_id, function ($q) {
-                    $q->whereHas('ms_generus', function ($qq) {
-                        $qq->where('ms_kelompok_id', $this->ms_kelompok_id);
-                    });
-                })
-                ->count();
-
-            $percent = $targetTotal > 0 ? round(($hadir / $targetTotal) * 100, 1) : 0;
-
-            $stats[$date] = [
-                'date' => $date,
-                'target' => $targetTotal,
-                'hadir' => $hadir,
-                'percent' => $percent,
-            ];
-        }
-
-        $this->emit('attendancePeriodStats', [
-            'start' => $this->startDate,
-            'end' => $this->endDate,
-            'stats' => $stats,
-        ]);
-    }
-
 }

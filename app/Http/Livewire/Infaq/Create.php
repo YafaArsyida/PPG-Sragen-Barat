@@ -13,9 +13,12 @@ class Create extends Component
 {
     public $ms_kegiatan_generus_id;
     public $nama_kegiatan;
+    public $tanggal_kegiatan;
     public $nominal;
     public $tanggal;
     public $keterangan;
+
+    public $listInfaq = [];
 
     protected $listeners = ['InfaqCreate'];
 
@@ -32,8 +35,14 @@ class Create extends Component
 
         $this->ms_kegiatan_generus_id = $kegiatan->ms_kegiatan_generus_id;
         $this->nama_kegiatan  = $kegiatan->nama_kegiatan;
+        $this->tanggal_kegiatan  = $kegiatan->tanggal;
 
         $this->tanggal = now()->format('Y-m-d');
+
+        $this->listInfaq = TRInfaq::with('ms_pengguna')
+            ->where('ms_kegiatan_generus_id', $ms_kegiatan_generus_id)
+            ->latest()
+            ->get();
 
         $this->emitSelf('render');
     }

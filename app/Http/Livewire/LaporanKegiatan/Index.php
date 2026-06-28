@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Operasional\KegiatanEvent;
+namespace App\Http\Livewire\LaporanKegiatan;
 
 use App\Models\KegiatanGenerus;
 use App\Models\Kelompok;
@@ -23,7 +23,7 @@ class Index extends Component
     public $tipeKegiatan = ''; // rutin | sekali
 
     public $ms_kelompok_id;
-    public $jenjangUsia = '';
+    public $jenjangUsia = null;
 
     public $startDate = null;
     public $endDate = null;
@@ -98,16 +98,12 @@ class Index extends Component
     public function getQueryProperty()
     {
         $query = KegiatanGenerus::query()
-            ->with([
-                'ms_desa',
-                'ms_kelompok.ms_desa'
-            ])
+            ->with(['ms_desa', 'ms_kelompok.ms_desa'])
             ->withSum('tr_infaq', 'nominal')
             ->withCount([
                 'presensi_kegiatan_generus as hadir_count' => function ($q) {
                     $q->where('status_hadir', 'hadir');
                 },
-
                 'presensi_kegiatan_generus as izin_count' => function ($q) {
                     $q->where('status_hadir', 'izin');
                 },
@@ -149,11 +145,42 @@ class Index extends Component
         // FILTER TANGGAL
         $query->when(
             $this->startDate && $this->endDate,
-            fn($q) =>
-            $q->whereBetween('tanggal', [
-                $this->startDate,
-                $this->endDate
-            ])
+            function ($q) {
+
+                $q->where(function ($qq) {
+
+                    // Kegiatan sekali
+                    $qq->whereBetween('tanggal', [
+                        $this->startDate,
+                        $this->endDate
+                    ]);
+
+                    // Kegiatan rutin selalu tampil
+                    $qq->orWhere('tipe_kegiatan', 'rutin');
+
+                    // Kegiatan khusus
+                    $qq->orWhere(function ($sub) {
+
+                        $sub->where('tipe_kegiatan', 'khusus')
+                            ->whereRaw(
+                                "
+                                EXISTS (
+                                    SELECT 1
+                                    FROM JSON_TABLE(
+                                        jadwal_khusus,
+                                        '$[*]'
+                                        COLUMNS (
+                                            tanggal DATE PATH '$.tanggal'
+                                        )
+                                    ) jt
+                                    WHERE jt.tanggal BETWEEN ? AND ?
+                                )
+                                ",
+                                [$this->startDate, $this->endDate]
+                            );
+                    });
+                });
+            }
         );
 
         // FILTER TIPE KEGIATAN
@@ -162,25 +189,27 @@ class Index extends Component
             fn($q) =>
             $q->where('tipe_kegiatan', $this->tipeKegiatan)
         );
-
-        // FILTER SEARCH
+        
         $query->when(
-            $this->search,
-            fn($q) =>
-            $q->where('nama_kegiatan', 'like', "%{$this->search}%")
+            $this->jenjangUsia,
+            fn ($q) => $q->where('jenjang', $this->jenjangUsia)
         );
+        // FILTER TAMBAHAN
+        if ($this->search) {
+            $query->where('nama_kegiatan', 'like', "%{$this->search}%");
+        }
 
-        return $query->orderByRaw("
-        CASE 
-            WHEN tipe_kegiatan = 'rutin' THEN 0 
-            ELSE 1 
-        END,
-        tanggal ASC
-    ");
+       return $query->orderByRaw("
+            CASE
+                WHEN tipe_kegiatan = 'rutin' THEN 0
+                WHEN tipe_kegiatan = 'khusus' THEN 1
+                ELSE 2
+            END
+        ")->latest('created_at');
     }
     public function render()
     {
-        return view('livewire.operasional.kegiatan-event.index',[
+        return view('livewire.laporan-kegiatan.index',[
             'listKegiatan' => $this->query->paginate(25)
         ]);
     }

@@ -23,7 +23,7 @@ class Index extends Component
     public $tipeKegiatan = ''; // rutin | sekali
 
     public $ms_kelompok_id;
-    public $jenjangUsia = '';
+    public $jenjangUsia = null;
 
     public $startDate = null;
     public $endDate = null;
@@ -136,11 +136,42 @@ class Index extends Component
         // FILTER TANGGAL
         $query->when(
             $this->startDate && $this->endDate,
-            fn($q) =>
-            $q->where(function($qq) {
-                $qq->whereBetween('tanggal', [$this->startDate, $this->endDate])
-                   ->orWhere('tipe_kegiatan', 'rutin'); // Include kegiatan rutin (tanggal bisa NULL)
-            })
+            function ($q) {
+
+                $q->where(function ($qq) {
+
+                    // Kegiatan sekali
+                    $qq->whereBetween('tanggal', [
+                        $this->startDate,
+                        $this->endDate
+                    ]);
+
+                    // Kegiatan rutin selalu tampil
+                    $qq->orWhere('tipe_kegiatan', 'rutin');
+
+                    // Kegiatan khusus
+                    $qq->orWhere(function ($sub) {
+
+                        $sub->where('tipe_kegiatan', 'khusus')
+                            ->whereRaw(
+                                "
+                                EXISTS (
+                                    SELECT 1
+                                    FROM JSON_TABLE(
+                                        jadwal_khusus,
+                                        '$[*]'
+                                        COLUMNS (
+                                            tanggal DATE PATH '$.tanggal'
+                                        )
+                                    ) jt
+                                    WHERE jt.tanggal BETWEEN ? AND ?
+                                )
+                                ",
+                                [$this->startDate, $this->endDate]
+                            );
+                    });
+                });
+            }
         );
 
         // FILTER TIPE KEGIATAN
@@ -150,18 +181,22 @@ class Index extends Component
             $q->where('tipe_kegiatan', $this->tipeKegiatan)
         );
         
+        $query->when(
+            $this->jenjangUsia,
+            fn ($q) => $q->where('jenjang', $this->jenjangUsia)
+        );
         // FILTER TAMBAHAN
         if ($this->search) {
             $query->where('nama_kegiatan', 'like', "%{$this->search}%");
         }
 
-        return $query->orderByRaw("
-            CASE 
-                WHEN tipe_kegiatan = 'rutin' THEN 0 
-                ELSE 1 
-            END,
-            tanggal ASC
-        ");
+       return $query->orderByRaw("
+            CASE
+                WHEN tipe_kegiatan = 'rutin' THEN 0
+                WHEN tipe_kegiatan = 'khusus' THEN 1
+                ELSE 2
+            END
+        ")->latest('created_at');
     }
 
     public function render()
