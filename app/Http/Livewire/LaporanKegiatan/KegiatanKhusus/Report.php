@@ -18,6 +18,10 @@ class Report extends Component
 
     public $search = '';
 
+    public $targetTotal = 0;
+    public $persentaseTotal = 0;
+    public $totalInfaq = 0;
+
     public $laporanRows = [];
     public $tanggalMatrix = [];
     public $totalPerTanggal = [];
@@ -101,7 +105,8 @@ class Report extends Component
             ->orderBy('nama_kelompok')
             ->get();
 
-        $targetTotal = $kelompoks->sum('ms_generus_count');
+        // $targetTotal = $kelompoks->sum('ms_generus_count');
+        $this->targetTotal = $kelompoks->sum('ms_generus_count');
 
         /*
         |--------------------------------------------------------------------------
@@ -168,8 +173,9 @@ class Report extends Component
 
             $row = [
                 'kelompok' => strtoupper($kelompok->nama_kelompok),
-                'target' => $target,
-                'tanggal' => [],
+                'target'   => $target,
+                'tanggal'  => [],
+                'persen'   => [],
             ];
 
             foreach ($this->tanggalMatrix as $tanggal) {
@@ -185,9 +191,12 @@ class Report extends Component
                     : 0;
 
                 $row['tanggal'][$tanggal] = [
-                    'hadir' => $hadir,
+                    'hadir'      => $hadir,
                     'persentase' => $persentase,
                 ];
+
+                // agar mudah dipanggil di blade
+                $row['persen'][$tanggal] = $persentase;
             }
 
             $rows[] = $row;
@@ -206,11 +215,12 @@ class Report extends Component
 
             $this->totalPerTanggal[$tanggal] = [
                 'hadir' => $hadirTotal,
-                'persentase' => $targetTotal > 0
-                    ? round(($hadirTotal / $targetTotal) * 100)
+                'persentase' => $this->targetTotal > 0
+                    ? round(($hadirTotal / $this->targetTotal) * 100)
                     : 0,
                 'infaq' => 0,
             ];
+
         }
 
         /*
@@ -234,6 +244,22 @@ class Report extends Component
                 ($infaqs[$tanggal] ?? collect())
                     ->sum('nominal');
         }
+        
+        $this->totalInfaq = collect($this->totalPerTanggal)
+           ->sum('infaq');
+        /*
+        |--------------------------------------------------------------------------
+        | Persentase Keseluruhan
+        |--------------------------------------------------------------------------
+        */
+        $totalHadir = collect($this->totalPerTanggal)
+            ->sum('hadir');
+
+        $totalTarget = $this->targetTotal * count($this->tanggalMatrix);
+
+        $this->persentaseTotal = $totalTarget > 0
+            ? round(($totalHadir / $totalTarget) * 100)
+            : 0;
     }
     public function render()
     {

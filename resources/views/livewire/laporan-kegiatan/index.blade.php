@@ -26,10 +26,10 @@
             {{-- ACTION --}}
             <div class="d-flex gap-2 flex-wrap">
                 {{-- IMPORT --}}
-                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportLaporanExcel">
+                {{-- <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportLaporanExcel">
                     <i class="ri-database-2-line me-1 text-secondary"></i>
                     Export Data
-                </button>
+                </button> --}}
     
                 {{-- TAMBAH --}}
                 <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ModalKegiatanCreate"
@@ -508,7 +508,6 @@
                 XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
                 XLSX.writeFile(wb, "Laporan-Kegiatan-Generus.xlsx");
-
             }, 1000);
         });
         

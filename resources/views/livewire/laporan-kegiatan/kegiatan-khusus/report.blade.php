@@ -93,6 +93,9 @@
                                             </small>
                                         </th>
                                         @endforeach
+                                        <th style="min-width: 90px">
+                                            %
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,6 +127,12 @@
                                                 {{-- ({{ $data['persentase'] }}%) --}}
                                             </td>
                                         @endforeach
+                                        {{-- <td class="fw-bold">
+                                            {{ collect($row['persen'])->implode('% / ') }}%
+                                        </td> --}}
+                                        <td class="fw-bold">
+                                            {{ round(collect($row['persen'])->avg()) }}%
+                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
@@ -140,34 +149,51 @@
 
                                 <tfoot class="table-light fw-bold">
                                     <tr>
-                                        <td colspan="3">JUMLAH</td>
+                                        <td colspan="2">
+                                            JUMLAH
+                                        </td>
+
+                                        <td>
+                                            {{ number_format($targetTotal) }}
+                                        </td>
 
                                         @foreach($tanggalMatrix as $tanggal)
                                             <td>{{ $totalPerTanggal[$tanggal]['hadir'] ?? 0 }}</td>
                                         @endforeach
+
+                                        <td class="fw-bold">
+                                            {{ $persentaseTotal }}%
+                                        </td>
                                     </tr>
 
-                                    <tr>
+                                    {{-- <tr>
                                         <td colspan="3">%</td>
 
                                         @foreach($tanggalMatrix as $tanggal)
                                             <td>{{ $totalPerTanggal[$tanggal]['persentase'] ?? 0 }}%</td>
                                         @endforeach
-                                    </tr>
+                                    </tr> --}}
 
-                                    {{-- <tr class="table-warning">
-
-                                        <td colspan="3">
+                                    <tr class="table-warning">
+                                        <td colspan="3" class="text-center">
                                             <i class="ri-money-dollar-circle-line me-1"></i>
                                             INFAQ
                                         </td>
 
+                                        {{-- <td class="fw-bold">
+                                            Rp {{ number_format($totalInfaq, 0, ',', '.') }}
+                                        </td> --}}
+
                                         @foreach($tanggalMatrix as $tanggal)
-                                        <td>
-                                            Rp {{ number_format($totalPerTanggal[$tanggal]['infaq'] ?? 0, 0, ',', '.') }}
-                                        </td>
+                                            <td class="fw-bold">
+                                                @php $infaq = $totalPerTanggal[$tanggal]['infaq'] ?? 0; @endphp
+
+                                                {{ $infaq ? 'Rp '.number_format($infaq,0,',','.') : '-' }}
+                                            </td>
                                         @endforeach
-                                    </tr> --}}
+
+                                        <td></td>
+                                    </tr>
                                 </tfoot>
                                 @endif
                             </table>

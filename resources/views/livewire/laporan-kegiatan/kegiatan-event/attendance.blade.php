@@ -21,10 +21,9 @@
             </div>
             {{-- ACTION --}}
             <div class="d-flex gap-2 flex-wrap">
-                <button id="btnExportAttendance" class="btn btn-success rounded-pill px-4">
-                    <i class="ri-file-excel-2-line me-1">
-                    </i>
-                    Export Excel
+                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#attendanceEvent">
+                    <i class="ri-database-2-line me-1 text-secondary"></i>
+                    Export Data
                 </button>
             </div>
         </div>

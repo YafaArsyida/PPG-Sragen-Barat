@@ -158,3 +158,126 @@
         @endif
     </div>
 </div>
+ {{-- MODAL EXPORT --}}
+<div class="modal fade" id="attendanceEvent" tabindex="-1" aria-labelledby="exportRecordLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            {{-- HEADER --}}
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn btn-light btn-icon rounded-circle ms-auto" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ri-close-line fs-18"></i>
+                </button>
+            </div>
+
+            {{-- BODY --}}
+            <div class="modal-body px-4 pb-5 pt-2 text-center">
+                {{-- ICON --}}
+                <div class="mb-4">
+                    <div class="avatar-xl mx-auto">
+                        <div class="avatar-title bg-success-subtle text-success rounded-circle">
+                            <lord-icon src="https://cdn.lordicon.com/fjvfsqea.json" trigger="loop"
+                                colors="primary:#198754,secondary:#198754" style="width:70px;height:70px">
+                            </lord-icon>
+                        </div>
+                    </div>
+                </div>
+                {{-- TITLE --}}
+                <div class="mb-2">
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-3">
+                        Export Kehadiran
+                    </span>
+                    <h3 class="fw-bold mb-2" id="exportRecordLabel">
+                        Export Data Kehadiran?
+                    </h3>
+
+                    <p class="text-muted mb-0 lh-lg px-lg-4">
+                        Laporan kehadiran generus akan diekspor sesuai
+                        filter dan data tabel yang sedang ditampilkan.
+                    </p>
+                </div>
+
+                {{-- INFO --}}
+                <div class="alert alert-light border rounded-4 text-start mt-4 mb-0">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0">
+                            <i class="ri-information-line text-primary fs-20"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-semibold mb-1">
+                                Informasi Export
+                            </h6>
+
+                            <p class="text-muted mb-0 fs-13">
+                                File akan diunduh dalam format Excel (.xlsx)
+                                dan hanya mencakup data yang tampil pada tabel.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- FOOTER --}}
+            <div class="modal-footer border-0 pt-0 px-4 pb-4 justify-content-center">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">
+                    <i class="ri-close-line me-1"></i>
+                    Batal
+                </button>
+
+                <button type="button" class="btn btn-success rounded-pill px-4" id="konfirmasiAttendanceEvent"
+                    data-bs-dismiss="modal">
+                    <i class="ri-file-excel-2-line me-1"></i>
+                    Ya, Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('konfirmasiAttendanceEvent').addEventListener('click', function () {
+        alertify.success("Menyiapkan Dokumen");
+
+        setTimeout(function () {
+            var table = document.getElementById("Attendance");
+
+            var data = [];
+            // Kolom yang ingin diexport 
+            var exportCols = [0,1,2,3,4,5];
+
+            // Ambil header
+            var headers = [];
+            for(var i=0; i<exportCols.length; i++){
+                headers.push(table.tHead.rows[0].cells[exportCols[i]].innerText.trim());
+            }
+            data.push(headers);
+
+            // Ambil data tbody
+            for(var i=0; i<table.tBodies[0].rows.length; i++){
+                var row = table.tBodies[0].rows[i];
+                var rowData = [];
+                for(var j=0; j<exportCols.length; j++){
+                    rowData.push(row.cells[exportCols[j]].innerText.trim());
+                }
+                data.push(rowData);
+            }
+
+            // Ambil data tfoot (jika ada)
+            if(table.tFoot){
+                for(var i=0; i<table.tFoot.rows.length; i++){
+                    var row = table.tFoot.rows[i];
+                    var rowData = [];
+                    for(var j=0; j<exportCols.length; j++){
+                        rowData.push(row.cells[exportCols[j]].innerText.trim());
+                    }
+                    data.push(rowData);
+                }
+            }
+
+            // Buat workbook
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+            XLSX.writeFile(wb, "Laporan-Kehadiran-Generus.xlsx");
+
+        }, 1000);
+    });
+</script>

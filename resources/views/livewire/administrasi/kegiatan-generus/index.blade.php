@@ -435,7 +435,7 @@
 
                 var data = [];
                 // Kolom yang ingin diexport 
-                var exportCols = [0,1,2,3,4,5];
+                var exportCols = [0,2,3,4,5,6];
 
                 // Ambil header
                 var headers = [];
