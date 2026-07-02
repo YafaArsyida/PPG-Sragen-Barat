@@ -34,20 +34,29 @@
             <div class="col-xxl-12 col-lg-12">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                     <div class="card-header bg-white border-0 p-4">
-                        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+                        <div class="text-center">
+                            <h5 class="fw-bold mb-1 text-uppercase">
+                                {{ $kegiatan->nama_kegiatan }}
+                            </h5>
+                            <small class="text-muted">
+                                {{ $kegiatan->lokasi_final['tempat'] ?? '-' }} {{-- {{ $kegiatan->alamat
+                                }} --}}
+                            </small>
+                        </div>
+                        {{-- <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
                             <div>
                                 <h5 class="fw-bold mb-1">{{ $kegiatan->nama_kegiatan }} </h5>
                                 <p class="text-muted mb-0">{{ $kegiatan->lokasi_final['tempat'] ?? '-' }}</p>
                             </div>
-                            {{-- <div class="d-flex gap-2 flex-wrap">
+                            <div class="d-flex gap-2 flex-wrap">
                                 <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportMatrix">
                                     <i class="ri-database-2-line me-1 text-secondary"></i>
                                     Export Data
                                 </button>
-                            </div> --}}
-                        </div>
+                            </div>
+                        </div> --}}
                     </div>
-                    <div class="card-body border-top bg-light-subtle">
+                    {{-- <div class="card-body border-top bg-light-subtle">
                         <div class="row g-3 align-items-end">
                             <!-- Cari Kelompok -->
                             <div class="col-xl-12 col-lg-12">
@@ -65,7 +74,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="card-body p-0">
                         <!-- Tabel -->
                         <div class="table-responsive">
