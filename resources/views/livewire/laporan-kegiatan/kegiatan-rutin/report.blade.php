@@ -1,5 +1,4 @@
-<div wire:ignore.self class="offcanvas offcanvas-top border-0" id="offcanvasLaporanRutin"
-    aria-labelledby="offcanvasLaporanRutinLabel" style="min-height:100vh; background:#f8fafc;">
+<div wire:ignore.self class="offcanvas offcanvas-top border-0" id="offcanvasLaporanRutin" aria-labelledby="offcanvasLaporanRutinLabel" style="min-height:100vh; background:#f8fafc;">
     <div class="offcanvas-header border-bottom bg-white px-4 py-3 shadow-sm">
         <div class="d-flex justify-content-between align-items-start w-100">
             <!-- Kiri -->
