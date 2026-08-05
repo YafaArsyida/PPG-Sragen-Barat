@@ -142,7 +142,7 @@
                 <thead class="table-light">
                     <tr class="text-uppercase fw-semibold">
                         <th class="text-center" width="50">No</th>
-                        <th class="text-center" width="50">Hapus</th>
+                        <th class="text-center" width="50">Status</th>
                         <th>Jadwal</th>
                         <th>Kegiatan</th>
                         <th>Peserta</th>
