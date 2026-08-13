@@ -206,7 +206,7 @@ class KegiatanGenerus extends Model
      */
     public function totalHadir()
     {
-        return $this->ms_presensi()
+        return $this->presensi_kegiatan_generus()
             ->where('status_hadir', 'hadir')
             ->count();
     }
@@ -216,7 +216,7 @@ class KegiatanGenerus extends Model
      */
     public function totalIzin()
     {
-        return $this->ms_presensi()
+        return $this->presensi_kegiatan_generus()
             ->where('status_hadir', 'izin')
             ->count();
     }
@@ -229,7 +229,7 @@ class KegiatanGenerus extends Model
     {
         $target = $this->targetPeserta();
 
-        $hadirIzinSakit = $this->ms_presensi()
+        $hadirIzinSakit = $this->presensi_kegiatan_generus()
             ->whereIn('status_hadir', ['hadir', 'izin', 'sakit'])
             ->count();
 

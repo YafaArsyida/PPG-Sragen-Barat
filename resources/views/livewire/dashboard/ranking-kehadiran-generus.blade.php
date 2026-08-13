@@ -1,4 +1,4 @@
-<div class="card border-0 shadow-sm h-100 overflow-hidden">
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     {{-- HEADER --}}
     <div class="card-header bg-white border-0 py-4">
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">

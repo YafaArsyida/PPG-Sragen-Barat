@@ -6,6 +6,7 @@ use App\Http\Controllers\GenerasiPenerus;
 use App\Http\Controllers\KegiatanGenerus;
 use App\Http\Controllers\KurikulumKBM;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MonitoringGenerus;
 use App\Http\Controllers\OperasionalKegiatanGenerus;
 use App\Http\Controllers\SistemController;
 // TEMANPENGURUS
@@ -57,6 +58,8 @@ Route::post('/logout', [LoginController::class, 'logOut'])
 Route::get('/operasional/presensi-kegiatan-kartu/{token}',  [OperasionalKegiatanGenerus::class, 'kartu'])->name('operasional.presensi-kegiatan-kartu');
 
 Route::get('/operasional/presensi-kegiatan/{token}',  [OperasionalKegiatanGenerus::class, 'manual'])->name('operasional.presensi-kegiatan');
+
+Route::get('/monitoring/kegiatan-generus',  [MonitoringGenerus::class, 'kegiatanGenerus'])->name('monitoring.kegiatan-generus');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
