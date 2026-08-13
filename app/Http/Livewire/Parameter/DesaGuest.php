@@ -2,12 +2,12 @@
 
 namespace App\Http\Livewire\Parameter;
 
-use App\Models\Desa as ModelsDesa;
+use App\Models\Desa;
 use App\Models\Kelompok;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Desa extends Component
+class DesaGuest extends Component
 {
     public $selectedDesa = null;
 
@@ -15,18 +15,18 @@ class Desa extends Component
     {
         $user = Auth::user();
 
-        // SUPERADMIN
-        if ($user->peran === 'SUPERADMIN') {
-            return ModelsDesa::query();
+        // AKSES PUBLIK
+        if (!$user) {
+            return Desa::query();
         }
 
         $aksesPengguna = $user->ms_akses_pengguna;
 
         if ($aksesPengguna->isEmpty()) {
-            return ModelsDesa::query()->whereRaw('1 = 0');
+            return Desa::query()->whereRaw('1 = 0');
         }
 
-        $query = ModelsDesa::query();
+        $query = Desa::query();
 
         $query->where(function ($q) use ($aksesPengguna) {
 
@@ -93,8 +93,8 @@ class Desa extends Component
 
     public function render()
     {
-        return view('livewire.parameter.desa', [
-            'select_desa' => $this->getDesaQuery()
+        return view('livewire.parameter.desa-guest',[
+             'select_desa' => $this->getDesaQuery()
                 ->orderBy('nama_desa')
                 ->get(),
         ]);

@@ -51,7 +51,7 @@
                         </div>
 
                         {{-- PARAMETER DESA --}}
-                        @livewire('parameter.desa')
+                        @livewire('parameter.desa-guest')
 
                     </div>
                 </div>
