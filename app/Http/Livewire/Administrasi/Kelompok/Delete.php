@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Administrasi\Kelompok;
 
+use App\Models\Generus;
 use App\Models\Kelompok;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -34,12 +35,18 @@ class Delete extends Component
             return;
         }
 
-        // Contoh cek relasi (hapus jika tidak ada)
-        // if ($kelompok->anggota()->count() > 0) {
-        //     $this->dispatchBrowserEvent('alertify-error', ['message' => 'Kelompok memiliki anggota, tidak bisa dihapus']);
-        //     return;
-        // }
+        $jumlahGenerus = Generus::where(
+            'ms_kelompok_id',
+            $this->kelompokId
+        )->count();
 
+        if ($jumlahGenerus > 0) {
+            $this->dispatchBrowserEvent('alertify-error', [
+                'message' => "Kelompok tidak dapat dihapus karena masih memiliki {$jumlahGenerus} generus."
+            ]);
+
+            return;
+        }
         DB::beginTransaction();
         try {
             $kelompok->delete(); // Soft delete jika model menggunakan SoftDeletes

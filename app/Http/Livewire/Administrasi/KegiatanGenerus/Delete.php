@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Administrasi\KegiatanGenerus;
 
 use App\Models\KegiatanGenerus;
+use App\Models\PresensiKegiatanGenerus;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -25,17 +26,25 @@ class Delete extends Component
 
         $kegiatan = KegiatanGenerus::find($this->kegiatanId);
 
-        // if ($kegiatan->presensis()->exists()) {
-        //     $this->dispatchBrowserEvent('alertify-error', [
-        //         'message' => 'Kegiatan sudah memiliki data presensi.'
-        //     ]);
-        //     return;
-        // }
-
         if (!$kegiatan) {
             $this->dispatchBrowserEvent('alertify-error', [
                 'message' => 'Data kegiatan tidak ditemukan'
             ]);
+
+            return;
+        }
+
+        // Cek apakah kegiatan sudah memiliki data presensi
+        $adaPresensi = PresensiKegiatanGenerus::where(
+            'ms_kegiatan_generus_id',
+            $this->kegiatanId
+        )->exists();
+
+        if ($adaPresensi) {
+            $this->dispatchBrowserEvent('alertify-error', [
+                'message' => 'Kegiatan tidak dapat dihapus karena sudah memiliki data presensi.'
+            ]);
+
             return;
         }
 

@@ -30,7 +30,7 @@ class KegiatanGenerus extends Model
         'waktu',
         'status',
 
-        'tipe_kegiatan',     // ENUM('rutin','sekali')
+        'tipe_kegiatan',     // ENUM('rutin','sekali', 'khusus')
         'hari_rutin',
         'jadwal_khusus',
 
