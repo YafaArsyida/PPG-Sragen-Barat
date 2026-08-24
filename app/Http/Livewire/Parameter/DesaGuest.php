@@ -13,56 +13,7 @@ class DesaGuest extends Component
 
     private function getDesaQuery()
     {
-        $user = Auth::user();
-
-        // AKSES PUBLIK
-        if (!$user) {
-            return Desa::query();
-        }
-
-        $aksesPengguna = $user->ms_akses_pengguna;
-
-        if ($aksesPengguna->isEmpty()) {
-            return Desa::query()->whereRaw('1 = 0');
-        }
-
-        $query = Desa::query();
-
-        $query->where(function ($q) use ($aksesPengguna) {
-
-            foreach ($aksesPengguna as $akses) {
-
-                switch ($akses->scope_type) {
-
-                    // akses daerah -> semua desa dalam daerah
-                    case 'daerah':
-
-                        $q->orWhere('ms_daerah_id', $akses->scope_id);
-
-                        break;
-
-                    // akses desa -> desa tersebut
-                    case 'desa':
-
-                        $q->orWhere('ms_desa_id', $akses->scope_id);
-
-                        break;
-
-                    // akses kelompok -> desa dari kelompok tersebut
-                    case 'kelompok':
-
-                        $q->orWhereIn(
-                            'ms_desa_id', Kelompok::query()
-                            ->where('ms_kelompok_id', $akses->scope_id)
-                            ->pluck('ms_desa_id')
-                        );
-
-                        break;
-                }
-            }
-        });
-
-        return $query;
+        return Desa::query();
     }
 
     public function mount()
