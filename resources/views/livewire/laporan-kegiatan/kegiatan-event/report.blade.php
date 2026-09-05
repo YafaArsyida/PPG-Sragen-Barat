@@ -11,7 +11,7 @@
             </div>
             <div>
                 <h5 class="fw-bold mb-1">
-                    Kegiatan Generus Desa {{ $nama_desa }}
+                    {{$kegiatan->nama_kegiatan ?? '-'}}
                 </h5>
                 <small>
                     Rekap kehadiran, izin, dan alfa peserta kegiatan generus

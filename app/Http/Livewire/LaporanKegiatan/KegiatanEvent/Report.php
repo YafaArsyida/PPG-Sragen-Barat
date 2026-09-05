@@ -57,6 +57,9 @@ class Report extends Component
             return;
         }
 
+        // Ambil scope dari kegiatan
+        $scope = $this->kegiatan->scope;
+
         // GENERATE REPORT
         $this->generateTableReport();
 
@@ -65,7 +68,8 @@ class Report extends Component
             'laporan-kegiatan.kegiatan-event.attendance',
             'setKegiatan',
             $kegiatanId,
-            $desaId
+            $desaId,
+            $scope
         );
 
         // SUCCESS
@@ -93,11 +97,11 @@ class Report extends Component
             ]);
 
         // Filter desa jika ada
-        if ($this->ms_desa_id) {
-            $targetQuery->whereHas('ms_kelompok', function ($q) {
-                $q->where('ms_desa_id', $this->ms_desa_id);
-            });
-        }
+        // if ($this->ms_desa_id) {
+        //     $targetQuery->whereHas('ms_kelompok', function ($q) {
+        //         $q->where('ms_desa_id', $this->ms_desa_id);
+        //     });
+        // }
 
         $targetGenerus = $targetQuery->get();
         // PRESENSI

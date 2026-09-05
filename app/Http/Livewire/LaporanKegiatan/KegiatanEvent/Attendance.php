@@ -15,6 +15,7 @@ class Attendance extends Component
 
     public $ms_kegiatan_generus_id;
     public $ms_desa_id;
+    public $scope;
 
     public $search = '';
     public $gender = '';
@@ -32,15 +33,24 @@ class Attendance extends Component
         $this->ms_kegiatan_generus_id = $kegiatanId;
     }
 
-    public function setKegiatan($kegiatanId, $desaId)
+    public function setKegiatan($kegiatanId, $desaId, $scope)
     {
         $this->ms_kegiatan_generus_id = $kegiatanId;
         $this->ms_desa_id = $desaId; // FIXED
+        $this->scope = $scope;
         $this->ms_kelompok_id = null;
 
-        $this->listKelompok = Kelompok::where('ms_desa_id', $desaId)
-            ->orderBy('nama_kelompok')
-            ->get();
+        // LIST KELOMPOK BERDASARKAN SCOPE
+        if ($scope === 'daerah') {
+            // Scope daerah → semua kelompok
+            $this->listKelompok = Kelompok::orderBy('nama_kelompok')
+                ->get();
+        } else {
+            // Scope desa → hanya kelompok di desa tersebut
+            $this->listKelompok = Kelompok::where('ms_desa_id', $desaId)
+                ->orderBy('nama_kelompok')
+                ->get();
+        }
 
         $this->resetPage();
     }
@@ -68,9 +78,9 @@ class Attendance extends Component
             ->where('ms_kegiatan_generus_id', $this->ms_kegiatan_generus_id)
 
             // 🔒 FIXED DESA
-            ->whereHas('ms_generus.ms_kelompok', function ($q) {
-                $q->where('ms_desa_id', $this->ms_desa_id);
-            })
+            // ->whereHas('ms_generus.ms_kelompok', function ($q) {
+            //     $q->where('ms_desa_id', $this->ms_desa_id);
+            // })
 
             ->when($this->search, function ($q) {
                 $q->whereHas('ms_generus', function ($qq) {
