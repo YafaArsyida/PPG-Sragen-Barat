@@ -193,6 +193,36 @@ class KegiatanGenerus extends Model
         return $query;
     }
 
+    public function kehadiranPesertaQuery()
+    {
+        $query = Generus::query()
+            ->with('ms_kelompok.ms_desa');
+
+        // Scope kegiatan
+        if ($this->scope === 'desa' && $this->ms_desa_id) {
+            $query->whereHas('ms_kelompok', function ($q) {
+                $q->where('ms_desa_id', $this->ms_desa_id);
+            });
+        }
+
+        if ($this->scope === 'kelompok' && $this->ms_kelompok_id) {
+            $query->where('ms_kelompok_id', $this->ms_kelompok_id);
+        }
+
+        // Jenjang usia
+        if ($this->jenjang && $this->jenjang !== 'semua') {
+            [$min, $max] = Generus::jenjangUsiaMap()[$this->jenjang] ?? [0, 100];
+
+            $startDate = now()->subYears($max)->startOfDay();
+            $endDate   = now()->subYears($min)->endOfDay();
+
+            $query->whereBetween('tanggal_lahir', [$startDate, $endDate]);
+        }
+
+        return $query;
+    }
+
+
     /**
      * Total target peserta sesuai scope + jenjang kegiatan
      */

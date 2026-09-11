@@ -77,7 +77,7 @@ class Attendance extends Component
             return collect();
         }
 
-        $query = $this->kegiatan->targetPesertaQuery()
+        $query = $this->kegiatan->kehadiranPesertaQuery()
             ->with('ms_kelompok');
 
         if ($this->ms_kelompok_id) {
