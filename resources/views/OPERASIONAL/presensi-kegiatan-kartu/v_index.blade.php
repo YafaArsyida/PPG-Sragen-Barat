@@ -105,11 +105,9 @@
             </div>
         </header>
 
-        {{-- =====================================================
-            MAIN CONTENT
-        ====================================================== --}}
         <main class="flex-grow-1">
             <div class="container-fluid px-3 px-xl-5 py-4">
+                {{-- dari sini --}}
                 <div class="row g-4">
                     {{-- =================================================
                         LEFT : PRESENSI OPERASIONAL
@@ -501,106 +499,6 @@
                                     </div>
                                 </div>
 
-                                {{-- RANK 3 --}}
-                                <div class="px-4 py-3 border-bottom">
-                                    <div class="d-flex align-items-center gap-3">
-
-                                        {{-- TROPHY --}}
-                                        <div class="avatar-sm flex-shrink-0">
-                                            <div class="avatar-title bg-danger text-white rounded-circle">
-                                                <i class="ri-trophy-fill fs-5"></i>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="fw-semibold text-body text-truncate">
-                                                Citra Lestari
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Kelompok An-Nur
-                                            </small>
-                                        </div>
-
-                                        <div class="text-end">
-                                            <div class="fw-bold fs-5 text-dark">
-                                                06:53
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Kartu
-                                            </small>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {{-- RANK 4 --}}
-                                <div class="px-4 py-3 border-bottom">
-                                    <div class="d-flex align-items-center gap-3">
-
-                                        <div class="avatar-sm flex-shrink-0">
-                                            <div class="avatar-title bg-light text-muted rounded-circle fw-semibold">
-                                                4
-                                            </div>
-                                        </div>
-
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="fw-semibold text-body text-truncate">
-                                                Dimas Pratama
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Kelompok Al-Ikhlas
-                                            </small>
-                                        </div>
-
-                                        <div class="text-end">
-                                            <div class="fw-bold fs-5 text-dark">
-                                                07:01
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Kartu
-                                            </small>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                {{-- RANK 5 --}}
-                                <div class="px-4 py-3">
-                                    <div class="d-flex align-items-center gap-3">
-
-                                        <div class="avatar-sm flex-shrink-0">
-                                            <div class="avatar-title bg-light text-muted rounded-circle fw-semibold">
-                                                5
-                                            </div>
-                                        </div>
-
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="fw-semibold text-body text-truncate">
-                                                Fajar Ramadhan
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Kelompok Al-Muttaqin
-                                            </small>
-                                        </div>
-
-                                        <div class="text-end">
-                                            <div class="fw-bold fs-5 text-dark">
-                                                07:05
-                                            </div>
-
-                                            <small class="text-muted">
-                                                Manual
-                                            </small>
-                                        </div>
-
-                                    </div>
-                                </div>
-
                             </div>
 
                             {{-- FOOTER --}}
@@ -623,10 +521,6 @@
             </div>
         </main>
 
-
-        {{-- =====================================================
-            FOOTER
-        ====================================================== --}}
         <footer class="border-top bg-white">
             <div class="container-fluid px-4 px-xl-5">
                 <div class="d-flex align-items-center justify-content-between py-3">
@@ -640,7 +534,6 @@
                 </div>
             </div>
         </footer>
-
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
