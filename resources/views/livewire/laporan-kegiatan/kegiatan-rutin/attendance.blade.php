@@ -27,7 +27,7 @@
                 <label class="form-label fw-semibold">Kelompok</label>
 
                 @if($kegiatan?->scope === 'kelompok')
-                    <input type="text" class="form-control rounded-3" value="{{ $listKelompok->first()?->nama_kelompok ?? '-' }}" readonly>
+                    <input type="text" class="form-control rounded-3" value="{{ collect($listKelompok)->first()?->nama_kelompok ?? '-' }}" readonly>
                 @else
                     <select class="form-select rounded-3" wire:model="ms_kelompok_id">
                         <option value="">Semua Kelompok</option>
