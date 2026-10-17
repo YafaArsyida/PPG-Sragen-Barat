@@ -6,7 +6,8 @@
                     <th width="60" class="text-center">No</th>
                     <th class="text-center">Hapus</th>
                     <th>Generus</th>
-                    <th>Kartu</th>
+                    <th>L/P</th>
+                    {{-- <th>Kartu</th> --}}
                     <th>Status</th>
                     <th>Kontak</th>
                     <th>Kelompok</th>
@@ -36,28 +37,27 @@
                     <td>
                         <div class="d-flex align-items-center gap-3">
                             <div class="avatar-xs flex-shrink-0">
-                                <div class="avatar-title 
-                                            {{ $row->jenis_kelamin == 'perempuan'
-                                            ? 'bg-danger-subtle text-danger'
-                                            : 'bg-primary-subtle text-primary' 
-                                            }} 
-                                            rounded-circle fw-semibold">
-                                    {{ strtoupper(substr($row->nama_generus, 0, 1)) }}
+                                <div class="avatar-title
+                                    {{ $row->jenis_kelamin == 'perempuan'
+                                        ? 'bg-danger-subtle text-danger'
+                                        : 'bg-primary-subtle text-primary'
+                                    }}
+                                    rounded-circle">
+                                    <i class="ri-user-line"></i>
                                 </div>
                             </div>
-                            <div>
-                                <div class="fw-semibold">
-                                    {{ $row->nama_generus }}
-                                </div>
-                                <small class="text-muted">
-                                    {{ strtoupper($row->jenis_kelamin) }}
-                                </small>
+
+                            <div class="fw-semibold">
+                                {{ $row->nama_generus }}
                             </div>
                         </div>
                     </td>
                     <td>
-                        {{ $row->nomor_kartu }}
+                        {{ $row->jenis_kelamin }}
                     </td>
+                    {{-- <td>
+                        {{ $row->nomor_kartu }}
+                    </td> --}}
                     <td>
                         {{ $row->status_generus }}
                     </td>
@@ -89,11 +89,8 @@
                     <td class="text-center">
                         @if($row->usia)
                         <div class="fw-semibold">
-                            {{ $row->usia }}
+                            {{ $row->usia }} Tahun
                         </div>
-                        <small class="text-muted">
-                            Tahun
-                        </small>
                         @else
                         <span class="text-muted">
                             -
