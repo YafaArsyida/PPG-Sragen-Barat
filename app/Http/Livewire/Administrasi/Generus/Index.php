@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Administrasi\Generus;
 
+use App\Exports\ExportGenerus;
 use App\Models\Generus;
 use App\Models\Kelompok;
+use Maatwebsite\Excel\Facades\Excel;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -56,6 +58,11 @@ class Index extends Component
 
     public function getAllGenerusProperty()
     {
+        return $this->generusQuery();
+    }
+
+    private function generusQuery()
+    {
         // Guard clause
         if (!$this->selectedDesa) {
             return Generus::query()->whereRaw('1 = 0');
@@ -106,6 +113,14 @@ class Index extends Component
         }
 
         return $query;
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new ExportGenerus($this->generusQuery()),
+            'Data-Generus.xlsx'
+        );
     }
 
     public function render()

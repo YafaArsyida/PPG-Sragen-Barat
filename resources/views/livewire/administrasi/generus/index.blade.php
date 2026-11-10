@@ -22,40 +22,53 @@
                 </div>
             </div>
             {{-- ACTION --}}
-            <div class="d-flex gap-2 flex-wrap">
-                {{-- IMPORT --}}
-                <button type="button" class="btn btn-light border rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#ExportGenerus">
-                    <i class="ri-database-2-line me-1 text-secondary"></i>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                {{-- EXPORT DATA --}}
+                <button type="button"
+                    class="btn btn-light border rounded-pill px-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ExportGenerus">
+                    <i class="ri-file-excel-2-line me-1 text-success"></i>
                     Export Data
                 </button>
-                {{-- IMPORT --}}
-                <button type="button" class="btn btn-soft-primary border rounded-pill px-4" data-bs-toggle="modal"
+
+                {{-- IMPORT GENERUS --}}
+                <button type="button"
+                    class="btn btn-soft-primary rounded-pill px-3"
+                    data-bs-toggle="modal"
                     data-bs-target="#ModalImportGenerus"
                     wire:click.prevent="$emit('showImportGenerus', {{ $selectedDesa }})">
-                    <i class="ri-database-2-line me-1">
-                    </i>
+                    <i class="ri-upload-2-line me-1"></i>
                     Import Generus
                 </button>
+
                 {{-- IMPORT KARTU --}}
                 @if(Str::startsWith($activeTab, 'kelompok-'))
                     @php
-                    $kelompokId = str_replace('kelompok-', '', $activeTab);
+                        $kelompokId = str_replace('kelompok-', '', $activeTab);
                     @endphp
-                
-                    <button type="button" class="btn btn-soft-primary border rounded-pill px-4" data-bs-toggle="modal"
-                        data-bs-target="#ModalImportKartu" wire:click.prevent="$emit('showImportKartu', {{ $kelompokId }})">
-                    
+
+                    <button type="button"
+                        class="btn btn-soft-info rounded-pill px-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#ModalImportKartu"
+                        wire:click.prevent="$emit('showImportKartu', {{ $kelompokId }})">
                         <i class="ri-bank-card-line me-1"></i>
                         Import Kartu
                     </button>
                 @endif
-                {{-- TAMBAH --}}
-                <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
-                    data-bs-target="#ModalGenerusCreate" wire:click="$emit('GenerusCreate')">
-                    <i class="ri-add-line me-1">
-                    </i>
+
+                {{-- TAMBAH GENERUS --}}
+                <button type="button"
+                    class="btn btn-primary rounded-pill px-4 shadow-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ModalGenerusCreate"
+                    wire:click="$emit('GenerusCreate')">
+                    <i class="ri-add-line me-1"></i>
                     Tambah Generus
                 </button>
+
             </div>
         </div>
     </div>
@@ -217,8 +230,7 @@
                         </h3>
     
                         <p class="text-muted mb-0 lh-lg px-lg-4">
-                            Laporan generus akan diekspor sesuai
-                            filter dan data tabel yang sedang ditampilkan.
+                            Seluruh data generus akan diekspor sesuai filter yang dipilih.
                         </p>
                     </div>
     
@@ -235,7 +247,7 @@
     
                                 <p class="text-muted mb-0 fs-13">
                                     File akan diunduh dalam format Excel (.xlsx)
-                                    dan hanya mencakup data yang tampil pada tabel.
+                                    termasuk data yang tidak berada di halaman tabel saat ini.
                                 </p>
                             </div>
                         </div>
@@ -249,7 +261,7 @@
                     </button>
     
                     <button type="button" class="btn btn-success rounded-pill px-4" id="konfirmasiExportLaporan"
-                        data-bs-dismiss="modal">
+                        data-bs-dismiss="modal" wire:click="exportExcel">
                         <i class="ri-file-excel-2-line me-1"></i>
                         Ya, Export
                     </button>
@@ -257,55 +269,4 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('konfirmasiExportLaporan').addEventListener('click', function () {
-            alertify.success("Menyiapkan Dokumen");
-
-            setTimeout(function () {
-                var table = document.getElementById("DataGenerus");
-
-                var data = [];
-                // Kolom yang ingin diexport 
-                var exportCols = [0,2,3,4,5,6,7];
-
-                // Ambil header
-                var headers = [];
-                for(var i=0; i<exportCols.length; i++){
-                    headers.push(table.tHead.rows[0].cells[exportCols[i]].innerText.trim());
-                }
-                data.push(headers);
-
-                // Ambil data tbody
-                for(var i=0; i<table.tBodies[0].rows.length; i++){
-                    var row = table.tBodies[0].rows[i];
-                    var rowData = [];
-                    for(var j=0; j<exportCols.length; j++){
-                        rowData.push(row.cells[exportCols[j]].innerText.trim());
-                    }
-                    data.push(rowData);
-                }
-
-                // Ambil data tfoot (jika ada)
-                if(table.tFoot){
-                    for(var i=0; i<table.tFoot.rows.length; i++){
-                        var row = table.tFoot.rows[i];
-                        var rowData = [];
-                        for(var j=0; j<exportCols.length; j++){
-                            rowData.push(row.cells[exportCols[j]].innerText.trim());
-                        }
-                        data.push(rowData);
-                    }
-                }
-
-                // Buat workbook
-                var wb = XLSX.utils.book_new();
-                var ws = XLSX.utils.aoa_to_sheet(data);
-                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-                XLSX.writeFile(wb, "Data-Generus.xlsx");
-
-            }, 1000);
-        });
-        
-    </script>
 </div>
